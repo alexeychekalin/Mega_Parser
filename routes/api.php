@@ -23,4 +23,9 @@ Route::group(['namespace' => 'User', 'prefix' => 'users', 'middleware' => 'auth:
     Route::get('/', [App\Http\Controllers\User\IndexController::class, 'index']);
     Route::post('/update', [App\Http\Controllers\User\UserController::class, 'update'])->name('user.update');
     Route::post('/delete', [App\Http\Controllers\User\UserController::class, 'delete'])->name('user.delete');
+    Route::post('/change', [App\Http\Controllers\User\UserController::class, 'changePassword'])->name('user.change');
+});
+
+Route::group(['namespace' => 'Log', 'prefix' => 'log', 'middleware' => 'auth:sanctum'], function (){
+    Route::post('/', [App\Http\Controllers\LogController::class, 'index']);
 });

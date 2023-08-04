@@ -33,10 +33,7 @@ export default {
     }
   }
 }
-
 </script>
-
-
 
 <template>
   <div class="auth-wrapper d-flex align-center justify-center pa-4">

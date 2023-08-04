@@ -40,11 +40,11 @@ export default {
     },
     actions:{
         login({commit}){
-            return axios.get('/api/user').then(({data})=>{
+            return axios.get('/api/user', {withCredentials: true}).then(({data})=>{
                 commit('SET_USER',data)
                 commit('SET_AUTHENTICATED',true)
                 commit('SET_ROLE', data.role)
-                commit('SET_ACCESSWEB', data.AccessWeb === 1)
+                commit('SET_ACCESSWEB', data.WebAccess === 1)
                 router.push('dashboard')
             }).catch(({response:{data}})=>{
                 commit('SET_USER',{})
@@ -58,6 +58,19 @@ export default {
             commit('SET_AUTHENTICATED',false)
             commit('SET_ROLE', '')
             commit('SET_ACCESSWEB', false)
-        }
+        },
+        checkUser({commit}){
+            return axios.get('/api/user', {withCredentials: true}).then(({data})=>{
+                commit('SET_USER',data)
+                commit('SET_AUTHENTICATED',true)
+                commit('SET_ROLE', data.role)
+                commit('SET_ACCESSWEB', data.WebAccess === 1)
+            }).catch(({response:{data}})=>{
+                commit('SET_USER',{})
+                commit('SET_AUTHENTICATED',false)
+                commit('SET_ROLE', '')
+                commit('SET_ACCESSWEB', '')
+            })
+        },
     }
 }

@@ -20,6 +20,19 @@ class UserController extends Controller
     }
 
     public function update(UserRequest $request){
+        DB::table('users')
+            ->where('UserID', $request['UserID'])
+            ->update(
+                [
+                    'FIO' => $request['FIO'],
+                    'TNumber' => DB::raw($request['TNumber']),
+                    'ChatID' => $request['ChatID'],
+                    'WebAccess' => DB::raw($request['WebAccess']),
+                    'TelegramAccess' => DB::raw($request['TelegramAccess'])
+                ]
+            );
+        return $request['id'];
+        /*
         if($request['password'] != 'null'){
             $data = $request->validated();
             $data['password'] = bcrypt($data['password']);
@@ -50,9 +63,22 @@ class UserController extends Controller
             return $request['id'];
 
         }
+        */
     }
-    public function delete(UserRequest $request){
-        User::where('id',$request['id'])->delete();
+    public function delete(Request $request){
+        User::where('UserID',$request['UserID'])->delete();
+    }
+
+    public function changePassword(Request $request){
+        $request['password'] = bcrypt($request['password']);
+        DB::table('users')
+            ->where('UserID', $request['UserID'])
+            ->update(
+                [
+                    'password' => $request['password']
+                ]
+            );
+        return $request['id'];
     }
 
 }

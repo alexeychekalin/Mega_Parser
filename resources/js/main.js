@@ -11,6 +11,9 @@ import store from '../js/store'
 import { createApp } from 'vue'
 import axios from "axios";
 
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
 loadFonts()
 
 // Create vue app
@@ -25,9 +28,9 @@ app.config.globalProperties.$axios = { ...axiosInstance }
 
 router.beforeEach((to, from, next) => {
     //document.title = `${to.meta.title} - ${process.env.MIX_APP_NAME}`
-    
+    store.dispatch('auth/checkUser')
 
-    if(to.meta.middleware=="guest"){
+    if(to.meta.middleware==="guest"){
         if(store.state.auth.authenticated && store.state.auth.accessWeb){
             next({name:"dashboard"})
         }else{
@@ -52,6 +55,12 @@ router.beforeEach((to, from, next) => {
 app.use(vuetify)
 app.use(router)
 app.use(store)
+
+app.use(Toast, {
+    transition: "Vue-Toastification__bounce",
+    maxToasts: 20,
+    newestOnTop: true
+});
 
 // Mount vue app
 app.mount('#app')

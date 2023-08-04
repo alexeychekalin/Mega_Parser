@@ -66,9 +66,9 @@ export default {
           />
         </IconBtn>
 
-        <!--
+
         <UserProfile />
-        -->
+
       </div>
     </template>
 

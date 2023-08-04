@@ -1,5 +1,4 @@
 <template>
-
   <v-data-table
     :headers="headers"
     :items="users"
@@ -52,7 +51,7 @@
                   <v-col
                     cols="12"
                     sm="6"
-                    md="4"
+                    md="6"
                   >
                     <v-text-field
                       v-model="editedItem.FIO"
@@ -62,50 +61,52 @@
                   <v-col
                     cols="12"
                     sm="6"
-                    md="4"
+                    md="6"
                   >
                     <v-text-field
                       v-model="editedItem.TNumber"
                       label="Телефон"
                     ></v-text-field>
                   </v-col>
+                </v-row>
+                <v-row>
                   <v-col
                     cols="12"
                     sm="6"
-                    md="4"
+                    md="6"
                   >
-                    <v-text-field
-                      v-model="editedItem.Access"
+                    <v-select
+                      v-model="editedItem.TelegramAccess"
+                      :items="selectsItem"
+                      item-title="value"
+                      item-value="access"
                       label="Telegram"
-                    ></v-text-field>
+                      persistent-hint
+                    ></v-select>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
-                    md="4"
+                    md="6"
                   >
-                    <v-text-field
-                      v-model="editedItem.AccessWeb"
-                      label="AccessWeb"
-                    ></v-text-field>
+                    <v-select
+                      v-model="editedItem.WebAccess"
+                      :items="selectsItem"
+                      item-title="value"
+                      item-value="access"
+                      label="ЛК"
+                      persistent-hint
+                    ></v-select>
                   </v-col>
+                </v-row>
+                <v-row v-if="editedIndex === -1">
                   <v-col
                     cols="12"
                     sm="6"
-                    md="4"
+                    md="12"
                   >
                     <v-text-field
-                      v-model="editedItem.ChatId"
-                      label="ChatId"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.password"
+                      v-model="addPassword"
                       label="Пароль"
                     ></v-text-field>
                   </v-col>
@@ -120,25 +121,25 @@
                 variant="text"
                 @click="close"
               >
-                Cancel
+                Закрыть
               </v-btn>
               <v-btn
                 color="blue-darken-1"
                 variant="text"
                 @click="save"
               >
-                Save
+                Сохранить
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title class="text-h5">Удалить?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Отмена</v-btn>
+              <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">Удалить</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -162,24 +163,24 @@
       </v-icon>
     </template>
 
-    <template v-slot:item.Access="{ item }">
+    <template v-slot:item.TelegramAccess="{ item }">
       <VAvatar
         size="40"
         variant="tonal"
-        :color="getColor(item.columns.Access)"
+        :color="getColor(item.columns.TelegramAccess)"
         class="me-3"
       >
-        {{ getAccess(item.columns.Access) }}
+        {{ getAccess(item.columns.TelegramAccess) }}
       </VAvatar>
     </template>
-    <template v-slot:item.AccessWeb="{ item }">
+    <template v-slot:item.WebAccess="{ item }">
       <VAvatar
         size="40"
         variant="tonal"
-        :color="getColor(item.columns.AccessWeb)"
+        :color="getColor(item.columns.WebAccess)"
         class="me-3"
       >
-        {{ getAccess(item.columns.AccessWeb) }}
+        {{ getAccess(item.columns.WebAccess) }}
       </VAvatar>
     </template>
 
@@ -194,23 +195,28 @@
 
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import axios from "axios";
 </script>
 
 <script>
 import axios from "axios";
-
+import { useToast } from "vue-toastification";
+import store from "@/store";
 export default {
   data: () => ({
     search: '',
     dialog: false,
     dialogDelete: false,
+    addPassword:'',
+    selectsItem: [
+      {access: 1, value: 'Доступен'},
+      {access: 0, value: 'Запрещено'}
+    ],
     headers: [
       { title: 'ФИО', align: 'center', key: 'FIO'},
       { title: 'Телефон', key: 'TNumber', align: 'center' },
       { title: 'ChatId', key: 'ChatId', align: 'center' },
-      { title: 'Доступ в TG', key: 'Access', sortable: false, align: 'center' },
-      { title: 'Доступ в ЛК', key: 'AccessWeb', sortable: false, align: 'center' },
+      { title: 'Доступ в TG', key: 'TelegramAccess', sortable: false, align: 'center' },
+      { title: 'Доступ в ЛК', key: 'WebAccess', sortable: false, align: 'center' },
       { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],
     users: [],
@@ -284,8 +290,17 @@ export default {
     },
 
     deleteItemConfirm () {
-      this.users.splice(this.editedIndex, 1)
-      this.closeDelete()
+      let currentUser = this.users[this.editedIndex]
+      axios.post('api/users/delete', {UserID : currentUser.UserID}).then(res => {
+        useToast().success('Пользователь удален')
+        this.users.splice(this.editedIndex, 1)
+        this.closeDelete()
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка удаления пользователя')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ пользователя: '+ updatedUser.FIO + '. Описание: ' + error, Place: 'users.vue' })
+        });
+
     },
 
     close () {
@@ -306,9 +321,47 @@ export default {
 
     save () {
       if (this.editedIndex > -1) {
+        // check NEW phone number, if different set ChatID to NULL
         Object.assign(this.users[this.editedIndex], this.editedItem)
+        let ChatID = this.users[this.editedIndex].TNumber === this.editItem.TNumber ? this.users[this.editedIndex].ChatID : null
+        this.editedItem.ChatId = ChatID;
+        let updatedUser = this.editedItem;
+        axios.post('/api/users/update',
+            {
+                    UserID: updatedUser.UserID,
+                    FIO: updatedUser.FIO,
+                    TNumber: updatedUser.TNumber,
+                    ChatID: ChatID,
+                    WebAccess: updatedUser.WebAccess,
+                    TelegramAccess: updatedUser.TelegramAccess
+            }
+        )
+          .then(res => {
+              useToast().success('Пользователь обновлен')
+          })
+          .catch(function (error) {
+            useToast().error('Ошибка обновления пользователя')
+            axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ пользователя: '+ updatedUser.FIO + '. Описание: ' + error, Place: 'users.vue' })
+          });
       } else {
-        this.users.push(this.editedItem)
+
+        axios.post('/api/users',
+          {
+                  FIO: this.editedItem.FIO,
+                  TNumber: this.editedItem.TNumber,
+                  ChatID: null,
+                  WebAccess: this.editedItem.WebAccess,
+                  TelegramAccess: this.editedItem.TelegramAccess,
+                  password: this.addPassword
+          } )
+          .then(res => {
+            useToast().success('Пользователь создан')
+            this.users.push(this.editedItem)
+          })
+          .catch(function (error) {
+            useToast().error('Ошибка создания пользователя')
+            axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ пользователя: '+ this.editedItem.FIO + '. Описание: ' + error, Place: 'users.vue' })
+          });
       }
       this.close()
     },
