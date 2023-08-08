@@ -5,7 +5,7 @@ import avatar8 from '@images/avatars/avatar-8.png'
 
 const solidCardData = [
   {
-    cardBg: '#16B1FF',
+    cardBg: '#56CA00',
     title: 'Twitter Card',
     icon: 'mdi-twitter',
     text: '"Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."',
@@ -15,7 +15,7 @@ const solidCardData = [
     share: '80',
   },
   {
-    cardBg: '#3B5998',
+    cardBg: '#FF4C51',
     title: 'Facebook Card',
     icon: 'mdi-facebook',
     text: 'You\'ve read about the importance of being courageous, rebellious and imaginative. These are all vital ingredients.',

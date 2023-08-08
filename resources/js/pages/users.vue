@@ -203,6 +203,7 @@ import { useToast } from "vue-toastification";
 import store from "@/store";
 export default {
   data: () => ({
+    dessertName: '',
     search: '',
     dialog: false,
     dialogDelete: false,

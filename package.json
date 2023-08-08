@@ -38,7 +38,8 @@
     "vuetify": "3.2.1",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.1.0",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@antfu/eslint-config-vue": "^0.38.6",
