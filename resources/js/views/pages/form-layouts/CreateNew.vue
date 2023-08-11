@@ -107,7 +107,7 @@ export default {
           color="success"
           true-icon="mdi-gift-open-outline"
           false-icon="mdi-gift-off-outline"
-          label="Списание бонусы Спасибо"
+          label="Списание бонусов Спасибо"
         ></VCheckbox>
       </VCol>
       <VCol cols="12" md="3">
