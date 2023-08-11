@@ -40,6 +40,7 @@
               Создать
             </v-btn>
           </template>
+          <v-form>
           <v-card>
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
@@ -56,6 +57,7 @@
                     <v-text-field
                       v-model="editedItem.FIO"
                       label="ФИО"
+                      :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -66,6 +68,7 @@
                     <v-text-field
                       v-model="editedItem.TNumber"
                       label="Телефон"
+                      :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -108,6 +111,7 @@
                     <v-text-field
                       v-model="addPassword"
                       label="Пароль"
+                      :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -132,6 +136,7 @@
               </v-btn>
             </v-card-actions>
           </v-card>
+          </v-form>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
@@ -238,6 +243,14 @@ export default {
       password:'',
       ChatId: ''
     },
+    rules: {
+      required: value => !!value || 'Поле обязательно',
+      //number: value => value.length <= 20 || 'Max 20 characters',
+      number: value => {
+        const pattern = /^\d*(\.\d{1,2})?$/
+        return pattern.test(value) || 'Введите число, формат 12345.67'
+      },
+    }
   }),
 
   components:{
