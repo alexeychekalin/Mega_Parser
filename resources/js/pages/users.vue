@@ -40,7 +40,7 @@
               Создать
             </v-btn>
           </template>
-          <v-form>
+          <v-form @submit.prevent="save">
           <v-card>
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
@@ -112,6 +112,7 @@
                       v-model="addPassword"
                       label="Пароль"
                       :rules="[rules.required]"
+
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -128,9 +129,10 @@
                 Закрыть
               </v-btn>
               <v-btn
+                :disabled="false"
                 color="blue-darken-1"
                 variant="text"
-                @click="save"
+                type="submit"
               >
                 Сохранить
               </v-btn>
@@ -232,7 +234,7 @@ export default {
       TNumber: '',
       Access: 0,
       AccessWeb: 0,
-      password:'',
+      password: '',
       ChatId: '',
     },
     defaultItem: {
@@ -312,13 +314,14 @@ export default {
       })
         .catch(function (error) {
           useToast().error('Ошибка удаления пользователя')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ пользователя: '+ updatedUser.FIO + '. Описание: ' + error, Place: 'users.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ пользователя: '+ currentUser.FIO + '. Описание: ' + error, Place: 'users.vue' })
         });
 
     },
 
     close () {
       this.dialog = false
+      this.addPassword = ''
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
@@ -352,13 +355,14 @@ export default {
         )
           .then(res => {
               useToast().success('Пользователь обновлен')
+            this.addPassword = ''
+            this.close()
           })
           .catch(function (error) {
             useToast().error('Ошибка обновления пользователя')
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ пользователя: '+ updatedUser.FIO + '. Описание: ' + error, Place: 'users.vue' })
           });
       } else {
-
         axios.post('/api/users',
           {
                   FIO: this.editedItem.FIO,
@@ -371,13 +375,15 @@ export default {
           .then(res => {
             useToast().success('Пользователь создан')
             this.users.push(this.editedItem)
+            this.addPassword = ''
+            this.close()
           })
           .catch(function (error) {
             useToast().error('Ошибка создания пользователя')
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ пользователя: '+ this.editedItem.FIO + '. Описание: ' + error, Place: 'users.vue' })
           });
       }
-      this.close()
+
     },
   },
 }
