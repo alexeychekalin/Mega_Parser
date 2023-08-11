@@ -363,6 +363,7 @@ export default {
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ пользователя: '+ updatedUser.FIO + '. Описание: ' + error, Place: 'users.vue' })
           });
       } else {
+        let name = this.editedItem.FIO
         axios.post('/api/users',
           {
                   FIO: this.editedItem.FIO,
@@ -380,7 +381,7 @@ export default {
           })
           .catch(function (error) {
             useToast().error('Ошибка создания пользователя')
-            axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ пользователя: '+ this.editedItem.FIO + '. Описание: ' + error, Place: 'users.vue' })
+            axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ пользователя: '+ name + '. Описание: ' + error, Place: 'users.vue' })
           });
       }
 

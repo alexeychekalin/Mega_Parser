@@ -34,17 +34,25 @@ export default {
   },
 
   methods: {
+    clear(){
+      this.Bonus = false
+      this.Monitor = false
+      this.CardCash = false
+      console.log(this.CardCash)
+    },
+    newProduct(){
 
+    }
   },
 }
 </script>
 
 <template>
-  <VForm @submit.prevent="() => {}">
+  <VForm @submit.prevent="newProduct">
     <VRow>
       <VCol
         cols="12"
-        md="5"
+        md="6"
       >
         <v-text-field
           v-model="ClassName"
@@ -57,7 +65,7 @@ export default {
 
       <VCol
         cols="12"
-        md="3"
+        md="6"
       >
         <v-select
           v-model="Type"
@@ -70,7 +78,7 @@ export default {
 
       <VCol
         cols="12"
-        md="2"
+        md="6"
       >
         <v-text-field
           v-model="PurchasePrice"
@@ -83,7 +91,7 @@ export default {
 
       <VCol
         cols="12"
-        md="2"
+        md="6"
       >
         <v-text-field
           v-model="SellPrice"
@@ -94,44 +102,51 @@ export default {
         />
       </VCol>
 
-      <VCol cols="12" md="3">
+      <VCol cols="12" md="4">
         <VCheckbox
           color="success"
           true-icon="mdi-credit-card-check-outline"
           false-icon="mdi-credit-card-off-outline"
           label="Оплата картой"
+          v-model="CardCash"
         ></VCheckbox>
       </VCol>
-      <VCol cols="12" md="3">
+      <VCol cols="12" md="4">
         <VCheckbox
           color="success"
           true-icon="mdi-gift-open-outline"
           false-icon="mdi-gift-off-outline"
-          label="Списание бонусов Спасибо"
+          label="Бонусы Спасибо"
+          v-model="Bonus"
         ></VCheckbox>
       </VCol>
-      <VCol cols="12" md="3">
+      <VCol cols="12" md="4">
         <VCheckbox
           color="success"
           true-icon="mdi-shopping-search"
           false-icon="mdi-shopping-search-outline"
-          label="Мониторинг на маркетплейсе"
+          label="Мониторинг"
+          v-model="Monitor"
         ></VCheckbox>
       </VCol>
 
       <VCol
         cols="12"
-        class="d-flex gap-4"
+        class="d-flex gap-6"
         md="3"
       >
-        <VBtn type="submit">
+        <VBtn
+          type="submit"
+          variant="text"
+        >
           Добавить
         </VBtn>
 
         <VBtn
           type="reset"
           color="secondary"
-          variant="tonal"
+          variant="text"
+          @click="clear"
         >
           Очистить
         </VBtn>

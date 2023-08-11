@@ -28,7 +28,6 @@ class LogRequest extends FormRequest
             'User' => 'required',
             'Message' => 'required',
             'Place' => 'required',
-            'password' => ''
         ];
     }
 }

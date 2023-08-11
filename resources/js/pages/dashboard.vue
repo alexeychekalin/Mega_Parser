@@ -10,7 +10,8 @@ import AnalyticsUserTable from '@/views/dashboard/AnalyticsUserTable.vue'
 import AnalyticsWeeklyOverview from '@/views/dashboard/AnalyticsWeeklyOverview.vue'
 import CardStatisticsVertical from '@core/components/cards/CardStatisticsVertical.vue'
 import CardCheck from "@/views/pages/cards/card-basic/CardCheck.vue";
-import CreateNew from "@/views/pages/form-layouts/CreateNew.vue";
+import NewProduct from "@/views/pages/form-layouts/NewProduct.vue";
+import NewUser from "@/views/pages/form-layouts/NewUser.vue";
 import Monitor from "@/views/dashboard/Monitor.vue";
 
 const totalProfit = {
@@ -47,10 +48,17 @@ const newProject = {
       <Monitor />
     </VCol>
 
-    <VCol cols="12">
+    <VCol cols="12" md="6" >
       <VCard title="Новый товар">
         <VCardText>
-          <CreateNew />
+          <NewProduct />
+        </VCardText>
+      </VCard>
+    </VCol>
+    <VCol cols="12" md="6">
+      <VCard title="Новый пользователь">
+        <VCardText>
+          <NewUser />
         </VCardText>
       </VCard>
     </VCol>
