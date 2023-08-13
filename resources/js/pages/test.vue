@@ -18,15 +18,38 @@
         >
           Скачать XLSX
         </v-btn>
-    </template>
-
-    <template v-slot:bottom>
       <div class="text-center pt-2">
         <v-pagination
           v-model="page"
           :length="pageCount"
         ></v-pagination>
       </div>
+    </template>
+
+    <template v-slot:bottom>
+      <VRow>
+        <VCol cols="12" md="1">
+          <v-btn
+            color="primary"
+            dark
+            variant="text"
+            class="ml-10"
+            @click="download"
+          >
+            Скачать XLSX
+          </v-btn>
+
+        </VCol>
+        <VCol cols="12" md="10">
+          <div class="text-center pt-2">
+            <v-pagination
+              v-model="page"
+              :length="pageCount"
+            ></v-pagination>
+          </div>
+        </VCol>
+
+      </VRow>
     </template>
 
     <template v-slot:thead>
@@ -80,7 +103,6 @@ export default {
         title: 'Dessert (100g serving)',
         align: 'center',
         key: 'name',
-        class: 'section-dessert',
         width: '30%'
       },
       { title: 'Calories', key: 'calories', class: 'section-dessert', align: 'center', },

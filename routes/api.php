@@ -29,3 +29,10 @@ Route::group(['namespace' => 'User', 'prefix' => 'users', 'middleware' => 'auth:
 Route::group(['namespace' => 'Log', 'prefix' => 'log', 'middleware' => 'auth:sanctum'], function (){
     Route::post('/', [App\Http\Controllers\LogController::class, 'index']);
 });
+
+Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => 'auth:sanctum'], function (){
+    Route::post('/', [App\Http\Controllers\Product\ProductController::class, 'index']);
+    Route::get('/', [App\Http\Controllers\Product\IndexController::class, 'index']);
+    Route::post('/update', [App\Http\Controllers\Product\ProductController::class, 'update'])->name('product.update');
+    Route::post('/delete', [App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete');
+});

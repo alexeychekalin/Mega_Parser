@@ -1,14 +1,3 @@
-<script setup>
-const firstName = ref('')
-const lastName = ref('')
-const city = ref('')
-const country = ref('')
-const company = ref('')
-const email = ref('')
-const checkbox = ref(false)
-</script>
-
-
 <script>
 import { useToast } from "vue-toastification";
 import axios from "axios";
@@ -64,6 +53,7 @@ export default {
         } )
         .then(res => {
           useToast().success('Пользователь создан')
+          this.$refs.newUser.reset()
         })
         .catch(function (error) {
           useToast().error('Ошибка создания пользователя')
@@ -75,7 +65,10 @@ export default {
 </script>
 
 <template>
-  <VForm @submit.prevent="newUser">
+  <VForm
+    @submit.prevent="newUser"
+    ref="newUser"
+  >
     <VRow>
       <v-col
         cols="12"

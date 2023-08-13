@@ -11,6 +11,8 @@ const checkbox = ref(false)
 
 <script>
 import { useToast } from "vue-toastification";
+import axios from "axios";
+import store from "@/store";
 export default {
   data: () => ({
     ClassName:'',
@@ -40,15 +42,37 @@ export default {
       this.CardCash = false
       console.log(this.CardCash)
     },
-    newProduct(){
 
+    newProduct(){
+      axios.post('/api/product',
+        {
+          Type: this.Type,
+          ClassName: this.ClassName,
+          PurchasePrice: this.PurchasePrice,
+          Bonus: this.Bonus,
+          CardCash: this.CardCash,
+          Monitor: this.Monitor,
+          SellPrice: this.SellPrice
+        } )
+        .then(res => {
+          useToast().success('Товар создан')
+          this.$refs.newProduct.reset()
+          this.clear()
+        })
+        .catch(function (error) {
+          useToast().error('Ошибка создания товара')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ товара: '+ name + '. Описание: ' + error, Place: 'Dashboard/NewProduct.vue' })
+        });
     }
-  },
+  }
 }
 </script>
 
 <template>
-  <VForm @submit.prevent="newProduct">
+  <VForm
+    @submit.prevent="newProduct"
+    ref="newProduct"
+  >
     <VRow>
       <VCol
         cols="12"
