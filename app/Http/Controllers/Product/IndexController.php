@@ -13,7 +13,14 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $product = Product::all();
+        $product = DB::table('product')
+                    ->select('product.*', 'types.typeName',
+                        DB::raw('(CASE WHEN product.Bonus = 0 THEN "Нет" ELSE "Да" END) as Bonus'),
+                        DB::raw('(CASE WHEN product.CardCash = 0 THEN "Нет" ELSE "Да" END) as CardCash'),
+                        DB::raw('(CASE WHEN product.Monitor = 0 THEN "Нет" ELSE "Да" END) as Monitor')
+                    )
+                    ->join('types', 'product.ProductId', '=', 'types.typeID')
+                    ->get();
         return json_decode(json_encode($product), true);
     }
 }

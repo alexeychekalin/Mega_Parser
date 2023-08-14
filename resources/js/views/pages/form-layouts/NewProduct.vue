@@ -22,6 +22,7 @@ export default {
     CardCash: false,
     Monitor: false,
     Type: '',
+    types:[],
     rules: {
       required: value => !!value || 'Поле обязательно',
       //number: value => value.length <= 20 || 'Max 20 characters',
@@ -35,7 +36,22 @@ export default {
 
   },
 
+  created () {
+    this.getTypes()
+  },
+
   methods: {
+    getTypes (){
+      axios.get('/api/product/types')
+        .then(res => {
+          this.types = res.data;
+        })
+        .catch(function (error) {
+          useToast().error('Ошибка получения списка типов')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'NewProduct.vue' })
+        });
+    },
+
     clear(){
       this.Bonus = false
       this.Monitor = false
@@ -94,7 +110,9 @@ export default {
         <v-select
           v-model="Type"
           label="Тип"
-          :items="['ТИП 1', 'ТИП 2', 'ТИП 3', 'ТИП 4', 'ТИП 5', 'ТИП 6']"
+          :items="types"
+          item-title="typeName"
+          item-value="typeID"
           :rules="[rules.required]"
           prepend-inner-icon="mdi-format-list-bulleted-type"
         ></v-select>

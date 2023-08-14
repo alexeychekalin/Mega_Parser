@@ -239,7 +239,7 @@
         :color="getColor(item.columns.Bonus)"
         class="me-3"
       >
-        {{ getAccess(item.columns.Bonus) }}
+        {{ item.columns.Bonus }}
       </VAvatar>
     </template>
 
@@ -250,7 +250,7 @@
         :color="getColor(item.columns.CardCash)"
         class="me-3"
       >
-        {{ getAccess(item.columns.CardCash) }}
+        {{ item.columns.CardCash }}
       </VAvatar>
     </template>
 
@@ -261,13 +261,14 @@
         :color="getColor(item.columns.Monitor)"
         class="me-3"
       >
-        {{ getAccess(item.columns.Monitor) }}
+        {{ item.columns.Monitor }}
       </VAvatar>
     </template>
 
     <template v-slot:item.parseDate="{ item }">
         {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD .MM.yyyy HH:mm") : ''}}
     </template>
+
 
     <template v-slot:item.profit="{ item }">
       <div class="text-success font-weight-medium">
@@ -301,6 +302,7 @@ export default {
     itemsPerPage: 15,
     dialog: false,
     dialogDelete: false,
+    types:[],
     selectsItem: [
       {access: 1, value: 'Доступен'},
       {access: 0, value: 'Запрещено'}
@@ -312,11 +314,11 @@ export default {
       Bonus: [],
       CardCash: [],
       Monitor: [],
-      Type: [],
+      typeName: [],
     },
     headers: [
       { title: 'Название', align: 'center', key: 'ClassName', width: '20%'},
-      { title: 'Тип', key: 'Type', align: 'center' },
+      { title: 'Тип', key: 'typeName', align: 'center' },
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
       { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
       { title: 'Рент', key: 'profit', sortable: false, align: 'center' },
@@ -383,13 +385,26 @@ export default {
   },
 
   created () {
-    this.getUsers()
+    this.getProducts()
+    this.getTypes()
   },
 
   methods: {
-    columnValueList(val) {
+    getTypes (){
+      axios.get('/api/product/types')
+        .then(res => {
+          this.types = res.data;
+        })
+        .catch(function (error) {
+          useToast().error('Ошибка получения списка типов')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'NewProduct.vue' })
+        });
+    },
+
+    columnValueList: function (val) {
       return this.products.map((d) => d[val]).filter((value, index, self) => self.indexOf(value) === index);
     },
+
     download : function() {
       let output = this.products.filter((d) => {
         return Object.keys(this.filters).every((f) => {
@@ -402,14 +417,12 @@ export default {
       XLSX.utils.book_append_sheet(wb, data, 'data')
       XLSX.writeFile(wb,'demo.xlsx')
     },
+
     getColor (value) {
-      return value ? 'success' : 'error'
-    },
-    getAccess (value) {
-      return value ? 'да' : 'нет'
+      return value === 'Да' ? 'success' : 'error'
     },
 
-    getUsers (){
+    getProducts (){
       axios.get('/api/product')
         .then(res => {
           this.products = res.data;

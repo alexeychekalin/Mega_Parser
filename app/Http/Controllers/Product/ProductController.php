@@ -39,4 +39,9 @@ class ProductController extends Controller
         return $request['ProductID'];
     }
 
+    public function getType()
+    {
+       return DB::table('types')->get();
+    }
+
 }

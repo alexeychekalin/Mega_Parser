@@ -75,16 +75,9 @@ export default {
     <template #vertical-nav-content>
       <VerticalNavLink
         :item="{
-          title: 'Dashboard',
+          title: 'Дашборд',
           icon: 'mdi-home-outline',
           to: '/dashboard',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Account Settings',
-          icon: 'mdi-account-cog-outline',
-          to: '/account-settings',
         }"
       />
 
@@ -97,8 +90,50 @@ export default {
       <VerticalNavLink
         :item="{
           title: 'Список',
-          icon: 'mdi-account-cog-outline',
+          icon: 'mdi-account-details-outline',
           to: '/users',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Новый',
+          icon: 'mdi-account-plus-outline',
+          to: '/users',
+        }"
+      />
+
+      <!-- 👉 Pages -->
+      <VerticalNavSectionTitle
+        :item="{
+          heading: 'Товары',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Список',
+          icon: 'mdi-cart-variant',
+          to: '/products',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Типы',
+          icon: 'mdi-store-cog-outline',
+          to: '/products',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Классификация',
+          icon: 'mdi-store-alert-outline',
+          to: '/products',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Новый',
+          icon: 'mdi-cart-arrow-down',
+          to: '/products',
         }"
       />
 

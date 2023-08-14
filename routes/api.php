@@ -35,4 +35,5 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::get('/', [App\Http\Controllers\Product\IndexController::class, 'index']);
     Route::post('/update', [App\Http\Controllers\Product\ProductController::class, 'update'])->name('product.update');
     Route::post('/delete', [App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete');
+    Route::get('/types', [App\Http\Controllers\Product\ProductController::class, 'getType'])->name('product.types');
 });

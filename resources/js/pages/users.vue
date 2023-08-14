@@ -291,6 +291,10 @@ export default {
         .then(res => {
           this.users = res.data;
         })
+        .catch(function (error) {
+          useToast().error('Ошибка получения списка пользователей')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ пользователей. Описание: ' + error, Place: 'users.vue' })
+        });
     },
 
     editItem (item) {
