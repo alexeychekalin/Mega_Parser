@@ -21,8 +21,11 @@ export default {
       signIn: 'auth/login',
     }),
     async login() {
+      await this.$axios.post('/logout').then(() => {
+        store.dispatch('auth/logout')
+      })
       await this.$axios.get('/sanctum/csrf-cookie')
-      await this.$axios.post('/login', this.auth).then(() => {
+      await this.$axios.post('/login', this.auth).then((data) => {
         this.signIn().then(() => {
           this.$router.replace('dashboard')
         })

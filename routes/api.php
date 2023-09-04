@@ -35,5 +35,30 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::get('/', [App\Http\Controllers\Product\IndexController::class, 'index']);
     Route::post('/update', [App\Http\Controllers\Product\ProductController::class, 'update'])->name('product.update');
     Route::post('/delete', [App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete');
-    Route::get('/types', [App\Http\Controllers\Product\ProductController::class, 'getType'])->name('product.types');
+    Route::post('/get99', [App\Http\Controllers\Product\ProductController::class, 'get99'])->name('product.get99');
+});
+
+Route::group(['namespace' => 'Types', 'prefix' => 'types', 'middleware' => 'auth:sanctum'], function (){
+    Route::post('/', [App\Http\Controllers\Type\TypeController::class, 'index']);
+    Route::get('/', [App\Http\Controllers\Type\IndexController::class, 'index']);
+    Route::post('/update', [App\Http\Controllers\Type\TypeController::class, 'update'])->name('types.update');
+    Route::post('/delete', [App\Http\Controllers\Type\TypeController::class, 'delete'])->name('types.delete');
+});
+
+Route::group(['namespace' => 'Colors', 'prefix' => 'colors', 'middleware' => 'auth:sanctum'], function (){
+    Route::post('/', [App\Http\Controllers\Color\ColorController::class, 'index']);
+    Route::get('/', [App\Http\Controllers\Color\IndexController::class, 'index']);
+    Route::post('/update', [App\Http\Controllers\Color\ColorController::class, 'update'])->name('colors.update');
+    Route::post('/delete', [App\Http\Controllers\Color\ColorController::class, 'delete'])->name('colors.delete');
+});
+
+Route::group(['namespace' => 'Providers', 'prefix' => 'providers', 'middleware' => 'auth:sanctum'], function (){
+    Route::post('/', [App\Http\Controllers\Provider\ProviderController::class, 'index']);
+    Route::get('/', [App\Http\Controllers\Provider\IndexController::class, 'index']);
+    Route::post('/update', [App\Http\Controllers\Provider\ProviderController::class, 'update'])->name('providers.update');
+    Route::post('/delete', [App\Http\Controllers\Provider\ProviderController::class, 'delete'])->name('providers.delete');
+});
+
+Route::middleware('auth:web')->group(function () {
+    Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout']);
 });

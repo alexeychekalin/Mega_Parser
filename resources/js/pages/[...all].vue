@@ -2,16 +2,29 @@
 import misc404 from '@images/pages/404.png'
 import miscMaskDark from '@images/pages/misc-mask-dark.png'
 import miscMaskLight from '@images/pages/misc-mask-light.png'
-import tree from '@images/pages/tree.png'
 import { useTheme } from 'vuetify'
 
 const vuetifyTheme = useTheme()
+
 
 const authThemeMask = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? miscMaskLight : miscMaskDark
 })
 </script>
+<script>
+import store from "@/store";
+export default {
 
+  methods: {
+    async logout() {
+      await this.$axios.post('/logout').then(() => {
+        store.dispatch('auth/logout')
+        this.$router.replace('login')
+      })
+    },
+  }
+}
+</script>
 <template>
   <div class="misc-wrapper">
     <ErrorHeader
@@ -29,7 +42,8 @@ const authThemeMask = computed(() => {
         class="mx-auto"
       />
       <VBtn
-        to="/login"
+        @click="logout"
+
         class="mt-10"
       >
         Назад

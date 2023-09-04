@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Type extends Authenticatable
+class Provider extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -17,14 +17,14 @@ class Type extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'typeID',
-        'typeName'
+        'providerID',
+        'providerName'
     ];
 
     public $timestamps = false;
-    protected $primaryKey = 'typeID';
+    protected $primaryKey = 'providerID';
 
-    protected $table = 'types';
+    protected $table = 'providers';
 
     /**
      * The attributes that should be hidden for serialization.

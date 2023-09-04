@@ -20,16 +20,13 @@ const upgradeBanner = computed(() => {
 </script>
 
 <script>
-import { mapActions } from 'vuex'
+import store from "@/store";
 export default {
 
   methods: {
-    ...mapActions({
-      signOut: 'auth/logout',
-    }),
     async logout() {
       await this.$axios.post('/logout').then(() => {
-        this.signOut()
+        store.dispatch('auth/logout')
         this.$router.replace('login')
       })
     },
@@ -98,7 +95,7 @@ export default {
         :item="{
           title: 'Новый',
           icon: 'mdi-account-plus-outline',
-          to: '/users',
+          to: '/usersnew',
         }"
       />
 
@@ -117,23 +114,43 @@ export default {
       />
       <VerticalNavLink
         :item="{
+          title: 'Новый',
+          icon: 'mdi-cart-arrow-down',
+          to: '/productsnew',
+        }"
+      />
+      <!-- 👉 Pages -->
+      <VerticalNavSectionTitle
+        :item="{
+          heading: 'Настройки',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
           title: 'Типы',
           icon: 'mdi-store-cog-outline',
-          to: '/products',
+          to: '/types',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Цвета',
+          icon: 'mdi-palette',
+          to: '/colors',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Поставщики',
+          icon: 'mdi-account-group-outline',
+          to: '/providers',
         }"
       />
       <VerticalNavLink
         :item="{
           title: 'Классификация',
           icon: 'mdi-store-alert-outline',
-          to: '/products',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Новый',
-          icon: 'mdi-cart-arrow-down',
-          to: '/products',
+          to: '/products3',
         }"
       />
 

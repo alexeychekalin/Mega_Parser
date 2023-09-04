@@ -62,7 +62,7 @@ const newProject = {
         </VCardText>
       </VCard>
     </VCol>
-
+<!--
     <VCol
       cols="12"
       md="4"
@@ -129,5 +129,6 @@ const newProject = {
     <VCol cols="12">
       <AnalyticsUserTable />
     </VCol>
+    -->
   </VRow>
 </template>

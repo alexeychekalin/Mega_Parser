@@ -1,14 +1,3 @@
-<script setup>
-const firstName = ref('')
-const lastName = ref('')
-const city = ref('')
-const country = ref('')
-const company = ref('')
-const email = ref('')
-const checkbox = ref(false)
-</script>
-
-
 <script>
 import { useToast } from "vue-toastification";
 import axios from "axios";
@@ -42,7 +31,7 @@ export default {
 
   methods: {
     getTypes (){
-      axios.get('/api/product/types')
+      axios.get('/api/types')
         .then(res => {
           this.types = res.data;
         })

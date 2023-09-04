@@ -16,11 +16,11 @@ const triangleBg = computed(() => global.name.value === 'light' ? triangleLight 
   >
     <VCardText>
       <h5 class="text-2xl font-weight-medium text-primary">
-        Lorem isapum
+        $42.8k
       </h5>
-      <p>Ракета на марс 🚀</p>
+      <p>78% of target 🚀</p>
       <VBtn size="small">
-        Поехали
+        View Sales
       </VBtn>
     </VCardText>
 
@@ -30,6 +30,11 @@ const triangleBg = computed(() => global.name.value === 'light' ? triangleLight 
       class="triangle-bg flip-in-rtl"
     />
 
+    <!-- Trophy -->
+    <VImg
+      :src="trophy"
+      class="trophy"
+    />
   </VCard>
 </template>
 

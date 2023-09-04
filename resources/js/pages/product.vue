@@ -1,28 +1,20 @@
 <template>
   <v-data-table
     v-model:page="page"
+    :search="search"
     :headers="headers"
     :items="filteredProducts"
     :items-per-page="itemsPerPage"
-    item-key="ClassName"
+    row-class="my-row-class"
     hide-default-footer
     class="custom_table_class"
+    v-model:sort-by="sortBy"
   >
     <template v-slot:bottom>
       <VRow>
-        <VCol cols="12" md="1">
-          <v-btn
-            color="primary"
-            dark
-            variant="text"
-            class="ml-10"
-            @click="download"
-          >
-            Скачать XLSX
-          </v-btn>
-        </VCol>
-        <VCol cols="12" md="10">
-          <div class="text-center pt-2">
+        <VCol cols="12" md="3"></VCol>
+        <VCol cols="12" md="6">
+          <div class="text-center pt-2 mt-10">
             <v-pagination
               v-model="page"
               :length="pageCount"
@@ -88,9 +80,24 @@
           inset
           vertical
         ></v-divider>
+        <VCol cols="12" md="1">
+          <v-btn
+            color="primary"
+            dark
+            variant="text"
+            @click="download"
+          >
+            Скачать XLSX
+          </v-btn>
+        </VCol>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
         <v-dialog
           v-model="dialog"
-          max-width="500px"
+          max-width="800px"
         >
           <template v-slot:activator="{ props }">
             <v-btn
@@ -117,8 +124,8 @@
                     md="6"
                   >
                     <v-text-field
-                      v-model="editedItem.FIO"
-                      label="ФИО"
+                      v-model="editedItem.ClassName"
+                      label="Название"
                       :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
@@ -127,11 +134,15 @@
                     sm="6"
                     md="6"
                   >
-                    <v-text-field
-                      v-model="editedItem.TNumber"
-                      label="Телефон"
+                    <v-select
+                      v-model="editedItem.Type"
+                      label="Тип"
+                      :items="types"
+                      item-title="typeName"
+                      item-value="typeID"
                       :rules="[rules.required]"
-                    ></v-text-field>
+                      prepend-inner-icon="mdi-format-list-bulleted-type"
+                    ></v-select>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -140,43 +151,49 @@
                     sm="6"
                     md="6"
                   >
-                    <v-select
-                      v-model="editedItem.TelegramAccess"
-                      :items="selectsItem"
-                      item-title="value"
-                      item-value="access"
-                      label="Telegram"
-                      persistent-hint
-                    ></v-select>
+                    <v-text-field
+                      v-model="editedItem.PurchasePrice"
+                      label="Цена закупки"
+                      :rules="[rules.required]"
+                    ></v-text-field>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
                     md="6"
                   >
-                    <v-select
-                      v-model="editedItem.WebAccess"
-                      :items="selectsItem"
-                      item-title="value"
-                      item-value="access"
-                      label="ЛК"
-                      persistent-hint
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row v-if="editedIndex === -1">
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="12"
-                  >
                     <v-text-field
-                      v-model="addPassword"
-                      label="Пароль"
-                      :rules="[rules.required]"
-
+                      v-model="editedItem.SellPrice"
+                      label="Цена продажи"
                     ></v-text-field>
                   </v-col>
+                  <VCol cols="12" md="4">
+                    <VCheckbox
+                      color="success"
+                      true-icon="mdi-credit-card-check-outline"
+                      false-icon="mdi-credit-card-off-outline"
+                      label="Оплата картой"
+                      v-model="editedItem.CardCash"
+                    ></VCheckbox>
+                  </VCol>
+                  <VCol cols="12" md="4">
+                    <VCheckbox
+                      color="success"
+                      true-icon="mdi-gift-open-outline"
+                      false-icon="mdi-gift-off-outline"
+                      label="Бонусы Спасибо"
+                      v-model="editedItem.Bonus"
+                    ></VCheckbox>
+                  </VCol>
+                  <VCol cols="12" md="4">
+                    <VCheckbox
+                      color="success"
+                      true-icon="mdi-shopping-search"
+                      false-icon="mdi-shopping-search-outline"
+                      label="Мониторинг"
+                      v-model="editedItem.Monitor"
+                    ></VCheckbox>
+                  </VCol>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -232,47 +249,52 @@
       </v-icon>
     </template>
 
-    <template v-slot:item.Bonus="{ item }">
+    <template v-slot:item.BonusVal="{ item }">
       <VAvatar
         size="40"
         variant="tonal"
-        :color="getColor(item.columns.Bonus)"
+        :color="getColor(item.columns.BonusVal)"
         class="me-3"
       >
-        {{ item.columns.Bonus }}
+        {{ item.columns.BonusVal }}
       </VAvatar>
     </template>
 
-    <template v-slot:item.CardCash="{ item }">
+    <!--
+    <template v-slot:item.CardCashVal="{ item }">
       <VAvatar
         size="40"
         variant="tonal"
-        :color="getColor(item.columns.CardCash)"
+        :color="getColor(item.columns.CardCashVal)"
         class="me-3"
       >
-        {{ item.columns.CardCash }}
+        {{ item.columns.CardCashVal }}
       </VAvatar>
     </template>
+    -->
 
-    <template v-slot:item.Monitor="{ item }">
+    <template v-slot:item.MonitorVal="{ item }">
       <VAvatar
         size="40"
         variant="tonal"
-        :color="getColor(item.columns.Monitor)"
+        :color="getColor(item.columns.MonitorVal)"
         class="me-3"
       >
-        {{ item.columns.Monitor }}
+        {{ item.columns.MonitorVal }}
       </VAvatar>
     </template>
 
     <template v-slot:item.parseDate="{ item }">
-        {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD .MM.yyyy HH:mm") : ''}}
+        {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
     </template>
 
+    <template v-slot:item.SberParseDate="{ item }">
+      {{item.columns.SberParseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
+    </template>
 
     <template v-slot:item.profit="{ item }">
       <div class="text-success font-weight-medium">
-        {{item.columns.SellPrice !== null ? (1 - (item.columns.PurchasePrice/item.columns.SellPrice )).toFixed(2) : '-'}}
+        {{item.columns.profit}}
       </div>
     </template>
 
@@ -298,7 +320,9 @@ import * as XLSX from 'xlsx/xlsx.mjs';
 import moment from 'moment'
 export default {
   data: () => ({
+    sortBy: [{ key: 'parseDate', order: 'desc' }],
     page:1,
+    search:'',
     itemsPerPage: 15,
     dialog: false,
     dialogDelete: false,
@@ -309,23 +333,24 @@ export default {
     ],
     filters: {
       ClassName:[],
-      PurchasePrice:[],
-      SellPrice: [],
       Bonus: [],
       CardCash: [],
-      Monitor: [],
+      MonitorVal: [],
       typeName: [],
+      providerName:[]
     },
     headers: [
-      { title: 'Название', align: 'center', key: 'ClassName', width: '20%'},
-      { title: 'Тип', key: 'typeName', align: 'center' },
+      { title: 'Рент', key: 'profit', align: 'center' },
+      { title: 'Название', align: 'center', key: 'ClassName', width: '25%'},
+      { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
+      { title: 'Продавец', key: 'providerName', align: 'center' },
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
       { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
-      { title: 'Рент', key: 'profit', sortable: false, align: 'center' },
-      { title: 'Дата', key: 'parseDate', sortable: false, align: 'center' },
-      { title: 'Бонусы', key: 'Bonus', align: 'center' },
-      { title: 'Карта', key: 'CardCash', align: 'center' },
-      { title: 'Монитор', key: 'Monitor', align: 'center' },
+      { title: 'Дата', key: 'parseDate', align: 'center' },
+      { title: 'Дата', key: 'SberParseDate', align: 'center' },
+      { title: 'Бонусы', key: 'BonusVal', align: 'center' },
+     // { title: 'Карта', key: 'CardCashVal', align: 'center' },
+      { title: 'Монитор', key: 'MonitorVal', align: 'center' },
       { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],
     products: [],
@@ -338,6 +363,7 @@ export default {
       CardCash: false,
       Monitor: false,
       Type: '',
+      ProductId: ''
     },
     defaultItem: {
       ClassName:'',
@@ -347,6 +373,7 @@ export default {
       CardCash: false,
       Monitor: false,
       Type: '',
+      ProductId: ''
     },
     rules: {
       required: value => !!value || 'Поле обязательно',
@@ -361,7 +388,6 @@ export default {
   components:{
     axios
   },
-
   computed: {
     filteredProducts() {
       return this.products.filter((d) => {
@@ -390,8 +416,9 @@ export default {
   },
 
   methods: {
+
     getTypes (){
-      axios.get('/api/product/types')
+      axios.get('/api/types')
         .then(res => {
           this.types = res.data;
         })
@@ -422,10 +449,25 @@ export default {
       return value === 'Да' ? 'success' : 'error'
     },
 
+    getBool (value) {
+      return value === 'Да' ? 1 : 0
+    },
+
     getProducts (){
       axios.get('/api/product')
         .then(res => {
-          this.products = res.data;
+          this.products = res.data.map(item => {
+            return {
+              ...item,
+              profit: item.SellPrice !== null ? ((1 - (item.PurchasePrice.split(" ")[0].replace('₽', '').replace(',','')/item.SellPrice.replace(',','').replace('₽', '') ))*100).toFixed(2) : '-'
+            }
+          });
+          /*
+          const rows = document.querySelectorAll('table tr');
+          console.log(rows)
+          // Для каждой строки таблицы присваиваем класс
+          rows.forEach(row => row.classList.add('my-row-class'));
+           */
         })
     },
 
@@ -479,16 +521,18 @@ export default {
           {
             ClassName: updatedProduct.ClassName,
             PurchasePrice: updatedProduct.PurchasePrice,
-            SellPrice: updatedProduct.SellPrice,
-            Bonus: updatedProduct.Bonus,
-            CardCash: updatedProduct.CardCash,
-            Monitor: updatedProduct.Monitor,
+            SellPrice: null,
+            Bonus: updatedProduct.Bonus ?? 0,
+            CardCash: updatedProduct.CardCash ?? 0,
+            Monitor: updatedProduct.Monitor  ?? 0,
             Type: updatedProduct.Type,
+            ProductId: updatedProduct.ProductId
           }
       )
         .then(res => {
             useToast().success('Товар обновлен')
             this.close()
+            this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
         })
         .catch(function (error) {
           useToast().error('Ошибка обновления товара')
@@ -507,4 +551,8 @@ export default {
   font-size: 14px;
   text-transform: uppercase
 }
+.now-green{
+  background-color: #4caf50;
+}
+
 </style>

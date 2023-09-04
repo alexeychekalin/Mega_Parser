@@ -14,12 +14,9 @@ export default {
     password:''
   }),
   methods: {
-    ...mapActions({
-      signOut: 'auth/logout',
-    }),
     async logout() {
       await this.$axios.post('/logout').then(() => {
-        this.signOut()
+        store.dispatch('auth/logout')
         this.$router.replace('login')
       })
     },

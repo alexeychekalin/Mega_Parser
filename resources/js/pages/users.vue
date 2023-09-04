@@ -68,7 +68,7 @@
                     <v-text-field
                       v-model="editedItem.TNumber"
                       label="Телефон"
-                      :rules="[rules.required]"
+                      :rules="[rules.required, rules.phone]"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -252,6 +252,10 @@ export default {
         const pattern = /^\d*(\.\d{1,2})?$/
         return pattern.test(value) || 'Введите число, формат 12345.67'
       },
+      phone: value => {
+        const pattern = /^\d+$/
+        return pattern.test(value) || 'В телефоне буквы?'
+      }
     }
   }),
 

@@ -27,9 +27,54 @@ const router = createRouter({
           },
         },
         {
+          path: 'usersnew',
+          name: 'usersnew',
+          component: () => import('../pages/usersNew.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
           path: 'products',
           name: 'products',
           component: () => import('../pages/product.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
+          path: 'productsnew',
+          name: 'productsnew',
+          component: () => import('../pages/productNew.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
+          path: 'types',
+          name: 'types',
+          component: () => import('../pages/types.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
+          path: 'colors',
+          name: 'colors',
+          component: () => import('../pages/colors.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
+          path: 'providers',
+          name: 'providers',
+          component: () => import('../pages/providers.vue'),
           meta:{
             middleware:"auth",
             admin: true
