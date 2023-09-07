@@ -45,6 +45,24 @@ const router = createRouter({
           },
         },
         {
+          path: 'monitor',
+          name: 'monitor',
+          component: () => import('../pages/monitor.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
+          path: 'monitorTypes',
+          name: 'monitorTypes',
+          component: () => import('../pages/monitorTypes.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
           path: 'productsnew',
           name: 'productsnew',
           component: () => import('../pages/productNew.vue'),

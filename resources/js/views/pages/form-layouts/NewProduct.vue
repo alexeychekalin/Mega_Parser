@@ -4,14 +4,19 @@ import axios from "axios";
 import store from "@/store";
 export default {
   data: () => ({
-    ClassName:'',
+    Model:'',
+    Color: '',
     PurchasePrice:'',
     SellPrice: '',
     Bonus: false,
     CardCash: false,
     Monitor: false,
+    Rostest: false,
+    Wholesaler: '',
+    Retailer: '',
     Type: '',
     types:[],
+    provider:[],
     rules: {
       required: value => !!value || 'Поле обязательно',
       //number: value => value.length <= 20 || 'Max 20 characters',
@@ -27,6 +32,7 @@ export default {
 
   created () {
     this.getTypes()
+    this.getProviders()
   },
 
   methods: {
@@ -41,26 +47,53 @@ export default {
         });
     },
 
+    getProviders (){
+      axios.get('/api/providers')
+        .then(res => {
+          this.provider = res.data;
+        })
+        .catch(function (error) {
+          useToast().error('Ошибка получения списка поставщиков')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'product.vue' })
+        });
+    },
+
     clear(){
       this.Bonus = false
       this.Monitor = false
       this.CardCash = false
-      console.log(this.CardCash)
+      this.Rostest = false
     },
 
     newProduct(){
+      console.log(this.Wholesaler)
       axios.post('/api/product',
         {
-          Type: this.Type,
-          ClassName: this.ClassName,
+          Model: this.Model,
           PurchasePrice: this.PurchasePrice,
+          SellPrice: this.SellPrice,
           Bonus: this.Bonus,
           CardCash: this.CardCash,
           Monitor: this.Monitor,
-          SellPrice: this.SellPrice
+          Type: this.Type,
+          ProductId: this.ProductId,
+          Color: this.Color,
+          Rostest: this.Rostest,
+          Wholesaler: this.Wholesaler,
+          Retailer: this.Retailer,
         } )
         .then(res => {
           useToast().success('Товар создан')
+          axios.post('/api/colors/check',{Color: this.Color,})
+            .then(res => {
+              if(!res.data)
+                useToast().success('Цвет добавлен в классификатор')
+            })
+            .catch(function (error) {
+              useToast().error('Ошибка добавления цвета')
+              axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ this.Model + '. Описание: ' + error, Place: 'Dashboard/NewProduct.vue' })
+            });
+
           this.$refs.newProduct.reset()
           this.clear()
         })
@@ -84,7 +117,7 @@ export default {
         md="6"
       >
         <v-text-field
-          v-model="ClassName"
+          v-model="Model"
           label="Название"
           placeholder="Полное название"
           :rules="[rules.required]"
@@ -111,6 +144,31 @@ export default {
         cols="12"
         md="6"
       >
+        <v-select
+          v-model="Wholesaler"
+          label="Продавец"
+          :items="provider"
+          item-title="providerName"
+          item-value="providerID"
+          prepend-inner-icon="mdi-basket-plus"
+        ></v-select>
+      </VCol>
+      <VCol
+        cols="12"
+        md="6"
+      >
+        <v-text-field
+          v-model="Retailer"
+          label="Ритейлер"
+          placeholder="Ритейлер товара"
+          prepend-inner-icon="mdi-cart-arrow-right"
+        />
+      </VCol>
+
+      <VCol
+        cols="12"
+        md="4"
+      >
         <v-text-field
           v-model="PurchasePrice"
           label="Закупочная цена"
@@ -122,7 +180,7 @@ export default {
 
       <VCol
         cols="12"
-        md="6"
+        md="4"
       >
         <v-text-field
           v-model="SellPrice"
@@ -133,7 +191,28 @@ export default {
         />
       </VCol>
 
-      <VCol cols="12" md="4">
+      <VCol
+        cols="12"
+        md="4"
+      >
+        <v-text-field
+          v-model="Color"
+          label="Цвет"
+          placeholder="Цвет"
+          prepend-inner-icon="mdi-palette"
+        />
+      </VCol>
+
+      <VCol cols="12" sm="3" class='d-flex justify-center'>
+        <VCheckbox
+          color="success"
+          true-icon="mdi-alpha-r-circle-outline"
+          false-icon="mdi-alpha-s-circle-outline"
+          label="Ростест"
+          v-model="Rostest"
+        ></VCheckbox>
+      </VCol>
+      <VCol cols="12" sm="3">
         <VCheckbox
           color="success"
           true-icon="mdi-credit-card-check-outline"
@@ -142,7 +221,7 @@ export default {
           v-model="CardCash"
         ></VCheckbox>
       </VCol>
-      <VCol cols="12" md="4">
+      <VCol cols="12" sm="3" class='d-flex justify-center'>
         <VCheckbox
           color="success"
           true-icon="mdi-gift-open-outline"
@@ -151,7 +230,7 @@ export default {
           v-model="Bonus"
         ></VCheckbox>
       </VCol>
-      <VCol cols="12" md="4">
+      <VCol cols="12" sm="3" class='d-flex justify-center'>
         <VCheckbox
           color="success"
           true-icon="mdi-shopping-search"

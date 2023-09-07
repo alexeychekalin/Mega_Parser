@@ -18,14 +18,19 @@ class Product extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'ClassName',
+        'Type',
+        'Model',
+        'Color',
+        'Rostest',
         'PurchasePrice',
+        'Wholesaler',
+        'Retailer',
         'Bonus',
         'CardCash',
         'Monitor',
         'SellPrice',
-        'Type',
-        'parseDate'
+        'parseDate',
+        'SberParseDate',
     ];
 
     protected $primaryKey = 'ProductID';

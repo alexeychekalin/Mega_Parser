@@ -30,4 +30,22 @@ class TypeController extends Controller
     public function delete(Request $request){
         Type::where('typeID',$request['typeID'])->delete();
     }
+    public function monitor(){
+        $product = DB::table('types')
+            ->select('*')
+            ->whereNotIn('types.typeId', [99,100,101, 102])
+            ->get();
+        return json_decode(json_encode($product), true);
+    }
+
+    public function setbytype(Request $request){
+        DB::table('types')
+            ->where('typeID', $request['typeID'])
+            ->update(
+                [
+                    'monitor' => $request['set'],
+                ]
+            );
+        return $request['typeID'];
+    }
 }

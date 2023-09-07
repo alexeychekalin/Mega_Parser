@@ -25,13 +25,18 @@ class ProductRequest extends FormRequest
     {
         return [
             'Type' => '',
-            'ClassName' => 'required|string',
+            'Model' => 'required|string',
+            'Color' => '',
+            'Rostest' => '',
             'PurchasePrice' => '',
+            'Wholesaler' => '',
+            'Retailer' => '',
             'Bonus' => '',
             'CardCash' => '',
             'Monitor' => '',
             'SellPrice' => '',
-            'parseDate' => ''
+            'parseDate' => '',
+            'SberParseDate' => ''
         ];
     }
 

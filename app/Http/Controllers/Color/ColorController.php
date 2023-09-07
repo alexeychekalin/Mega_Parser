@@ -31,4 +31,14 @@ class ColorController extends Controller
     public function delete(Request $request){
         Color::where('idColor',$request['idColor'])->delete();
     }
+
+    function check(ColorRequest $request){
+        $text =  strtolower(trim($request['Color']));
+        $color = Color::select('idColor')->whereRaw('TRIM(LOWER(`Color`)) LIKE ?', [$text])->exists();
+        if(!$color){
+            $data = $request->validated();
+            Color::create($data);
+        }
+        return $color;
+    }
 }

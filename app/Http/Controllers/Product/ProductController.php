@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductRequest;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -24,12 +25,16 @@ class ProductController extends Controller
             ->update(
                 [
                     'Type' => $request['Type'],
-                    'ClassName' => $request['ClassName'],
+                    'Model' => $request['Model'],
                     'PurchasePrice' => $request['PurchasePrice'],
-                    'Bonus' => DB::raw($request['Bonus']),
-                    'CardCash' => DB::raw($request['CardCash']),
-                    'Monitor' => DB::raw($request['Monitor']),
+                    'Bonus' => $request['Bonus'],
+                    'CardCash' => $request['CardCash'],
+                    'Monitor' => $request['Monitor'],
                     'SellPrice' => $request['SellPrice'] == "" ? null : $request['SellPrice'],
+                    'Color' => $request['Color'],
+                    'Rostest' =>  $request['Rostest'] == "" ? 0 : $request['Rostest'],
+                    'Wholesaler' => $request['Wholesaler'] == "" ? null : $request['Wholesaler'],
+                    'Retailer' => $request['Retailer'] == "" ? null : $request['Retailer'],
                 ]
             );
         return $request['id'];
@@ -42,14 +47,45 @@ class ProductController extends Controller
     public function get99()
     {
         $product = DB::table('product')
-            ->select('product.*', 'types.typeName',
-                DB::raw('(CASE WHEN product.Bonus = 0 THEN "Нет" WHEN product.Bonus is NULL THEN "Нет" ELSE "Да" END) as BonusVal'),
-                DB::raw('(CASE WHEN product.CardCash = 0 THEN "Нет" WHEN product.CardCash is NULL THEN "Нет" ELSE "Да" END) as CardCashVal'),
-                DB::raw('(CASE WHEN product.Monitor = 0 THEN "Нет" WHEN product.Monitor is NULL THEN "Нет" ELSE "Да" END) as MonitorVal')
-            )
+            ->select('product.*', 'types.typeName')
             ->join('types', 'product.Type', '=', 'types.typeID')
             ->whereNotIn('types.typeId', [99,100,101])
             ->get();
         return json_decode(json_encode($product), true);
     }
+
+    public function monitor(){
+        $product = DB::table('product')
+            ->select('product.*', 'types.typeName', 'providers.providerName',
+                DB::raw('(CASE WHEN product.Bonus = 0 THEN false WHEN product.Bonus is NULL THEN false ELSE true END) as Bonus'),
+                DB::raw('(CASE WHEN product.CardCash = 0 THEN false WHEN product.CardCash is NULL THEN false ELSE true END) as CardCash'),
+                DB::raw('(CASE WHEN product.Monitor = 0 THEN false WHEN product.Monitor is NULL THEN false ELSE true END) as Monitor')
+            )
+            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
+            ->whereNotIn('types.typeId', [99, 100, 101, 102])
+            ->where('product.Monitor', '=', 0)->orWhereNull('product.Monitor')
+            ->get();
+        return json_decode(json_encode($product), true);
+    }
+    public function set(Request $request){
+        DB::table('product')
+            ->where('ProductId', $request['ProductId'])
+            ->update(
+                [
+                    $request['what'] => $request['set'],
+                ]
+            );
+    }
+    public function setbytype(Request $request){
+        DB::table('product')
+            ->where('Type', $request['typeID'])
+            ->update(
+                [
+                    'Monitor' => $request['set'],
+                ]
+            );
+        return $request['typeID'];
+    }
+
 }

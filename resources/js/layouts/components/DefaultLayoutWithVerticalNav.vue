@@ -122,6 +122,39 @@ export default {
       <!-- 👉 Pages -->
       <VerticalNavSectionTitle
         :item="{
+          heading: 'Мониторинг',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Все товары',
+          icon: 'mdi-shopping-search-outline',
+          to: '/monitor',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Категории',
+          icon: 'mdi-store-search-outline',
+          to: '/monitorTypes',
+        }"
+      />
+      <!-- 👉 Pages -->
+      <VerticalNavSectionTitle
+        :item="{
+          heading: 'Классификация',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Классификация',
+          icon: 'mdi-store-alert-outline',
+          to: '/products3',
+        }"
+      />
+      <!-- 👉 Pages -->
+      <VerticalNavSectionTitle
+        :item="{
           heading: 'Настройки',
         }"
       />

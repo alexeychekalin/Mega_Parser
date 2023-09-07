@@ -36,6 +36,9 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::post('/update', [App\Http\Controllers\Product\ProductController::class, 'update'])->name('product.update');
     Route::post('/delete', [App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete');
     Route::post('/get99', [App\Http\Controllers\Product\ProductController::class, 'get99'])->name('product.get99');
+    Route::get('/monitor', [App\Http\Controllers\Product\ProductController::class, 'monitor'])->name('product.monitor');
+    Route::post('/set', [App\Http\Controllers\Product\ProductController::class, 'set'])->name('product.set');
+    Route::post('/setbytype', [App\Http\Controllers\Product\ProductController::class, 'setbytype'])->name('product.setbytype');
 });
 
 Route::group(['namespace' => 'Types', 'prefix' => 'types', 'middleware' => 'auth:sanctum'], function (){
@@ -43,6 +46,8 @@ Route::group(['namespace' => 'Types', 'prefix' => 'types', 'middleware' => 'auth
     Route::get('/', [App\Http\Controllers\Type\IndexController::class, 'index']);
     Route::post('/update', [App\Http\Controllers\Type\TypeController::class, 'update'])->name('types.update');
     Route::post('/delete', [App\Http\Controllers\Type\TypeController::class, 'delete'])->name('types.delete');
+    Route::get('/monitor', [App\Http\Controllers\Type\TypeController::class, 'monitor'])->name('types.monitor');
+    Route::post('/setbytype', [App\Http\Controllers\Type\TypeController::class, 'setbytype'])->name('types.setbytype');
 });
 
 Route::group(['namespace' => 'Colors', 'prefix' => 'colors', 'middleware' => 'auth:sanctum'], function (){
@@ -50,6 +55,7 @@ Route::group(['namespace' => 'Colors', 'prefix' => 'colors', 'middleware' => 'au
     Route::get('/', [App\Http\Controllers\Color\IndexController::class, 'index']);
     Route::post('/update', [App\Http\Controllers\Color\ColorController::class, 'update'])->name('colors.update');
     Route::post('/delete', [App\Http\Controllers\Color\ColorController::class, 'delete'])->name('colors.delete');
+    Route::post('/check', [App\Http\Controllers\Color\ColorController::class, 'check'])->name('colors.check');
 });
 
 Route::group(['namespace' => 'Providers', 'prefix' => 'providers', 'middleware' => 'auth:sanctum'], function (){

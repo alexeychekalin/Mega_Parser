@@ -124,7 +124,7 @@
                     md="6"
                   >
                     <v-text-field
-                      v-model="editedItem.Model"
+                      v-model="editedItem.ClassName"
                       label="Название"
                       :rules="[rules.required]"
                     ></v-text-field>
@@ -141,6 +141,7 @@
                       item-title="typeName"
                       item-value="typeID"
                       :rules="[rules.required]"
+                      prepend-inner-icon="mdi-format-list-bulleted-type"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -149,31 +150,6 @@
                     cols="12"
                     sm="6"
                     md="6"
-                  >
-                    <v-select
-                      v-model="editedItem.Wholesaler"
-                      label="Продавец"
-                      :items="provider"
-                      item-title="providerName"
-                      item-value="providerID"
-                    ></v-select>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="6"
-                  >
-                    <v-text-field
-                      v-model="editedItem.Retailer"
-                      label="Ретейлер"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col
-                    cols="12"
-                    sm="4"
-                    md="4"
                   >
                     <v-text-field
                       v-model="editedItem.PurchasePrice"
@@ -183,34 +159,15 @@
                   </v-col>
                   <v-col
                     cols="12"
-                    sm="4"
-                    md="4"
+                    sm="6"
+                    md="6"
                   >
                     <v-text-field
                       v-model="editedItem.SellPrice"
                       label="Цена продажи"
                     ></v-text-field>
                   </v-col>
-                  <v-col
-                    cols="12"
-                    sm="4"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.Color"
-                      label="Цвет"
-                    ></v-text-field>
-                  </v-col>
-                  <VCol cols="12" md="3" class='d-flex justify-center'>
-                    <VCheckbox
-                      color="success"
-                      true-icon="mdi-alpha-r-circle-outline"
-                      false-icon="mdi-alpha-s-circle-outline"
-                      label="Ростест"
-                      v-model="editedItem.Rostest"
-                    ></VCheckbox>
-                  </VCol>
-                  <VCol cols="12" md="3" class='d-flex justify-center'>
+                  <VCol cols="12" md="4">
                     <VCheckbox
                       color="success"
                       true-icon="mdi-credit-card-check-outline"
@@ -219,7 +176,7 @@
                       v-model="editedItem.CardCash"
                     ></VCheckbox>
                   </VCol>
-                  <VCol cols="12" md="3" class='d-flex justify-center'>
+                  <VCol cols="12" md="4">
                     <VCheckbox
                       color="success"
                       true-icon="mdi-gift-open-outline"
@@ -228,7 +185,7 @@
                       v-model="editedItem.Bonus"
                     ></VCheckbox>
                   </VCol>
-                  <VCol cols="12" md="3" class='d-flex justify-center'>
+                  <VCol cols="12" md="4">
                     <VCheckbox
                       color="success"
                       true-icon="mdi-shopping-search"
@@ -292,57 +249,38 @@
       </v-icon>
     </template>
 
-    <template v-slot:item.Bonus="{ item }">
+    <template v-slot:item.BonusVal="{ item }">
       <VAvatar
         size="40"
         variant="tonal"
-        style="cursor: pointer"
-        :color="getColor(item.columns.Bonus)"
+        :color="getColor(item.columns.BonusVal)"
         class="me-3"
-        @click="set(item.raw, 'Bonus', !item.columns.Bonus, 'бонусах')"
       >
-        {{ item.columns.Bonus === 1 ? "Да" : "Нет" }}
-      </VAvatar>
-    </template>
-
-    <template v-slot:item.Rostest="{ item }">
-      <VAvatar
-        size="40"
-        variant="tonal"
-        :color="getColor(item.columns.Rostest)"
-        class="me-3"
-        @click="set(item.raw, 'Rostest', !item.columns.Rostest, 'Ростесте')"
-        style="cursor: pointer"
-      >
-        {{ item.columns.Rostest === 1 ? "Да" : "Нет" }}
+        {{ item.columns.BonusVal }}
       </VAvatar>
     </template>
 
     <!--
-    <template v-slot:item.CardCash="{ item }">
+    <template v-slot:item.CardCashVal="{ item }">
       <VAvatar
         size="40"
         variant="tonal"
-        :color="getColor(item.columns.CardCash)"
+        :color="getColor(item.columns.CardCashVal)"
         class="me-3"
-        @click="set(item.raw, 'CardCash', !item.columns.CardCash, 'оплате картой')"
-        style="cursor: pointer"
       >
-        {{ item.columns.CardCash === 1 ? "Да" : "Нет" }}
+        {{ item.columns.CardCashVal }}
       </VAvatar>
     </template>
     -->
 
-    <template v-slot:item.Monitor="{ item }" >
+    <template v-slot:item.MonitorVal="{ item }">
       <VAvatar
         size="40"
         variant="tonal"
-        :color="getColor(item.columns.Monitor)"
+        :color="getColor(item.columns.MonitorVal)"
         class="me-3"
-        @click="set(item.raw, 'Monitor', !item.columns.Monitor, 'мониторинге')"
-        style="cursor: pointer"
       >
-        {{ item.columns.Monitor === 1 || item.columns.Monitor === true ? "Да" : "Нет"}}
+        {{ item.columns.MonitorVal }}
       </VAvatar>
     </template>
 
@@ -357,12 +295,6 @@
     <template v-slot:item.profit="{ item }">
       <div class="text-success font-weight-medium">
         {{item.columns.profit}}
-      </div>
-    </template>
-
-    <template v-slot:item.Retailer="{ item }">
-      <div class="text-truncate" style="max-width: 70px;">
-        {{item.columns.Retailer}}
       </div>
     </template>
 
@@ -394,66 +326,53 @@ export default {
     itemsPerPage: 15,
     dialog: false,
     dialogDelete: false,
-    provider:[],
     types:[],
     selectsItem: [
       {access: 1, value: 'Доступен'},
       {access: 0, value: 'Запрещено'}
     ],
     filters: {
-      Model:[],
+      ClassName:[],
       Bonus: [],
-      // CardCash: [],
+      CardCash: [],
       typeName: [],
-      providerName:[],
-      //Retailer: []
+      providerName:[]
     },
     headers: [
-      { title: 'Рент', key: 'profit', align: 'center'  },
-      { title: 'Название', align: 'center', key: 'Model'},
-      { title: 'Цвет', align: 'center', key: 'Color'},
+      { title: 'Рент', key: 'profit', align: 'center' },
+      { title: 'Название', align: 'center', key: 'ClassName', width: '25%'},
       { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
       { title: 'Продавец', key: 'providerName', align: 'center' },
-      { title: 'Ретейлер', key: 'Retailer', align: 'center'  },
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
       { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
-      { title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
-      { title: 'Бонусы', key: 'Bonus', align: 'center' },
-      { title: 'РСТ', key: 'Rostest', align: 'center' },
-     // { title: 'Карта', key: 'CardCash', align: 'center' },
-      { title: 'Монитор', key: 'Monitor', align: 'center' },
+      { title: 'Дата', key: 'SberParseDate', align: 'center' },
+      { title: 'Бонусы', key: 'BonusVal', align: 'center' },
+     // { title: 'Карта', key: 'CardCashVal', align: 'center' },
+      { title: 'Монитор', key: 'MonitorVal', align: 'center' },
       { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],
     products: [],
     editedIndex: -1,
     editedItem: {
-      Model:'',
+      ClassName:'',
       PurchasePrice:'',
       SellPrice: '',
       Bonus: false,
       CardCash: false,
       Monitor: false,
-      Rostest: false,
       Type: '',
-      ProductId: '',
-      Color: '',
-      Wholesaler: '',
-      Retailer: '',
+      ProductId: ''
     },
     defaultItem: {
-      Model:'',
+      ClassName:'',
       PurchasePrice:'',
       SellPrice: '',
       Bonus: false,
       CardCash: false,
       Monitor: false,
-      Rostest: false,
       Type: '',
-      ProductId: '',
-      Color: '',
-      Wholesaler: '',
-      Retailer: '',
+      ProductId: ''
     },
     rules: {
       required: value => !!value || 'Поле обязательно',
@@ -468,7 +387,6 @@ export default {
   components:{
     axios
   },
-
   computed: {
     filteredProducts() {
       return this.products.filter((d) => {
@@ -494,7 +412,6 @@ export default {
   created () {
     this.getProducts()
     this.getTypes()
-    this.getProviders()
   },
 
   methods: {
@@ -506,18 +423,7 @@ export default {
         })
         .catch(function (error) {
           useToast().error('Ошибка получения списка типов')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'product.vue' })
-        });
-    },
-
-    getProviders (){
-      axios.get('/api/providers')
-        .then(res => {
-          this.provider = res.data;
-        })
-        .catch(function (error) {
-          useToast().error('Ошибка получения списка поставщиков')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'NewProduct.vue' })
         });
     },
 
@@ -535,23 +441,15 @@ export default {
       const data = XLSX.utils.json_to_sheet(output)
       const wb = XLSX.utils.book_new()
       XLSX.utils.book_append_sheet(wb, data, 'data')
-      XLSX.writeFile(wb,'report.xlsx')
-    },
-
-    set(item, what, set, toast){
-      this.editedIndex = this.products.indexOf(item)
-      this.products[this.editedIndex][what] = set ? 1 : 0
-      axios.post('api/product/set', {what : what, set : set, ProductId : item.ProductId}).then(res => {
-        useToast().success('Данные о ' + toast + ' обновлены')
-      })
-        .catch(function (error) {
-          useToast().error('Ошибка обновления данных о ' + toast)
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ОБНОВЛЕНИИ данных о: '+ toast + '. Описание: ' + error, Place: 'product.vue' })
-        });
+      XLSX.writeFile(wb,'demo.xlsx')
     },
 
     getColor (value) {
-      return value === 1 || value === true ? 'success' : 'error'
+      return value === 'Да' ? 'success' : 'error'
+    },
+
+    getBool (value) {
+      return value === 'Да' ? 1 : 0
     },
 
     getProducts (){
@@ -575,10 +473,6 @@ export default {
     editItem (item) {
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      this.editedItem.Monitor = this.editedItem.Monitor === 1
-      this.editedItem.Bonus = this.editedItem.Bonus === 1
-      this.editedItem.CardCash = this.editedItem.CardCash === 1
-      this.editedItem.Rostest = this.editedItem.Rostest === 1
       this.dialog = true
     },
 
@@ -597,12 +491,14 @@ export default {
       })
         .catch(function (error) {
           useToast().error('Ошибка удаления товара')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.ClassName + '. Описание: ' + error, Place: 'product.vue' })
         });
+
     },
 
     close () {
       this.dialog = false
+      this.addPassword = ''
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
@@ -618,57 +514,28 @@ export default {
     },
 
     save () {
+      Object.assign(this.products[this.editedIndex], this.editedItem)
       let updatedProduct = this.editedItem;
       axios.post('/api/product/update',
           {
-            Model: updatedProduct.Model,
+            ClassName: updatedProduct.ClassName,
             PurchasePrice: updatedProduct.PurchasePrice,
-            SellPrice: updatedProduct.SellPrice,
-            Bonus: updatedProduct.Bonus,
-            CardCash: updatedProduct.CardCash,
-            Monitor: updatedProduct.Monitor,
+            SellPrice: null,
+            Bonus: updatedProduct.Bonus ?? 0,
+            CardCash: updatedProduct.CardCash ?? 0,
+            Monitor: updatedProduct.Monitor  ?? 0,
             Type: updatedProduct.Type,
-            ProductId: updatedProduct.ProductId,
-            Color: updatedProduct.Color,
-            Rostest: updatedProduct.Rostest,
-            Wholesaler: updatedProduct.Wholesaler,
-            Retailer: updatedProduct.Retailer,
+            ProductId: updatedProduct.ProductId
           }
       )
         .then(res => {
-          useToast().success('Товар обновлен')
-          this.close()
-          this.editedItem.Bonus = this.editedItem.Bonus === true ? 1 : 0
-          this.editedItem.CardCash = this.editedItem.CardCash === true ? 1 : 0
-          this.editedItem.Monitor = this.editedItem.Monitor === true ? 1 : 0
-          this.editedItem.Rostest = this.editedItem.Rostest === true ? 1 : 0
-          Object.assign(this.products[this.editedIndex], this.editedItem)
-
-          this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
-
-          console.log(this.products[this.editedIndex]['providerName'])
-          console.log(this.provider.find(f => f.providerID === updatedProduct.Wholesaler).providerName)
-
-          if(updatedProduct.Wholesaler !== null || this.editedItem.Wholesaler !== ""){
-            this.products[this.editedIndex]['providerName'] = this.provider.find(f => f.providerID === updatedProduct.Wholesaler).providerName
-          }
-          if(this.editedItem.SellPrice !== "" || this.editedItem.SellPrice !== null || this.editedItem.PurchasePrice !== "" || this.editedItem.PurchasePrice !== null){
-            this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].split(" ")[0].replace('₽', '').replace(',','')/this.products[this.editedIndex]['SellPrice'].replace(',','').replace('₽', '') ))*100).toFixed(2)
-          }
-
-          axios.post('/api/colors/check',{Color: updatedProduct.Color,})
-              .then(res => {
-                if(!res.data)
-                  useToast().success('Цвет добавлен в классификатор')
-              })
-              .catch(function (error) {
-                useToast().error('Ошибка добавления цвета')
-                axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
-              });
+            useToast().success('Товар обновлен')
+            this.close()
+            this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
         })
         .catch(function (error) {
           useToast().error('Ошибка обновления товара')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ товара: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ товара: '+ updatedProduct.ClassName + '. Описание: ' + error, Place: 'product.vue' })
         });
     },
   },
@@ -683,4 +550,8 @@ export default {
   font-size: 14px;
   text-transform: uppercase
 }
+.now-green{
+  background-color: #4caf50;
+}
+
 </style>
