@@ -3,7 +3,6 @@ import avatar1 from '@images/avatars/avatar-1.png'
 const isPasswordVisible = ref(false)
 </script>
 <script>
-import { mapActions } from 'vuex'
 import store from "@/store";
 import axios from "axios";
 import {useToast} from "vue-toastification";

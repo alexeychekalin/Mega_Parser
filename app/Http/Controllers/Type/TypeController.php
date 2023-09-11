@@ -17,6 +17,12 @@ class TypeController extends Controller
         return Type::create($data);
     }
 
+    public function getall()
+    {
+        $product = Type::all();
+        return json_decode(json_encode($product), true);
+    }
+
     public function update(TypeRequest $request){
         DB::table('types')
             ->where('typeID', $request['typeID'])
@@ -33,7 +39,7 @@ class TypeController extends Controller
     public function monitor(){
         $product = DB::table('types')
             ->select('*')
-            ->whereNotIn('types.typeId', [99,100,101, 102])
+            ->whereNotIn('types.typeId', [99, 100, 101, 102])
             ->get();
         return json_decode(json_encode($product), true);
     }

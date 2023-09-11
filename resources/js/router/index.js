@@ -99,6 +99,33 @@ const router = createRouter({
           },
         },
         {
+          path: 'errors',
+          name: 'errors',
+          component: () => import('../pages/errors.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
+          path: 'notype',
+          name: 'notype',
+          component: () => import('../pages/notype.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
+          path: 'nosmm',
+          name: 'nosmm',
+          component: () => import('../pages/nosmm.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
           path: 'test',
           name: 'test',
           component: () => import('../pages/test.vue'),

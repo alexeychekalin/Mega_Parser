@@ -22,6 +22,15 @@ const upgradeBanner = computed(() => {
 <script>
 import store from "@/store";
 export default {
+  data: () => ({
+    items: [{
+      'Не найдена модель': [{icon: 'mdi-robot-vacuum-alert', link: '/errors'}],
+      'Недостаточно полей': [{icon: 'mdi-robot-vacuum-alert', link: '/errors'}],
+      'Неизвестный тип': [{icon: 'mdi-call-merge', link: '/notype'}],
+      'Не найдено на СберМегаМаркете': [{icon: 'mdi-store-off-outline', link: '/nosmm'}],
+  }],
+    stats:[],
+  }),
 
   methods: {
     async logout() {
@@ -30,7 +39,16 @@ export default {
         this.$router.replace('login')
       })
     },
-  }
+    Statistics() {
+      this.$axios.get('/api/product/stats').then((res) => {
+       this.stats = res.data
+      })
+    },
+  },
+
+  created () {
+    this.Statistics()
+  },
 }
 
 </script>
@@ -50,9 +68,35 @@ export default {
 
         <VSpacer />
 
-        <IconBtn class="me-2">
-          <VIcon icon="mdi-bell-outline" />
-        </IconBtn>
+        <v-menu
+          open-on-hover
+        >
+          <template v-slot:activator="{ props }">
+            <IconBtn class="me-2" v-bind="props">
+              <v-badge content="100" color="error">
+                <v-icon>mdi-bell-outline</v-icon>
+              </v-badge>
+            </IconBtn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-for="(i, index) in stats"
+              :key="index"
+              :href="this.items[0][i.typeName][0].link"
+              :prepend-icon="this.items[0][i.typeName][0].icon"
+              :title="i.typeName"
+            >
+              <template v-slot:append>
+                <v-badge
+                  color="error"
+                  :content="i.count"
+                  inline
+                ></v-badge>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-menu>
 
         <NavbarThemeSwitcher class="me-2" />
 
@@ -147,9 +191,23 @@ export default {
       />
       <VerticalNavLink
         :item="{
-          title: 'Классификация',
-          icon: 'mdi-store-alert-outline',
-          to: '/products3',
+          title: 'Ошибки',
+          icon: 'mdi-robot-vacuum-alert',
+          to: '/errors',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Неопределен тип',
+          icon: 'mdi-call-merge',
+          to: '/notype',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Не найден на СММ',
+          icon: 'mdi-store-off-outline',
+          to: '/nosmm',
         }"
       />
       <!-- 👉 Pages -->
@@ -179,43 +237,7 @@ export default {
           to: '/providers',
         }"
       />
-      <VerticalNavLink
-        :item="{
-          title: 'Классификация',
-          icon: 'mdi-store-alert-outline',
-          to: '/products3',
-        }"
-      />
-
-      <!-- 👉 Pages -->
-      <VerticalNavSectionTitle
-        :item="{
-          heading: 'Pages',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Login',
-          icon: 'mdi-login',
-          to: '/login',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Register',
-          icon: 'mdi-account-plus-outline',
-          to: '/register',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Error',
-          icon: 'mdi-information-outline',
-          to: '/no-existence',
-        }"
-      />
-
-      <!-- 👉 User Interface -->
+      <!-- 👉 User Interface
       <VerticalNavSectionTitle
         :item="{
           heading: 'User Interface',
@@ -256,6 +278,7 @@ export default {
           to: '/form-layouts',
         }"
       />
+       -->
     </template>
 
     <!-- 👉 Pages -->

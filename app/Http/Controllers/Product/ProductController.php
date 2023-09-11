@@ -44,12 +44,35 @@ class ProductController extends Controller
         return $request['ProductID'];
     }
 
-    public function get99()
+    public function geterrors()
     {
         $product = DB::table('product')
-            ->select('product.*', 'types.typeName')
+            ->select('product.*', 'types.typeName', 'providers.providerName')
             ->join('types', 'product.Type', '=', 'types.typeID')
-            ->whereNotIn('types.typeId', [99,100,101])
+            ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
+            ->whereIn('types.typeId', [100,101])
+            ->get();
+        return json_decode(json_encode($product), true);
+    }
+
+    public function getnotype()
+    {
+        $product = DB::table('product')
+            ->select('product.*', 'types.typeName', 'providers.providerName')
+            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
+            ->where('types.typeId', '=', 99)
+            ->get();
+        return json_decode(json_encode($product), true);
+    }
+
+    public function getsmm()
+    {
+        $product = DB::table('product')
+            ->select('product.*', 'types.typeName', 'providers.providerName')
+            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
+            ->where('types.typeId', '=', 102)
             ->get();
         return json_decode(json_encode($product), true);
     }
@@ -68,7 +91,8 @@ class ProductController extends Controller
             ->get();
         return json_decode(json_encode($product), true);
     }
-    public function set(Request $request){
+    public function set(Request $request): void
+    {
         DB::table('product')
             ->where('ProductId', $request['ProductId'])
             ->update(
@@ -86,6 +110,28 @@ class ProductController extends Controller
                 ]
             );
         return $request['typeID'];
+    }
+
+    public function settype(Request $request): void
+    {
+        DB::table('product')
+            ->where('ProductId', $request['ProductId'])
+            ->update(
+                [
+                    'Type' => $request['Type'],
+                ]
+            );
+    }
+
+    public function stats()
+    {
+        $product = DB::table('product' )
+            ->select('product.Type', 'types.typeName', DB::raw('COUNT(Type) as count'))
+            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->whereIn('types.typeId', [99, 100, 101, 102])
+            ->groupBy('types.typeName', 'product.Type')
+            ->get();
+        return json_decode(json_encode($product), true);
     }
 
 }

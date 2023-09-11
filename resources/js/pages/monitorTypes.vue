@@ -1,9 +1,11 @@
 <template>
-  <v-data-table
+  <VCard title="Мониторинг по категориям">
+    <v-data-table
     :headers="headers"
     :items="types"
     :search="search"
     class="custom_table_class"
+    hover="true"
   >
     <template v-slot:top>
       <v-toolbar
@@ -42,6 +44,7 @@
       </p>
     </template>
   </v-data-table>
+  </VCard>
 </template>
 
 

@@ -35,10 +35,14 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::get('/', [App\Http\Controllers\Product\IndexController::class, 'index']);
     Route::post('/update', [App\Http\Controllers\Product\ProductController::class, 'update'])->name('product.update');
     Route::post('/delete', [App\Http\Controllers\Product\ProductController::class, 'delete'])->name('product.delete');
-    Route::post('/get99', [App\Http\Controllers\Product\ProductController::class, 'get99'])->name('product.get99');
+    Route::get('/geterrors', [App\Http\Controllers\Product\ProductController::class, 'geterrors'])->name('product.geterrors');
+    Route::get('/getnotype', [App\Http\Controllers\Product\ProductController::class, 'getnotype'])->name('product.getnotype');
+    Route::get('/getsmm', [App\Http\Controllers\Product\ProductController::class, 'getsmm'])->name('product.getsmm');
     Route::get('/monitor', [App\Http\Controllers\Product\ProductController::class, 'monitor'])->name('product.monitor');
     Route::post('/set', [App\Http\Controllers\Product\ProductController::class, 'set'])->name('product.set');
     Route::post('/setbytype', [App\Http\Controllers\Product\ProductController::class, 'setbytype'])->name('product.setbytype');
+    Route::post('/settype', [App\Http\Controllers\Product\ProductController::class, 'settype'])->name('product.settype');
+    Route::get('/stats', [App\Http\Controllers\Product\ProductController::class, 'stats'])->name('product.stats');
 });
 
 Route::group(['namespace' => 'Types', 'prefix' => 'types', 'middleware' => 'auth:sanctum'], function (){

@@ -1,5 +1,6 @@
 <template>
-  <v-data-table
+  <VCard title="Включить в мониторинг">
+    <v-data-table
     v-model:page="page"
     :search="search"
     :headers="headers"
@@ -9,6 +10,7 @@
     hide-default-footer
     class="custom_table_class"
     v-model:sort-by="sortBy"
+    hover="true"
   >
     <template v-slot:bottom>
       <VRow>
@@ -102,6 +104,7 @@
     </template>
 
   </v-data-table>
+  </VCard>
 </template>
 
 

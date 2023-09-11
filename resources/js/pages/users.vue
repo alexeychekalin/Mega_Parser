@@ -1,202 +1,205 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="users"
-    :search="search"
-    :sort-by="[{ key: 'FIO', order: 'asc' }]"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar
-        density="compact"
+  <VCard title="Все пользователи системы">
+    <v-data-table
+  :headers="headers"
+  :items="users"
+  :search="search"
+  :sort-by="[{ key: 'FIO', order: 'asc' }]"
+  class="elevation-1"
+  hover="true"
+>
+  <template v-slot:top>
+    <v-toolbar
+      density="compact"
+    >
+      <v-toolbar-title>
+        <v-text-field
+          v-model="search"
+          density="compact"
+          variant="plain"
+          append-icon="mdi-magnify"
+          label="Поиск по всем полям"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-toolbar-title>
+      <v-divider
+        class="mx-4"
+        inset
+        vertical
+      ></v-divider>
+      <v-dialog
+        v-model="dialog"
+        max-width="500px"
       >
-        <v-toolbar-title>
-          <v-text-field
-            v-model="search"
-            density="compact"
-            variant="plain"
-            append-icon="mdi-magnify"
-            label="Поиск по всем полям"
-            single-line
-            hide-details
-          ></v-text-field>
-        </v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        ></v-divider>
-        <v-dialog
-          v-model="dialog"
-          max-width="500px"
-        >
-          <template v-slot:activator="{ props }">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            color="primary"
+            dark
+            class="mb-2"
+            v-bind="props"
+          >
+            Создать
+          </v-btn>
+        </template>
+        <v-form @submit.prevent="save">
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">{{ formTitle }}</span>
+          </v-card-title>
+
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                >
+                  <v-text-field
+                    v-model="editedItem.FIO"
+                    label="ФИО"
+                    :rules="[rules.required]"
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                >
+                  <v-text-field
+                    v-model="editedItem.TNumber"
+                    label="Телефон"
+                    :rules="[rules.required, rules.phone]"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                >
+                  <v-select
+                    v-model="editedItem.TelegramAccess"
+                    :items="selectsItem"
+                    item-title="value"
+                    item-value="access"
+                    label="Telegram"
+                    persistent-hint
+                  ></v-select>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                >
+                  <v-select
+                    v-model="editedItem.WebAccess"
+                    :items="selectsItem"
+                    item-title="value"
+                    item-value="access"
+                    label="ЛК"
+                    persistent-hint
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <v-row v-if="editedIndex === -1">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="12"
+                >
+                  <v-text-field
+                    v-model="addPassword"
+                    label="Пароль"
+                    :rules="[rules.required]"
+
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
             <v-btn
-              color="primary"
-              dark
-              class="mb-2"
-              v-bind="props"
+              color="blue-darken-1"
+              variant="text"
+              @click="close"
             >
-              Создать
+              Закрыть
             </v-btn>
-          </template>
-          <v-form @submit.prevent="save">
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
+            <v-btn
+              :disabled="false"
+              color="blue-darken-1"
+              variant="text"
+              type="submit"
+            >
+              Сохранить
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+        </v-form>
+      </v-dialog>
+      <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-card>
+          <v-card-title class="text-h5">Удалить?</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Отмена</v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">Удалить</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-toolbar>
+  </template>
 
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="6"
-                  >
-                    <v-text-field
-                      v-model="editedItem.FIO"
-                      label="ФИО"
-                      :rules="[rules.required]"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="6"
-                  >
-                    <v-text-field
-                      v-model="editedItem.TNumber"
-                      label="Телефон"
-                      :rules="[rules.required, rules.phone]"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="6"
-                  >
-                    <v-select
-                      v-model="editedItem.TelegramAccess"
-                      :items="selectsItem"
-                      item-title="value"
-                      item-value="access"
-                      label="Telegram"
-                      persistent-hint
-                    ></v-select>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="6"
-                  >
-                    <v-select
-                      v-model="editedItem.WebAccess"
-                      :items="selectsItem"
-                      item-title="value"
-                      item-value="access"
-                      label="ЛК"
-                      persistent-hint
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row v-if="editedIndex === -1">
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="12"
-                  >
-                    <v-text-field
-                      v-model="addPassword"
-                      label="Пароль"
-                      :rules="[rules.required]"
+  <template v-slot:item.actions="{ item }">
+    <v-icon
+      size="small"
+      class="me-2"
+      @click="editItem(item.raw)"
+    >
+      mdi-pencil
+    </v-icon>
+    <v-icon
+      size="small"
+      @click="deleteItem(item.raw)"
+    >
+      mdi-delete
+    </v-icon>
+  </template>
 
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
+  <template v-slot:item.TelegramAccess="{ item }">
+    <VAvatar
+      size="40"
+      variant="tonal"
+      :color="getColor(item.columns.TelegramAccess)"
+      class="me-3"
+    >
+      {{ getAccess(item.columns.TelegramAccess) }}
+    </VAvatar>
+  </template>
+  <template v-slot:item.WebAccess="{ item }">
+    <VAvatar
+      size="40"
+      variant="tonal"
+      :color="getColor(item.columns.WebAccess)"
+      class="me-3"
+    >
+      {{ getAccess(item.columns.WebAccess) }}
+    </VAvatar>
+  </template>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue-darken-1"
-                variant="text"
-                @click="close"
-              >
-                Закрыть
-              </v-btn>
-              <v-btn
-                :disabled="false"
-                color="blue-darken-1"
-                variant="text"
-                type="submit"
-              >
-                Сохранить
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-          </v-form>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5">Удалить?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Отмена</v-btn>
-              <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">Удалить</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-
-    <template v-slot:item.actions="{ item }">
-      <v-icon
-        size="small"
-        class="me-2"
-        @click="editItem(item.raw)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        size="small"
-        @click="deleteItem(item.raw)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-
-    <template v-slot:item.TelegramAccess="{ item }">
-      <VAvatar
-        size="40"
-        variant="tonal"
-        :color="getColor(item.columns.TelegramAccess)"
-        class="me-3"
-      >
-        {{ getAccess(item.columns.TelegramAccess) }}
-      </VAvatar>
-    </template>
-    <template v-slot:item.WebAccess="{ item }">
-      <VAvatar
-        size="40"
-        variant="tonal"
-        :color="getColor(item.columns.WebAccess)"
-        class="me-3"
-      >
-        {{ getAccess(item.columns.WebAccess) }}
-      </VAvatar>
-    </template>
-
-    <template v-slot:no-data>
-      <p class="text-subtitle-1 text-truncate">
-        Ничего не найдено
-      </p>
-    </template>
-  </v-data-table>
+  <template v-slot:no-data>
+    <p class="text-subtitle-1 text-truncate">
+      Ничего не найдено
+    </p>
+  </template>
+</v-data-table>
+  </VCard>
 </template>
 
 

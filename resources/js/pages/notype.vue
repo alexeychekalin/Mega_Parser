@@ -1,5 +1,5 @@
 <template>
-  <VCard title="Товары на мониторинге">
+  <VCard title="Тип товара на определен автоматически">
     <v-data-table
   v-model:page="page"
   :search="search"
@@ -9,8 +9,8 @@
   row-class="my-row-class"
   hide-default-footer
   class="custom_table_class"
-  hover="true"
   v-model:sort-by="sortBy"
+  hover="true"
 >
   <template v-slot:bottom>
     <VRow>
@@ -26,6 +26,7 @@
     </VRow>
   </template>
 
+  <!--
   <template v-slot:thead>
     <tr class="grey lighten-3">
       <th v-for="header in headers" :key="header.title">
@@ -61,7 +62,7 @@
       </th>
     </tr>
   </template>
-
+-->
   <template v-slot:top>
     <v-toolbar
       density="compact"
@@ -294,78 +295,19 @@
     </v-icon>
   </template>
 
-  <template v-slot:item.Bonus="{ item }">
-    <VAvatar
-      size="40"
-      variant="tonal"
-      style="cursor: pointer"
-      :color="getColor(item.columns.Bonus)"
-      class="me-3"
-      @click="set(item.raw, 'Bonus', !item.columns.Bonus, 'бонусах')"
-    >
-      {{ item.columns.Bonus === 1 ? "Да" : "Нет" }}
-    </VAvatar>
-  </template>
-
-  <template v-slot:item.Rostest="{ item }">
-    <VAvatar
-      size="40"
-      variant="tonal"
-      :color="getColor(item.columns.Rostest)"
-      class="me-3"
-      @click="set(item.raw, 'Rostest', !item.columns.Rostest, 'Ростесте')"
-      style="cursor: pointer"
-    >
-      {{ item.columns.Rostest === 1 ? "Да" : "Нет" }}
-    </VAvatar>
-  </template>
-
-  <!--
-  <template v-slot:item.CardCash="{ item }">
-    <VAvatar
-      size="40"
-      variant="tonal"
-      :color="getColor(item.columns.CardCash)"
-      class="me-3"
-      @click="set(item.raw, 'CardCash', !item.columns.CardCash, 'оплате картой')"
-      style="cursor: pointer"
-    >
-      {{ item.columns.CardCash === 1 ? "Да" : "Нет" }}
-    </VAvatar>
-  </template>
-  -->
-
-  <template v-slot:item.Monitor="{ item }" >
-    <VAvatar
-      size="40"
-      variant="tonal"
-      :color="getColor(item.columns.Monitor)"
-      class="me-3"
-      @click="set(item.raw, 'Monitor', !item.columns.Monitor, 'мониторинге')"
-      style="cursor: pointer"
-    >
-      {{ item.columns.Monitor === 1 || item.columns.Monitor === true ? "Да" : "Нет"}}
-    </VAvatar>
-  </template>
-
   <template v-slot:item.parseDate="{ item }">
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
   </template>
 
-  <template v-slot:item.SberParseDate="{ item }">
-    {{item.columns.SberParseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
-  </template>
-
-  <template v-slot:item.profit="{ item }">
-    <div class="text-success font-weight-medium">
-      {{item.columns.profit}}
-    </div>
-  </template>
-
-  <template v-slot:item.Retailer="{ item }">
-    <div class="text-truncate" style="max-width: 70px;">
-      {{item.columns.Retailer}}
-    </div>
+  <template v-slot:item.typeName="{ item }">
+    <v-select
+      v-model="item.columns.Type"
+      :items="types"
+      item-title="typeName"
+      item-value="typeID"
+      variant="solo"
+      @update:model-value = "settype(item.value.ProductId, item.columns.Type)"
+    ></v-select>
   </template>
 
   <template v-slot:no-data>
@@ -412,20 +354,20 @@ export default {
       //Retailer: []
     },
     headers: [
-      { title: 'Рент', key: 'profit', align: 'center'  },
+      //{ title: 'Рент', key: 'profit', align: 'center'  },
       { title: 'Название', align: 'center', key: 'Model'},
       { title: 'Цвет', align: 'center', key: 'Color'},
       { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
       { title: 'Продавец', key: 'providerName', align: 'center' },
-      { title: 'Ретейлер', key: 'Retailer', align: 'center'  },
+      //{ title: 'Ретейлер', key: 'Retailer', align: 'center'  },
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
-      { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
+      //{ title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
-      { title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
-      { title: 'Бонусы', key: 'Bonus', align: 'center' },
-      { title: 'РСТ', key: 'Rostest', align: 'center' },
-     // { title: 'Карта', key: 'CardCash', align: 'center' },
-      { title: 'Монитор', key: 'Monitor', align: 'center' },
+      //{ title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
+      //{ title: 'Бонусы', key: 'Bonus', align: 'center' },
+      // { title: 'РСТ', key: 'Rostest', align: 'center' },
+      // { title: 'Карта', key: 'CardCash', align: 'center' },
+      //{ title: 'Монитор', key: 'Monitor', align: 'center' },
       { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],
     products: [],
@@ -501,7 +443,15 @@ export default {
   },
 
   methods: {
-
+    settype(ProductId, Type){
+      axios.post('api/product/settype', {ProductId : ProductId, Type : Type}).then(res => {
+        useToast().success('Данные о типе обновлены')
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка обновления данных о типе')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ОБНОВЛЕНИИ данных о: Типе ' + Type + ' c ID ' + ProductId + '. Описание: ' + error, Place: 'notype.vue' })
+        });
+    },
     getTypes (){
       axios.get('/api/types')
         .then(res => {
@@ -538,19 +488,7 @@ export default {
       const data = XLSX.utils.json_to_sheet(output)
       const wb = XLSX.utils.book_new()
       XLSX.utils.book_append_sheet(wb, data, 'data')
-      XLSX.writeFile(wb,'report.xlsx')
-    },
-
-    set(item, what, set, toast){
-      this.editedIndex = this.products.indexOf(item)
-      this.products[this.editedIndex][what] = set ? 1 : 0
-      axios.post('api/product/set', {what : what, set : set, ProductId : item.ProductId}).then(res => {
-        useToast().success('Данные о ' + toast + ' обновлены')
-      })
-        .catch(function (error) {
-          useToast().error('Ошибка обновления данных о ' + toast)
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ОБНОВЛЕНИИ данных о: '+ toast + '. Описание: ' + error, Place: 'product.vue' })
-        });
+      XLSX.writeFile(wb,'report-notype.xlsx')
     },
 
     getColor (value) {
@@ -558,20 +496,9 @@ export default {
     },
 
     getProducts (){
-      axios.get('/api/product')
+      axios.get('/api/product/getnotype')
         .then(res => {
-          this.products = res.data.map(item => {
-            return {
-              ...item,
-              profit: item.SellPrice !== null ? ((1 - (item.PurchasePrice.split(" ")[0].replace('₽', '').replace(',','')/item.SellPrice.replace(',','').replace('₽', '') ))*100).toFixed(2) : '-'
-            }
-          });
-          /*
-          const rows = document.querySelectorAll('table tr');
-          console.log(rows)
-          // Для каждой строки таблицы присваиваем класс
-          rows.forEach(row => row.classList.add('my-row-class'));
-           */
+          this.products = res.data
         })
     },
 
@@ -664,13 +591,18 @@ export default {
               })
               .catch(function (error) {
                 useToast().error('Ошибка добавления цвета')
-                axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
+                axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'notype.vue' })
               });
           }
+
+          if(!([100, 101].includes(updatedProduct.Type))){
+            this.products.splice(this.editedIndex, 1)
+          }
+
         })
         .catch(function (error) {
           useToast().error('Ошибка обновления товара')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ товара: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ товара: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'notype.vue' })
         });
     },
   },
