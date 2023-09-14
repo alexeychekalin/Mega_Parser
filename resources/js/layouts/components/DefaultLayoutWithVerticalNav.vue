@@ -86,8 +86,8 @@ export default {
             <v-list-item
               v-for="(i, index) in stats"
               :key="index"
-              :href="this.items[0][i.typeName][0].link"
-              :prepend-icon="this.items[0][i.typeName][0].icon"
+              :href="items[0][i.typeName][0].link"
+              :prepend-icon="items[0][i.typeName][0].icon"
               :title="i.typeName"
             >
               <template v-slot:append>

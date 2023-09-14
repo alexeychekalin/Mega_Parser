@@ -9,6 +9,36 @@ const { global } = useTheme()
 const triangleBg = computed(() => global.name.value === 'light' ? triangleLight : triangleDark)
 </script>
 
+<script>
+import store from "@/store";
+import {useToast} from "vue-toastification";
+export default {
+  data: () => ({
+    countAll : 0
+  }),
+
+  methods: {
+    run(){
+      this.$axios.get('/api/shell/run').then(() => { useToast().info('Запрос на запуск парсинга отправлен')})
+    }
+ /*
+    Statistics() {
+      this.$axios.get('/api/product/stats').then((res) => {
+        this.stats = res.data
+        this.countAll = res.data.reduce((sum, { count }) => sum + count, 0)
+      })
+    },
+
+  */
+  },
+
+  created () {
+
+  },
+}
+
+</script>
+
 <template>
   <VCard
     title="Мониторинг в 9:00 и 19:00"
@@ -22,7 +52,7 @@ const triangleBg = computed(() => global.name.value === 'light' ? triangleLight 
       <p>отслеживается </p>
       <VBtn
         size="small"
-        @click = "this.$axios.get('/api/shell/run').then(() => { useToast().info('Запрос на запуск парсинга отправлен')})"
+        @click = "run()"
       >
         Запустить сейчас
       </VBtn>
