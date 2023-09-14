@@ -30,6 +30,11 @@ Route::group(['namespace' => 'Log', 'prefix' => 'log', 'middleware' => 'auth:san
     Route::post('/', [App\Http\Controllers\LogController::class, 'index']);
 });
 
+Route::group(['namespace' => 'Shell', 'prefix' => 'shell', 'middleware' => 'auth:sanctum'], function (){
+    Route::get('/status', [App\Http\Controllers\ShellController::class, 'status'])->name('shell.status');
+    Route::get('/run', [App\Http\Controllers\ShellController::class, 'run'])->name('shell.run');
+});
+
 Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => 'auth:sanctum'], function (){
     Route::post('/', [App\Http\Controllers\Product\ProductController::class, 'index']);
     Route::get('/', [App\Http\Controllers\Product\IndexController::class, 'index']);

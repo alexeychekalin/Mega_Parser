@@ -5,6 +5,7 @@ import robot2 from '@images/avatars/robot2.png'
 import broken from '@images/avatars/brokenrobot.png'
 import { useToast } from "vue-toastification";
 import web from '@images/avatars/www.png'
+import axios from "axios";
 export default {
   data: () => ({
     solidCardData : [
@@ -69,11 +70,18 @@ export default {
   },
 
   methods: {
+    checkState(){
+      this.$axios.get('/api/check').then((res) => {
+        this.stats = res.data
+      })
+    }
+    /*
     checkState(key){
       useToast().info('Сервис проверки работает в режиме эмуляции ответов!')
       //TODO: На карточке админпанель в рабочем состоянии должен быть глобус
       this.solidCardData[key].state = this.state[Math.floor(Math.random() * this.state.length)]
     }
+     */
   },
 }
 </script>

@@ -212,7 +212,7 @@ export default {
           v-model="Rostest"
         ></VCheckbox>
       </VCol>
-      <VCol cols="12" sm="3">
+      <VCol cols="12" sm="3" class='d-flex justify-center'>
         <VCheckbox
           color="success"
           true-icon="mdi-credit-card-check-outline"

@@ -30,6 +30,7 @@ export default {
       'Не найдено на СберМегаМаркете': [{icon: 'mdi-store-off-outline', link: '/nosmm'}],
   }],
     stats:[],
+    countAll : 0
   }),
 
   methods: {
@@ -42,6 +43,7 @@ export default {
     Statistics() {
       this.$axios.get('/api/product/stats').then((res) => {
        this.stats = res.data
+        this.countAll = res.data.reduce((sum, { count }) => sum + count, 0)
       })
     },
   },
@@ -69,11 +71,12 @@ export default {
         <VSpacer />
 
         <v-menu
+          v-if="countAll !== 0"
           open-on-hover
         >
           <template v-slot:activator="{ props }">
             <IconBtn class="me-2" v-bind="props">
-              <v-badge content="100" color="error">
+              <v-badge :content="countAll" color="error">
                 <v-icon>mdi-bell-outline</v-icon>
               </v-badge>
             </IconBtn>

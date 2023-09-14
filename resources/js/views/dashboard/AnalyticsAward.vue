@@ -3,6 +3,7 @@ import triangleDark from '@images/misc/triangle-dark.png'
 import triangleLight from '@images/misc/triangle-light.png'
 import trophy from '@images/misc/trophy.png'
 import { useTheme } from 'vuetify'
+import { useToast } from "vue-toastification";
 
 const { global } = useTheme()
 const triangleBg = computed(() => global.name.value === 'light' ? triangleLight : triangleDark)
@@ -10,17 +11,20 @@ const triangleBg = computed(() => global.name.value === 'light' ? triangleLight 
 
 <template>
   <VCard
-    title="Lorem ismup davos"
-    subtitle="Best of the month"
+    title="Мониторинг в 9:00 и 19:00"
+    subtitle="автозапуск настроен"
     class="position-relative"
   >
     <VCardText>
       <h5 class="text-2xl font-weight-medium text-primary">
-        Lorem isapum
+        777 товаров в 22 категорях
       </h5>
-      <p>Ракета на марс 🚀</p>
-      <VBtn size="small">
-        Поехали
+      <p>отслеживается </p>
+      <VBtn
+        size="small"
+        @click = "this.$axios.get('/api/shell/run').then(() => { useToast().info('Запрос на запуск парсинга отправлен')})"
+      >
+        Запустить сейчас
       </VBtn>
     </VCardText>
 

@@ -1,32 +1,3 @@
-<script setup>
-const statistics = [
-  {
-    title: 'Sales',
-    stats: '245k',
-    icon: 'mdi-trending-up',
-    color: 'primary',
-  },
-  {
-    title: 'Customers',
-    stats: '12.5k',
-    icon: 'mdi-account-outline',
-    color: 'success',
-  },
-  {
-    title: 'Product',
-    stats: '1.54k',
-    icon: 'mdi-cellphone-link',
-    color: 'warning',
-  },
-  {
-    title: 'Revenue',
-    stats: '$88k',
-    icon: 'mdi-currency-usd',
-    color: 'info',
-  },
-]
-</script>
-
 <script>
 import robot from '@images/avatars/robot.png'
 import robot2 from '@images/avatars/robot2.png'
@@ -64,7 +35,7 @@ export default {
         }
       },
       {
-        title: 'Админ панель',
+        title: 'Web',
         icon: 'mdi-cog-sync',
         state: {
           color: 'success',
@@ -77,6 +48,11 @@ export default {
     colors : ['success', 'warning', 'error'],
     state : [
       {
+        color: 'error',
+        text: 'Подсистема недоступна',
+        image: broken
+      },
+      {
         color: 'success',
         text: 'Работает',
         image: robot
@@ -86,23 +62,35 @@ export default {
         text: 'Ожидание ответа',
         image: robot2
       },
-      {
-        color: 'error',
-        text: 'Подсистема недоступна',
-        image: broken
-      }
-    ]
+    ],
+    status: 'Все системы работают нормально',
+    answer: '',
+    dialog: false,
   }),
-  computed: {
-
+  created() {
+    this.checkState();
   },
 
   methods: {
+    triggerDialog(){
+      this.dialog = this.answer !== ''
+    },
+    /*
     checkState(key){
       useToast().info('Сервис проверки работает в режиме эмуляции ответов!')
       //TODO: На карточке админпанель в рабочем состоянии должен быть глобус
       this.solidCardData.forEach(e => e.state = this.state[Math.floor(Math.random() * this.state.length)])
       //this.solidCardData[0].state = this.state[Math.floor(Math.random() * this.state.length)]
+    }
+     */
+    checkState(){
+      this.$axios.get('/api/shell/status').then((res) => {
+        useToast().info('Опрос систем завершен')
+        this.solidCardData[0].state = this.state[res.data.answer]
+        this.solidCardData[1].state = this.state[res.data.answer]
+        this.solidCardData[2].state = this.state[res.data.answer]
+        this.status = res.data.answer === 0 ? 'Некоторые сервисы недоступны' : this.status
+      })
     }
   },
 }
@@ -111,7 +99,7 @@ export default {
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Мониторинг состояния подсистем</VCardTitle>
+      <VCardTitle>Мониторинг подсистем</VCardTitle>
 
       <template #append>
         <div class="me-n3">
@@ -131,7 +119,7 @@ export default {
 
     <VCardText>
       <h6 class="text-sm font-weight-medium mb-12">
-        <span>Все системы работают нормально</span>
+        <span>{{status}}</span>
       </h6>
 
       <VRow>
@@ -146,12 +134,13 @@ export default {
               <VAvatar
                 :color="item.state.color"
                 rounded
-                size="62"
+                size="42"
                 class="elevation-1"
               >
                 <VIcon
-                  size="44"
+                  size="30"
                   :icon="item.icon"
+                  @click="triggerDialog()"
                 />
               </VAvatar>
             </div>
@@ -160,11 +149,16 @@ export default {
               <span class="text-caption">
                 {{ item.state.text }}
               </span>
-              <span class="text-h6">{{ item.title }}</span>
+              <span class="text-overline">{{ item.title }}</span>
             </div>
           </div>
         </VCol>
       </VRow>
     </VCardText>
+    <v-dialog v-model="dialog" persistent max-width="290">
+      <v-card>
+        <tr>{{ answer }}</tr>
+      </v-card>
+    </v-dialog>
   </VCard>
 </template>
