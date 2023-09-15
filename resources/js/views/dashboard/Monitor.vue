@@ -99,7 +99,7 @@ export default {
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Мониторинг подсистем</VCardTitle>
+      <VCardTitle>Состояние подсистем</VCardTitle>
 
       <template #append>
         <div class="me-n3">

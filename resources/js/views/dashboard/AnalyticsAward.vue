@@ -20,20 +20,17 @@ export default {
   methods: {
     run(){
       this.$axios.get('/api/shell/run').then(() => { useToast().info('Запрос на запуск парсинга отправлен')})
-    }
- /*
-    Statistics() {
-      this.$axios.get('/api/product/stats').then((res) => {
-        this.stats = res.data
-        this.countAll = res.data.reduce((sum, { count }) => sum + count, 0)
-      })
     },
 
-  */
+    Statistics() {
+      this.$axios.get('/api/product/countMonitor').then((res) => {
+        this.countAll = res.data[0].count
+      })
+    },
   },
 
-  created () {
-
+  mounted () {
+  this.Statistics()
   },
 }
 
@@ -47,7 +44,7 @@ export default {
   >
     <VCardText>
       <h5 class="text-2xl font-weight-medium text-primary">
-        777 товаров в 22 категорях
+        {{countAll}} товаров
       </h5>
       <p>отслеживается </p>
       <VBtn

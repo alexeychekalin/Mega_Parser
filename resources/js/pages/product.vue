@@ -153,7 +153,7 @@
                   md="6"
                 >
                   <v-select
-                    v-model="editedItem.Wholesaler"
+                    v-model="editedItem.providerName"
                     label="Продавец"
                     :items="provider"
                     item-title="providerName"
@@ -582,6 +582,7 @@ export default {
       this.editedItem.Bonus = this.editedItem.Bonus === 1
       this.editedItem.CardCash = this.editedItem.CardCash === 1
       this.editedItem.Rostest = this.editedItem.Rostest === 1
+
       this.dialog = true
     },
 
@@ -620,23 +621,29 @@ export default {
       })
     },
 
-    save () {
+    save: function () {
+      if (this.editedItem.providerName !== null && this.editedItem.providerName !== "") {
+        let provider = this.provider.find(f => f.providerID === this.editedItem.providerName)
+        this.editedItem.Wholesaler = provider.providerID
+        this.editedItem.providerName = provider.providerName
+      }
       let updatedProduct = this.editedItem;
+      console.log(this.editedItem.providerName)
       axios.post('/api/product/update',
-          {
-            Model: updatedProduct.Model,
-            PurchasePrice: updatedProduct.PurchasePrice,
-            SellPrice: updatedProduct.SellPrice,
-            Bonus: updatedProduct.Bonus,
-            CardCash: updatedProduct.CardCash,
-            Monitor: updatedProduct.Monitor,
-            Type: updatedProduct.Type,
-            ProductId: updatedProduct.ProductId,
-            Color: updatedProduct.Color,
-            Rostest: updatedProduct.Rostest,
-            Wholesaler: updatedProduct.Wholesaler,
-            Retailer: updatedProduct.Retailer,
-          }
+        {
+          Model: updatedProduct.Model,
+          PurchasePrice: updatedProduct.PurchasePrice,
+          SellPrice: updatedProduct.SellPrice,
+          Bonus: updatedProduct.Bonus,
+          CardCash: updatedProduct.CardCash,
+          Monitor: updatedProduct.Monitor,
+          Type: updatedProduct.Type,
+          ProductId: updatedProduct.ProductId,
+          Color: updatedProduct.Color,
+          Rostest: updatedProduct.Rostest,
+          Wholesaler: updatedProduct.Wholesaler,
+          Retailer: updatedProduct.Retailer,
+        }
       )
         .then(res => {
           useToast().success('Товар обновлен')
@@ -649,28 +656,35 @@ export default {
 
           this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
 
-          if(updatedProduct.Wholesaler !== null && this.editedItem.Wholesaler !== ""){
-            this.products[this.editedIndex]['providerName'] = this.provider.find(f => f.providerID === updatedProduct.Wholesaler).providerName
-          }
-          if(this.editedItem.SellPrice !== "" && this.editedItem.SellPrice !== null && this.editedItem.PurchasePrice !== "" && this.editedItem.PurchasePrice !== null){
-            this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].split(" ")[0].replace('₽', '').replace(',','')/this.products[this.editedIndex]['SellPrice'].replace(',','').replace('₽', '') ))*100).toFixed(2)
+          if (this.editedItem.SellPrice !== "" && this.editedItem.SellPrice !== null && this.editedItem.PurchasePrice !== "" && this.editedItem.PurchasePrice !== null) {
+            this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].split(" ")[0].replace('₽', '').replace(',', '') / this.products[this.editedIndex]['SellPrice'].replace(',', '').replace('₽', ''))) * 100).toFixed(2)
           }
 
-          if(updatedProduct.Color !== null && updatedProduct.Color !== "" ){
-            axios.post('/api/colors/check',{Color: updatedProduct.Color,})
+          if (updatedProduct.Color !== null && updatedProduct.Color !== "") {
+            axios.post('/api/colors/check', {Color: updatedProduct.Color,})
               .then(res => {
-                if(!res.data)
+                if (!res.data)
                   useToast().success('Цвет добавлен в классификатор')
               })
               .catch(function (error) {
                 useToast().error('Ошибка добавления цвета')
-                axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
+                axios.post('/api/log', {
+                  Time: Date.now(),
+                  User: store.state.auth.user.UserID,
+                  Message: 'Ошибка при ДОБАВЛЕНИИ цвета: ' + updatedProduct.Model + '. Описание: ' + error,
+                  Place: 'product.vue'
+                })
               });
           }
         })
         .catch(function (error) {
           useToast().error('Ошибка обновления товара')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ товара: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {
+            Time: Date.now(),
+            User: store.state.auth.user.UserID,
+            Message: 'Ошибка при ИЗМЕНЕНИИ товара: ' + updatedProduct.Model + '. Описание: ' + error,
+            Place: 'product.vue'
+          })
         });
     },
   },

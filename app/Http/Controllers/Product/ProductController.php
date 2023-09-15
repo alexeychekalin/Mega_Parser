@@ -134,4 +134,13 @@ class ProductController extends Controller
         return json_decode(json_encode($product), true);
     }
 
+    public function countMonitor()
+    {
+        $cnt = DB::table('product' )
+            ->select(DB::raw('COUNT(ProductId) as count'))
+            ->where('Monitor', '=', 1)
+            ->get();
+        return json_decode(json_encode($cnt), true);
+    }
+
 }
