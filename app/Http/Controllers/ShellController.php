@@ -23,9 +23,19 @@ class ShellController extends Controller
 
     public function run(): \Illuminate\Http\JsonResponse
     {
-        $output2 = shell_exec('cd /home/mega_parser && python3 /home/mega_parser/SberParserStart.py');
-        return response()->json([
-            'output' => $output2
-        ]);
+        exec("cd /home/mega_parser; echo megaparser13 | sudo -S -k python3 /home/mega_parser/SberParserStart.py 2>&1", $output);
+
+        if($output[0] == '[sudo] password for www-data:'){
+            return response()->json([
+                'answer' => 1,
+            ]);
+        }
+        else{
+            return response()->json([
+                'output' => $output,
+                'answer' => 0
+            ]);
+        }
+
     }
 }

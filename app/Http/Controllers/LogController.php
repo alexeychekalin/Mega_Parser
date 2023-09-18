@@ -17,4 +17,13 @@ class LogController extends Controller
         $data = $request->validated();
         return Log::create($data);
     }
+
+    public function readLocal(Request $request)
+    {
+        $data = file('../public/SberParseApi.log');
+        //return  implode('<br>', $data);
+        return response()->json([
+            'api' => $data
+        ]);
+    }
 }

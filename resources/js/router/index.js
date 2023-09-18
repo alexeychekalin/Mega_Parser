@@ -126,6 +126,16 @@ const router = createRouter({
           },
         },
         {
+          path: 'logs',
+          name: 'logs',
+          component: () => import('../pages/logs.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+          /*
+        {
           path: 'test',
           name: 'test',
           component: () => import('../pages/test.vue'),
@@ -182,6 +192,7 @@ const router = createRouter({
             admin: true,
           },
         },
+           */
       ],
     },
     {

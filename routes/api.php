@@ -28,6 +28,7 @@ Route::group(['namespace' => 'User', 'prefix' => 'users', 'middleware' => 'auth:
 
 Route::group(['namespace' => 'Log', 'prefix' => 'log', 'middleware' => 'auth:sanctum'], function (){
     Route::post('/', [App\Http\Controllers\LogController::class, 'index']);
+    Route::get('/', [App\Http\Controllers\LogController::class, 'readLocal']);
 });
 
 Route::group(['namespace' => 'Shell', 'prefix' => 'shell', 'middleware' => 'auth:sanctum'], function (){

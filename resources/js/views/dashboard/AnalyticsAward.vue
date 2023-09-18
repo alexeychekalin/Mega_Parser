@@ -19,7 +19,8 @@ export default {
 
   methods: {
     run(){
-      this.$axios.get('/api/shell/run').then(() => { useToast().info('Запрос на запуск парсинга отправлен')})
+      useToast().info('Парсинг запущен')
+      this.$axios.get('/api/shell/run').then((res) => { res.data.answer === 1 ? useToast().success('Парсинг товаров завершен') : useToast().error('Произошла ошибка парсинга. Смотрите логи')})
     },
 
     Statistics() {
