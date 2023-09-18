@@ -21,8 +21,11 @@ class ShellController extends Controller
         ]);
     }
 
-    public function run(): void
+    public function run(): \Illuminate\Http\JsonResponse
     {
-        shell_exec('cd /home/mega_parser && python3 /home/mega_parser/SberParserStart.py');
+        $output2 = shell_exec('cd /home/mega_parser && python3 /home/mega_parser/SberParserStart.py');
+        return response()->json([
+            'output' => $output2
+        ]);
     }
 }
