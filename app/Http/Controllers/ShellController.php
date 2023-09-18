@@ -23,6 +23,6 @@ class ShellController extends Controller
 
     public function run(): void
     {
-        shell_exec('cd /; cd /home/mega_parser; python3 /home/mega_parser/SberParserStart.py');
+        shell_exec('cd /home/mega_parser && python3 /home/mega_parser/SberParserStart.py');
     }
 }

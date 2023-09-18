@@ -99,7 +99,8 @@
       ></v-divider>
       <v-dialog
         v-model="dialog"
-        max-width="800px"
+        scrollable
+        width="auto"
       >
         <template v-slot:activator="{ props }">
           <v-btn
@@ -112,7 +113,7 @@
           </v-btn>
         </template>
         <v-form @submit.prevent="save">
-        <v-card>
+        <v-card style="max-height: 700px;">
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
           </v-card-title>
@@ -353,7 +354,7 @@
   </template>
 
   <template v-slot:item.SberParseDate="{ item }">
-    {{item.columns.SberParseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
+    {{item.columns.SberParseDate !== null ? moment(item.columns.SberParseDate).format("DD.MM.YY") : ''}}
   </template>
 
   <template v-slot:item.profit="{ item }">
