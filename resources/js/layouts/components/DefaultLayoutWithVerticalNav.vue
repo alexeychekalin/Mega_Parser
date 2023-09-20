@@ -164,7 +164,7 @@ export default {
           title: 'Ошибки',
           icon: 'mdi-robot-vacuum-alert',
           to: '/errors',
-          badge: this.stats.filter(x => x.Type === 100 || x.Type === 101).reduce((ac, obj) =>  {return ac + obj.count}, 0)
+          badge: stats.filter(x => x.Type === 100 || x.Type === 101).reduce((ac, obj) =>  {return ac + obj.count}, 0)
         }"
       />
       <VerticalNavLink
@@ -172,7 +172,7 @@ export default {
           title: 'Неопределен тип',
           icon: 'mdi-call-merge',
           to: '/notype',
-          badge: this.stats.filter(x => x.Type === 99).reduce((ac, obj) =>  {return ac + obj.count}, 0)
+          badge: stats.filter(x => x.Type === 99).reduce((ac, obj) =>  {return ac + obj.count}, 0)
         }"
       />
       <VerticalNavLink
@@ -180,7 +180,7 @@ export default {
           title: 'Не найден на СММ',
           icon: 'mdi-store-off-outline',
           to: '/nosmm',
-          badge: this.stats.filter(x => x.Type === 102).reduce((ac, obj) =>  {return ac + obj.count}, 0)
+          badge: stats.filter(x => x.Type === 102).reduce((ac, obj) =>  {return ac + obj.count}, 0)
         }"
       />
       <!-- 👉 Pages -->
