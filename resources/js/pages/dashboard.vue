@@ -13,24 +13,6 @@ import CardCheck from "@/views/pages/cards/card-basic/CardCheck.vue";
 import NewProduct from "@/views/pages/form-layouts/NewProduct.vue";
 import NewUser from "@/views/pages/form-layouts/NewUser.vue";
 import Monitor from "@/views/dashboard/Monitor.vue";
-
-const totalProfit = {
-  title: 'Total Profit',
-  color: 'secondary',
-  icon: 'mdi-poll',
-  stats: '$25.6k',
-  change: 42,
-  subtitle: 'Weekly Project',
-}
-
-const newProject = {
-  title: 'New Project',
-  color: 'primary',
-  icon: 'mdi-briefcase-variant-outline',
-  stats: '862',
-  change: -18,
-  subtitle: 'Yearly Project',
-}
 </script>
 
 <template>

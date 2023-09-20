@@ -124,48 +124,14 @@ export default {
           to: '/dashboard',
         }"
       />
-
-      <!-- 👉 Pages -->
-      <VerticalNavSectionTitle
-        :item="{
-          heading: 'Пользователи',
-        }"
-      />
       <VerticalNavLink
         :item="{
-          title: 'Список',
-          icon: 'mdi-account-details-outline',
-          to: '/users',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Новый',
-          icon: 'mdi-account-plus-outline',
-          to: '/usersnew',
-        }"
-      />
-
-      <!-- 👉 Pages -->
-      <VerticalNavSectionTitle
-        :item="{
-          heading: 'Товары',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Список',
+          title: 'Мониторинг',
           icon: 'mdi-cart-variant',
           to: '/products',
         }"
       />
-      <VerticalNavLink
-        :item="{
-          title: 'Новый',
-          icon: 'mdi-cart-arrow-down',
-          to: '/productsnew',
-        }"
-      />
+
       <!-- 👉 Pages -->
       <VerticalNavSectionTitle
         :item="{
@@ -174,7 +140,7 @@ export default {
       />
       <VerticalNavLink
         :item="{
-          title: 'Все товары',
+          title: 'Товары',
           icon: 'mdi-shopping-search-outline',
           to: '/monitor',
         }"
@@ -221,6 +187,13 @@ export default {
       />
       <VerticalNavLink
         :item="{
+          title: 'Новый товар',
+          icon: 'mdi-cart-arrow-down',
+          to: '/productsnew',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
           title: 'Типы',
           icon: 'mdi-store-cog-outline',
           to: '/types',
@@ -238,6 +211,26 @@ export default {
           title: 'Поставщики',
           icon: 'mdi-account-group-outline',
           to: '/providers',
+        }"
+      />
+      <!-- 👉 Pages -->
+      <VerticalNavSectionTitle
+        :item="{
+          heading: 'Пользователи',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Список',
+          icon: 'mdi-account-details-outline',
+          to: '/users',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
+          title: 'Новый',
+          icon: 'mdi-account-plus-outline',
+          to: '/usersnew',
         }"
       />
       <!-- 👉 User Interface

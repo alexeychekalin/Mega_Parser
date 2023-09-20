@@ -623,13 +623,12 @@ export default {
     },
 
     save: function () {
-      if (this.editedItem.providerName !== null && this.editedItem.providerName !== "") {
+      if (this.editedItem.providerName !== null && this.editedItem.providerName !== "" && !isNaN(this.editedItem.providerName)) {
         let provider = this.provider.find(f => f.providerID === this.editedItem.providerName)
         this.editedItem.Wholesaler = provider.providerID
         this.editedItem.providerName = provider.providerName
       }
       let updatedProduct = this.editedItem;
-      console.log(this.editedItem.providerName)
       axios.post('/api/product/update',
         {
           Model: updatedProduct.Model,

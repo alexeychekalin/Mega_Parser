@@ -1,5 +1,5 @@
 <template>
-  <VCard title="Тип товара на определен автоматически">
+  <VCard title="Товары не найденые на СММ">
     <v-data-table
   v-model:page="page"
   :search="search"
@@ -154,7 +154,7 @@
                   md="6"
                 >
                   <v-select
-                    v-model="editedItem.Wholesaler"
+                    v-model="editedItem.providerName"
                     label="Продавец"
                     :items="provider"
                     item-title="providerName"
@@ -297,17 +297,6 @@
 
   <template v-slot:item.parseDate="{ item }">
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
-  </template>
-
-  <template v-slot:item.typeName="{ item }">
-    <v-select
-      v-model="item.columns.Type"
-      :items="types"
-      item-title="typeName"
-      item-value="typeID"
-      variant="solo"
-      :on-change = "clog(item.columns.Type + ' ' + item.columns.Model)"
-    ></v-select>
   </template>
 
   <template v-slot:no-data>
@@ -482,7 +471,7 @@ export default {
       const data = XLSX.utils.json_to_sheet(output)
       const wb = XLSX.utils.book_new()
       XLSX.utils.book_append_sheet(wb, data, 'data')
-      XLSX.writeFile(wb,'report-notype.xlsx')
+      XLSX.writeFile(wb,'report-nosmm.xlsx')
     },
 
     getColor (value) {
@@ -503,8 +492,6 @@ export default {
       this.editedItem.Bonus = this.editedItem.Bonus === 1
       this.editedItem.CardCash = this.editedItem.CardCash === 1
       this.editedItem.Rostest = this.editedItem.Rostest === 1
-
-      console.log(this.editedItem.Wholesaler)
       this.dialog = true
     },
 
@@ -544,6 +531,11 @@ export default {
     },
 
     save () {
+      if (this.editedItem.providerName !== null && this.editedItem.providerName !== "" && !isNaN(this.editedItem.providerName)) {
+        let provider = this.provider.find(f => f.providerID === this.editedItem.providerName)
+        this.editedItem.Wholesaler = provider.providerID
+        this.editedItem.providerName = provider.providerName
+      }
       let updatedProduct = this.editedItem;
       axios.post('/api/product/update',
           {
@@ -572,13 +564,6 @@ export default {
 
           this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
 
-          if(updatedProduct.Wholesaler !== null && this.editedItem.Wholesaler !== ""){
-            this.products[this.editedIndex]['providerName'] = this.provider.find(f => f.providerID === updatedProduct.Wholesaler).providerName
-          }
-          if(this.editedItem.SellPrice !== "" && this.editedItem.SellPrice !== null && this.editedItem.PurchasePrice !== "" && this.editedItem.PurchasePrice !== null){
-            this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].split(" ")[0].replace('₽', '').replace(',','')/this.products[this.editedIndex]['SellPrice'].replace(',','').replace('₽', '') ))*100).toFixed(2)
-          }
-
           if(updatedProduct.Color !== null && updatedProduct.Color !== "" ){
             axios.post('/api/colors/check',{Color: updatedProduct.Color,})
               .then(res => {
@@ -591,7 +576,7 @@ export default {
               });
           }
 
-          if(!([100, 101].includes(updatedProduct.Type))){
+          if(!([102].includes(updatedProduct.Type))){
             this.products.splice(this.editedIndex, 1)
           }
 

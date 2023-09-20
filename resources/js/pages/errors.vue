@@ -153,7 +153,7 @@
                   md="6"
                 >
                   <v-select
-                    v-model="editedItem.Wholesaler"
+                    v-model="editedItem.providerName"
                     label="Продавец"
                     :items="provider"
                     item-title="providerName"
@@ -530,6 +530,11 @@ export default {
     },
 
     save () {
+      if (this.editedItem.providerName !== null && this.editedItem.providerName !== "" && !isNaN(this.editedItem.providerName)) {
+        let provider = this.provider.find(f => f.providerID === this.editedItem.providerName)
+        this.editedItem.Wholesaler = provider.providerID
+        this.editedItem.providerName = provider.providerName
+      }
       let updatedProduct = this.editedItem;
       axios.post('/api/product/update',
           {
@@ -557,13 +562,6 @@ export default {
           Object.assign(this.products[this.editedIndex], this.editedItem)
 
           this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
-
-          if(updatedProduct.Wholesaler !== null && this.editedItem.Wholesaler !== ""){
-            this.products[this.editedIndex]['providerName'] = this.provider.find(f => f.providerID === updatedProduct.Wholesaler).providerName
-          }
-          if(this.editedItem.SellPrice !== "" && this.editedItem.SellPrice !== null && this.editedItem.PurchasePrice !== "" && this.editedItem.PurchasePrice !== null){
-            this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].split(" ")[0].replace('₽', '').replace(',','')/this.products[this.editedIndex]['SellPrice'].replace(',','').replace('₽', '') ))*100).toFixed(2)
-          }
 
           if(updatedProduct.Color !== null && updatedProduct.Color !== "" ){
             axios.post('/api/colors/check',{Color: updatedProduct.Color,})

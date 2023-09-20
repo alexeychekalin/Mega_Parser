@@ -11,8 +11,8 @@ export default {
         title: 'Парсер',
         icon: 'mdi-spider-web',
         state: {
-          color: 'success',
-          text: 'Работает',
+          color: 'warning',
+          text: 'Ожидание',
           image: robot
         }
       },
@@ -20,8 +20,8 @@ export default {
         title: 'Сообщения',
         icon: 'mdi-telegram',
         state: {
-          color: 'success',
-          text: 'Работает',
+          color: 'warning',
+          text: 'Ожидание',
           image: robot
         }
       },
@@ -29,8 +29,8 @@ export default {
         title: 'Классификатор',
         icon: 'mdi-sitemap',
         state: {
-          color: 'success',
-          text: 'Работает',
+          color: 'warning',
+          text: 'Ожидание',
           image: robot
         }
       },
@@ -39,7 +39,7 @@ export default {
         icon: 'mdi-cog-sync',
         state: {
           color: 'success',
-          text: 'Работает',
+          text: 'Ожидание',
           image: web
         }
       },
@@ -63,12 +63,12 @@ export default {
         image: robot2
       },
     ],
-    status: 'Все системы работают нормально',
+    status: 'Запросите состояние подсистем',
     answer: '',
     dialog: false,
   }),
   created() {
-    this.checkState();
+   // this.checkState();
   },
 
   methods: {
@@ -89,7 +89,7 @@ export default {
         this.solidCardData[0].state = this.state[res.data.answer]
         this.solidCardData[1].state = this.state[res.data.answer]
         this.solidCardData[2].state = this.state[res.data.answer]
-        this.status = res.data.answer === 0 ? 'Некоторые сервисы недоступны' : this.status
+        this.status = res.data.answer === 0 ? 'Некоторые сервисы недоступны' : 'Все системы работают нормально'
       })
     }
   },
