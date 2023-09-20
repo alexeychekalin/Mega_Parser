@@ -25,6 +25,13 @@ const props = defineProps({
       <span class="nav-item-title">
         {{ item.title }}
       </span>
+      <v-badge
+        class=""
+        v-if="item.badge"
+        color="error"
+        :content=item.badge
+        inline
+      ></v-badge>
     </Component>
   </li>
 </template>
