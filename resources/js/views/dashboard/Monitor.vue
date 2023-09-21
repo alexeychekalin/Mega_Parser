@@ -39,7 +39,7 @@ export default {
         icon: 'mdi-cog-sync',
         state: {
           color: 'success',
-          text: 'Ожидание',
+          text: 'Работает',
           image: web
         }
       },
@@ -49,7 +49,7 @@ export default {
     state : [
       {
         color: 'error',
-        text: 'Подсистема недоступна',
+        text: 'Недоступна',
         image: broken
       },
       {

@@ -113,7 +113,7 @@
           </v-btn>
         </template>
         <v-form @submit.prevent="save">
-        <v-card>
+        <v-card style="max-height: 700px;">
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
           </v-card-title>
