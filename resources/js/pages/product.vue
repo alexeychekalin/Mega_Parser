@@ -623,7 +623,9 @@ export default {
     },
 
     save: function () {
+      console.log(this.editedItem.providerName)
       if (this.editedItem.providerName !== null && this.editedItem.providerName !== "" && !isNaN(this.editedItem.providerName)) {
+        console.log("go if")
         let provider = this.provider.find(f => f.providerID === this.editedItem.providerName)
         this.editedItem.Wholesaler = provider.providerID
         this.editedItem.providerName = provider.providerName
