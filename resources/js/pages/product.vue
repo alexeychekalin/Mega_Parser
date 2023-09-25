@@ -564,7 +564,7 @@ export default {
           this.products = res.data.map(item => {
             return {
               ...item,
-              profit: item.SellPrice !== null ? ((1 - (item.PurchasePrice.split(" ")[0].replace('₽', '').replace(',','')/item.SellPrice.replace(',','').replace('₽', '') ))*100).toFixed(2) : '-'
+              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (item.PurchasePrice.split(" ")[0].replace('₽', '').replace(',','')/item.SellPrice.replace(',','').replace('₽', '') ))*100).toFixed(2) : '-'
             }
           });
           /*
@@ -656,7 +656,7 @@ export default {
 
           this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
 
-          if (this.editedItem.SellPrice !== "" && this.editedItem.SellPrice !== null && this.editedItem.PurchasePrice !== "" && this.editedItem.PurchasePrice !== null) {
+          if (this.editedItem.SellPrice !== "" && this.editedItem.SellPrice !== null && this.editedItem.PurchasePrice !== "" && this.editedItem.PurchasePrice != null) {
             this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].split(" ")[0].replace('₽', '').replace(',', '') / this.products[this.editedIndex]['SellPrice'].replace(',', '').replace('₽', ''))) * 100).toFixed(2)
           }
 
