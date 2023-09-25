@@ -70,7 +70,7 @@
                   <v-text-field
                     v-model="editedItem.TNumber"
                     label="Телефон"
-                    :rules="[rules.required, rules.phone]"
+                    :rules="[rules.required, rules.phoneFormat]"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -258,6 +258,10 @@ export default {
       phone: value => {
         const pattern = /^\d+$/
         return pattern.test(value) || 'В телефоне буквы?'
+      },
+      phoneFormat: value => {
+        const pattern = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{10,11}$/
+        return pattern.test(value) || 'Телефон, 10 или 11 цифр'
       }
     }
   }),
@@ -354,11 +358,12 @@ export default {
         let ChatID = this.users[this.editedIndex].TNumber === this.editItem.TNumber ? this.users[this.editedIndex].ChatID : null
         this.editedItem.ChatId = ChatID;
         let updatedUser = this.editedItem;
+        let pattern = /(\+7|8|7|)[\s(]?(\d{3})[\s)]?(\d{3})[\s-]?(\d{2})[\s-]?(\d{2})/g;
         axios.post('/api/users/update',
             {
                     UserID: updatedUser.UserID,
                     FIO: updatedUser.FIO,
-                    TNumber: updatedUser.TNumber,
+                    TNumber: updatedUser.TNumber.replace(pattern, '8$2$3$4$5'),
                     ChatID: ChatID,
                     WebAccess: updatedUser.WebAccess,
                     TelegramAccess: updatedUser.TelegramAccess
