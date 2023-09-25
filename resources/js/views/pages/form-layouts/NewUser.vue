@@ -26,7 +26,12 @@ export default {
       phone: value => {
         const pattern = /^\d+$/
         return pattern.test(value) || 'В телефоне буквы?'
+      },
+      phoneFormat: value => {
+        const pattern = /^\d+$/
+        return pattern.test(value) || 'В телефоне буквы?'
       }
+
     }
   }),
   computed: {

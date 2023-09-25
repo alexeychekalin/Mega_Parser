@@ -137,7 +137,7 @@ export default {
       { title: 'Название', align: 'center', key: 'Model', width: '25%'},
       { title: 'Цвет', align: 'center', key: 'Color'},
       { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
-      { title: 'Продавец', key: 'providerName', align: 'center' },
+      { title: 'Поставщик', key: 'providerName', align: 'center' },
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
       // { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },

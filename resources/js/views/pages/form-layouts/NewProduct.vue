@@ -146,7 +146,7 @@ export default {
       >
         <v-select
           v-model="Wholesaler"
-          label="Продавец"
+          label="Поставщик"
           :items="provider"
           item-title="providerName"
           item-value="providerID"

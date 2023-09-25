@@ -24,7 +24,7 @@ class IndexController extends Controller
                     ->join('types', 'product.Type', '=', 'types.typeID')
                     ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
                     ->whereNotIn('types.typeId', [99,100,101])
-                    ->whereBetween('parseDate', [Carbon::now()->subDay(30), Carbon::now()])
+                    // ->whereBetween('parseDate', [Carbon::now()->subDay(30), Carbon::now()])
                     ->where('product.Monitor', '=', 1)
                     ->get();
         return json_decode(json_encode($product), true);
