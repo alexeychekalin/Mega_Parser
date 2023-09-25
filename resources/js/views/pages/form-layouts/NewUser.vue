@@ -18,18 +18,19 @@ export default {
     ],
     rules: {
       required: value => !!value || 'Поле обязательно',
-      //number: value => value.length <= 20 || 'Max 20 characters',
       number: value => {
         const pattern = /^\d*(\.\d{1,2})?$/
         return pattern.test(value) || 'Введите число, формат 12345.67'
       },
+      /*
       phone: value => {
         const pattern = /^\d+$/
         return pattern.test(value) || 'В телефоне буквы?'
       },
+       */
       phoneFormat: value => {
-        const pattern = /^\d+$/
-        return pattern.test(value) || 'В телефоне буквы?'
+        const pattern = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{10,11}$/
+        return pattern.test(value) || 'Телефон, 10 или 11 цифр'
       }
 
     }
@@ -47,10 +48,11 @@ export default {
     },
     newUser(){
       let name = this.editedItem.FIO
+      let pattern = /(\+7|8|7|)[\s(]?(\d{3})[\s)]?(\d{3})[\s-]?(\d{2})[\s-]?(\d{2})/g;
       axios.post('/api/users',
         {
           FIO: this.editedItem.FIO,
-          TNumber: this.editedItem.TNumber,
+          TNumber: this.editedItem.TNumber.replace(pattern, '8$2$3$4$5'),
           ChatID: null,
           WebAccess: this.editedItem.WebAccess,
           TelegramAccess: this.editedItem.TelegramAccess,
@@ -93,7 +95,7 @@ export default {
         <v-text-field
           v-model="editedItem.TNumber"
           label="Телефон"
-          :rules="[rules.required, rules.phone]"
+          :rules="[rules.required, rules.phone, rules.phoneFormat]"
           prepend-inner-icon="mdi-cellphone"
         ></v-text-field>
       </v-col>
