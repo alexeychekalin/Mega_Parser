@@ -144,6 +144,7 @@ class ProductController extends Controller
         $cnt = DB::table('product' )
             ->select(DB::raw('COUNT(ProductId) as count'))
             ->where('Monitor', '=', 1)
+            ->whereNotNull('product.Wholesaler')
             ->get();
         return json_decode(json_encode($cnt), true);
     }

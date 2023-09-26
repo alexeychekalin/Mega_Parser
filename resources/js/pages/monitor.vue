@@ -562,15 +562,23 @@ export default {
       return value === 1 || value === true ? 'success' : 'error'
     },
 
+    formatNumber(i){
+      return Intl.NumberFormat('ru-RU').format(i.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ',''))
+    },
+
+    formatPrice(i){
+      return i.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ','')
+    },
+
     getProducts (){
       axios.get('/api/product')
         .then(res => {
           this.products = res.data.map(item => {
             return {
               ...item,
-              SellPrice : item.SellPrice !== null ? Intl.NumberFormat('ru-RU').format(item.SellPrice.split(" ")[0].replace('₽', '').replace(',','')) : null,
-              PurchasePrice : item.PurchasePrice !== null ? Intl.NumberFormat('ru-RU').format(item.PurchasePrice.split(" ")[0].replace('₽', '').replace(',','')) : null,
-              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (item.PurchasePrice/item.SellPrice))*100).toFixed(2) : '-',
+              SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
+              PurchasePrice : item.PurchasePrice !== null ? this.formatNumber(item.PurchasePrice) : null,
+              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
             }
           });
         })
