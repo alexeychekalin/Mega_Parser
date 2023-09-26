@@ -48,9 +48,10 @@ class ProductController extends Controller
     {
         $product = DB::table('product')
             ->select('product.*', 'types.typeName', 'providers.providerName')
-            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->leftJoin('types', 'product.Type', '=', 'types.typeID')
             ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
             ->whereIn('types.typeId', [100,101])
+            ->whereNotNull('product.Wholesaler')
             ->get();
         return json_decode(json_encode($product), true);
     }
@@ -59,9 +60,10 @@ class ProductController extends Controller
     {
         $product = DB::table('product')
             ->select('product.*', 'types.typeName', 'providers.providerName')
-            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->leftJoin('types', 'product.Type', '=', 'types.typeID')
             ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
             ->where('types.typeId', '=', 99)
+            ->whereNotNull('product.Wholesaler')
             ->get();
         return json_decode(json_encode($product), true);
     }
@@ -70,9 +72,10 @@ class ProductController extends Controller
     {
         $product = DB::table('product')
             ->select('product.*', 'types.typeName', 'providers.providerName')
-            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->leftJoin('types', 'product.Type', '=', 'types.typeID')
             ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
             ->where('types.typeId', '=', 102)
+            ->whereNotNull('product.Wholesaler')
             ->get();
         return json_decode(json_encode($product), true);
     }
@@ -84,10 +87,11 @@ class ProductController extends Controller
                 DB::raw('(CASE WHEN product.CardCash = 0 THEN false WHEN product.CardCash is NULL THEN false ELSE true END) as CardCash'),
                 DB::raw('(CASE WHEN product.Monitor = 0 THEN false WHEN product.Monitor is NULL THEN false ELSE true END) as Monitor')
             )
-            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->leftJoin('types', 'product.Type', '=', 'types.typeID')
             ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
             ->whereNotIn('types.typeId', [99, 100, 101, 102])
-            ->where('product.Monitor', '=', 0)->orWhereNull('product.Monitor')
+           // ->where('product.Monitor', '=', 0)->orWhereNull('product.Monitor')
+            ->whereNotNull('product.Wholesaler')
             ->get();
         return json_decode(json_encode($product), true);
     }
@@ -127,9 +131,10 @@ class ProductController extends Controller
     {
         $product = DB::table('product' )
             ->select('product.Type', 'types.typeName', DB::raw('COUNT(Type) as count'))
-            ->join('types', 'product.Type', '=', 'types.typeID')
+            ->leftJoin('types', 'product.Type', '=', 'types.typeID')
             ->whereIn('types.typeId', [99, 100, 101, 102])
             ->groupBy('types.typeName', 'product.Type')
+            ->whereNotNull('product.Wholesaler')
             ->get();
         return json_decode(json_encode($product), true);
     }

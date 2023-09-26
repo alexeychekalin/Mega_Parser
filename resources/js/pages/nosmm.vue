@@ -481,7 +481,12 @@ export default {
     getProducts (){
       axios.get('/api/product/getsmm')
         .then(res => {
-          this.products = res.data
+          this.products = res.data.map(item => {
+            return {
+              ...item,
+              PurchasePrice : item.PurchasePrice !== null ? Intl.NumberFormat('ru-RU').format(item.PurchasePrice.split(" ")[0].replace('₽', '').replace(',','')) : null,
+            }
+          });
         })
     },
 

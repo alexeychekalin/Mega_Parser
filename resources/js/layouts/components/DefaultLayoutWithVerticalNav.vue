@@ -129,7 +129,7 @@ export default {
         :item="{
           title: 'Мониторинг',
           icon: 'mdi-cart-variant',
-          to: '/products',
+          to: '/monitor',
         }"
       />
 
@@ -143,7 +143,7 @@ export default {
         :item="{
           title: 'Товары',
           icon: 'mdi-shopping-search-outline',
-          to: '/monitor',
+          to: '/products',
         }"
       />
       <VerticalNavLink

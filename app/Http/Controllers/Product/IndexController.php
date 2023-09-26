@@ -26,6 +26,7 @@ class IndexController extends Controller
                     ->whereNotIn('types.typeId', [99,100,101])
                     // ->whereBetween('parseDate', [Carbon::now()->subDay(30), Carbon::now()])
                     ->where('product.Monitor', '=', 1)
+                    ->whereNotNull('product.Wholesaler')
                     ->get();
         return json_decode(json_encode($product), true);
     }

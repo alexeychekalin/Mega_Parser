@@ -38,7 +38,7 @@ const router = createRouter({
         {
           path: 'products',
           name: 'products',
-          component: () => import('../pages/product.vue'),
+          component: () => import('../pages/products.vue'),
           meta:{
             middleware:"auth",
             admin: true

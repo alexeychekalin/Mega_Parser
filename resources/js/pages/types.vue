@@ -191,12 +191,20 @@ export default {
     editItem (item) {
       this.editedIndex = this.types.indexOf(item)
       this.editedItem = Object.assign({}, item)
+      if([99, 100, 101, 102].includes(this.editedItem.typeID)){
+        useToast().error('Служебный тип товара не может быть изменен!')
+        return
+      }
       this.dialog = true
     },
 
     deleteItem (item) {
       this.editedIndex = this.types.indexOf(item)
       this.editedItem = Object.assign({}, item)
+      if([99, 100, 101, 102].includes(this.editedItem.typeID)){
+        useToast().error('Служебный тип товара не может быть удален!')
+        return
+      }
       this.dialogDelete = true
     },
 
