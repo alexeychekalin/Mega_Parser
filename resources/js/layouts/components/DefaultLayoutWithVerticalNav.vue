@@ -14,9 +14,6 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
 
 const vuetifyTheme = useTheme()
 
-const upgradeBanner = computed(() => {
-  return vuetifyTheme.global.name.value === 'light' ? upgradeBannerLight : upgradeBannerDark
-})
 </script>
 
 <script>
