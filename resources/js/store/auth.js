@@ -7,7 +7,7 @@ export default {
         authenticated:false,
         user:{},
         role: '',
-        accessWeb:false
+        accessWeb:false,
     },
     getters:{
         authenticated(state){
