@@ -1,4 +1,5 @@
 <template>
+   <Spinner v-if="loading"/>
   <VCard title="Тип товара на определен автоматически">
     <v-data-table
   v-model:page="page"
@@ -306,7 +307,7 @@
       item-title="typeName"
       item-value="typeID"
       variant="solo"
-      @update:model-value = "settype(item.value.ProductId, item.columns.Type)"
+      @update:model-value = "searchSimilar(item.value.Model, item.columns.Type)"
     ></v-select>
   </template>
 
@@ -318,11 +319,48 @@
 
 </v-data-table>
   </VCard>
+
+  <v-dialog
+    v-model="typesDialog"
+    width="auto"
+  >
+    <template v-slot:default="{ isActive }">
+      <v-card>
+        <v-alert
+          color="warning"
+          :title="'Найдены похожие на '+ similar +  ' товары:' "
+          variant="outlined"
+          border="start"
+          border-color="warning"
+        >
+          <v-list :lines="newTypes.length" select-strategy="classic">
+            <v-list-subheader>Выбранный тип: {{newType}}</v-list-subheader>
+              <v-list-item v-for="(item, key, index) in newTypes" :value=key>
+                <template v-slot:prepend="{ isActive=true }">
+                  <v-list-item-action start>
+                    <v-checkbox :key="item['ProductId']"   :label="item['Model']" :model-value="isActive" v-model="newTypes[key]['selected']" color="success"></v-checkbox>
+                  </v-list-item-action>
+                </template>
+              </v-list-item>
+          </v-list>
+          <v-card-actions class="justify-end">
+            <v-btn
+              variant="text"
+              @click="updateTypes"
+            >Обновить</v-btn>
+          </v-card-actions>
+        </v-alert>
+
+      </v-card>
+    </template>
+  </v-dialog>
+
 </template>
 
 
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import Spinner from "@/layouts/spinner.vue";
 </script>
 
 <script>
@@ -331,9 +369,12 @@ import { useToast } from "vue-toastification";
 import store from "@/store";
 import * as XLSX from 'xlsx/xlsx.mjs';
 import moment from 'moment'
+import {FingerprintSpinner} from "epic-spinners";
 export default {
   data: () => ({
+    loading: false,
     sortBy: [{ key: 'parseDate', order: 'desc' }],
+    state: 'pending',
     page:1,
     search:'',
     itemsPerPage: 15,
@@ -407,11 +448,14 @@ export default {
         const pattern = /^\d*(\.\d{1,2})?$/
         return pattern.test(value) || 'Введите число, формат 12345.67'
       },
-    }
+    },
+    newTypes:[],
+    newType:'',
+    similar:'',
+    typesDialog: false
   }),
-
   components:{
-    axios
+    axios, FingerprintSpinner
   },
 
   computed: {
@@ -443,13 +487,38 @@ export default {
   },
 
   methods: {
-    settype(ProductId, Type){
-      axios.post('api/product/settype', {ProductId : ProductId, Type : Type}).then(res => {
-        useToast().success('Данные о типе обновлены')
+    updateTypes(){
+      let toUpdate = this.newTypes.filter((x) => x.selected === true).map(value => value.ProductId);
+      axios.post('api/product/updateSimilarType', {Models : toUpdate, Type: this.types.find(f => f.typeName === this.newType).typeID}).then(res => {
+        this.newTypes = []
+        this.similar = ''
+        this.newType = ''
+        this.typesDialog = false
+        this.getProducts()
       })
         .catch(function (error) {
-          useToast().error('Ошибка обновления данных о типе')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ОБНОВЛЕНИИ данных о: Типе ' + Type + ' c ID ' + ProductId + '. Описание: ' + error, Place: 'notype.vue' })
+          useToast().error('Ошибка обновления схожих товаров, при изменении типа')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка обновления схожих товаров, при изменении типа: Тип ' + this.newType + '. Описание: ' + error, Place: 'notype.vue/updateTypes' })
+        });
+
+    },
+    searchSimilar(model, Type){
+      this.newType = this.types.find(f => f.typeID === Type).typeName;
+      this.similar = model
+      axios.post('api/product/getSimilarType', {Model : model}).then(res => {
+        if(res.data.length >= 2){
+          this.typesDialog = true
+          this.newTypes = res.data.map(item => {
+            return {
+              ...item,
+              selected : true
+            }
+          })
+        }
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка поиска схожих товаров, при изменении типа')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка поиска схожих товаров, при изменении типа: Тип ' + Type + '. Описание: ' + error, Place: 'notype.vue/searchSimilar' })
         });
     },
     getTypes (){
@@ -496,8 +565,10 @@ export default {
     },
 
     getProducts (){
+      this.loading = true
       axios.get('/api/product/getnotype')
         .then(res => {
+          this.loading = false
           this.products = res.data.map(item => {
             return {
               ...item,
