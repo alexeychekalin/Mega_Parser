@@ -399,6 +399,7 @@ import moment from 'moment'
 export default {
   data: () => ({
     loading: false,
+    oldModel: '',
     sortBy: [{ key: 'parseDate', order: 'desc' }],
     page:1,
     search:'',
@@ -596,7 +597,7 @@ export default {
       this.editedItem.Bonus = this.editedItem.Bonus === 1
       this.editedItem.CardCash = this.editedItem.CardCash === 1
       this.editedItem.Rostest = this.editedItem.Rostest === 1
-
+      this.oldModel = item.Model
       this.dialog = true
     },
 
@@ -666,12 +667,29 @@ export default {
           this.editedItem.CardCash = this.editedItem.CardCash === true ? 1 : 0
           this.editedItem.Monitor = this.editedItem.Monitor === true ? 1 : 0
           this.editedItem.Rostest = this.editedItem.Rostest === true ? 1 : 0
+
           Object.assign(this.products[this.editedIndex], this.editedItem)
 
           this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
-
           if (this.editedItem.SellPrice !== "" && this.editedItem.SellPrice !== null && this.editedItem.PurchasePrice !== "" && this.editedItem.PurchasePrice != null) {
-            this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].split(" ")[0].replace('₽', '').replace(',', '') / this.products[this.editedIndex]['SellPrice'].replace(',', '').replace('₽', ''))) * 100).toFixed(2)
+            this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].replace("\u00A0", '') / this.products[this.editedIndex]['SellPrice'].replace("\u00A0", ''))) * 100).toFixed(2)
+          }
+
+          if(updatedProduct.Model !== this.oldModel){
+            axios.post('/api/product/addEdits', {new: updatedProduct.Model, old : this.oldModel})
+              .then(res => {
+                if (!res.data)
+                  useToast().success('Изменение модели добавлено в классификатор')
+              })
+              .catch(function (error) {
+                useToast().error('Ошибка добавления измененной модели в классификатор')
+                axios.post('/api/log', {
+                  Time: Date.now(),
+                  User: store.state.auth.user.UserID,
+                  Message: 'Ошибка при ДОБАВЛЕНИИ измененной модели в классификатор: ' + updatedProduct.Model + '. Описание: ' + error,
+                  Place: 'product.vue'
+                })
+              });
           }
 
           if (updatedProduct.Color !== null && updatedProduct.Color !== "") {

@@ -160,4 +160,18 @@ class ProductController extends Controller
         return json_decode(json_encode($cnt), true);
     }
 
+    public function addEdits(Request $request)
+    {
+        DB::table('edits')->upsert(
+            [
+            'OldModel' => $request['old'],
+            'NewModel' => $request['new']
+            ],
+            ['OldModel'],
+            ['NewModel']
+        );
+        //$cnt = DB::insert('INSERT INTO edits (OldModel, NewModel) VALUES (:old, :new) ON DUPLICATE KEY UPDATE NewModel = VALUES (:new)', ['new' => $request['new'], 'old' => $request['old']] );
+        //return json_decode(json_encode($cnt), true);
+    }
+
 }

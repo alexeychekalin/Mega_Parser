@@ -324,7 +324,7 @@ import * as XLSX from 'xlsx/xlsx.mjs';
 import moment from 'moment'
 export default {
   data: () => ({
-    loading: false
+    loading: false,
     sortBy: [{ key: 'parseDate', order: 'desc' }],
     page:1,
     search:'',
