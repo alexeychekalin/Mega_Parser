@@ -369,7 +369,6 @@ import { useToast } from "vue-toastification";
 import store from "@/store";
 import * as XLSX from 'xlsx/xlsx.mjs';
 import moment from 'moment'
-import {FingerprintSpinner} from "epic-spinners";
 export default {
   data: () => ({
     loading: false,
@@ -455,7 +454,7 @@ export default {
     typesDialog: false
   }),
   components:{
-    axios, FingerprintSpinner
+    axios,
   },
 
   computed: {

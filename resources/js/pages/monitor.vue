@@ -1,4 +1,5 @@
 <template>
+  <Spinner v-if="loading"/>
   <VCard title="Товары на мониторинге">
     <v-data-table
   v-model:page="page"
@@ -386,6 +387,7 @@
 
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import Spinner from "@/layouts/spinner.vue";
 </script>
 
 <script>
@@ -396,6 +398,7 @@ import * as XLSX from 'xlsx/xlsx.mjs';
 import moment from 'moment'
 export default {
   data: () => ({
+    loading: false,
     sortBy: [{ key: 'parseDate', order: 'desc' }],
     page:1,
     search:'',
@@ -571,9 +574,11 @@ export default {
     },
 
     getProducts (){
+      this.loading = true
       axios.get('/api/product')
         .then(res => {
           this.products = res.data.map(item => {
+            this.loading = false
             return {
               ...item,
               SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
@@ -631,6 +636,7 @@ export default {
     },
 
     save: function () {
+      this.loading = true
       if (this.editedItem.providerName !== null && this.editedItem.providerName !== "" && !isNaN(this.editedItem.providerName)) {
         let provider = this.provider.find(f => f.providerID === this.editedItem.providerName)
         this.editedItem.Wholesaler = provider.providerID
@@ -684,6 +690,7 @@ export default {
                 })
               });
           }
+          this.loading = false
         })
         .catch(function (error) {
           useToast().error('Ошибка обновления товара')

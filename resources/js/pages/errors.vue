@@ -1,4 +1,5 @@
 <template>
+  <Spinner v-if="loading"/>
   <VCard title="Ошибки парсинга товаров">
     <v-data-table
   v-model:page="page"
@@ -311,6 +312,7 @@
 
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import Spinner from "@/layouts/spinner.vue";
 </script>
 
 <script>
@@ -321,6 +323,7 @@ import * as XLSX from 'xlsx/xlsx.mjs';
 import moment from 'moment'
 export default {
   data: () => ({
+    loading: false,
     sortBy: [{ key: 'parseDate', order: 'desc' }],
     page:1,
     search:'',
@@ -476,8 +479,10 @@ export default {
     },
 
     getProducts (){
+      this.loading = true
       axios.get('/api/product/geterrors')
         .then(res => {
+          this.loading = false
           this.products = res.data.map(item => {
             return {
               ...item,
