@@ -5,11 +5,8 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductRequest;
 use App\Models\Product;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-
 
 class ProductController extends Controller
 {
@@ -125,6 +122,20 @@ class ProductController extends Controller
                     'Type' => $request['Type'],
                 ]
             );
+    }
+
+    public function getSimilarType(Request $request)
+    {
+        $product = DB::select('SELECT Model, ProductId FROM product WHERE DAMLEVP(Model, :model) < 0.5 and Type = 99', ['model' => $request['Model']]);
+        return json_decode(json_encode($product), true);
+    }
+
+    public function updateSimilarType(Request $request)
+    {
+        DB::table('product' )
+            ->whereIn('ProductId', $request['Models'])
+            ->update(['Type' => $request['Type']]);
+        return $request['Models'];
     }
 
     public function stats()

@@ -359,11 +359,12 @@ export default {
         this.editedItem.ChatId = ChatID;
         let updatedUser = this.editedItem;
         let pattern = /(\+7|8|7|)[\s(]?(\d{3})[\s)]?(\d{3})[\s-]?(\d{2})[\s-]?(\d{2})/g;
+        updatedUser.TNumber = updatedUser.TNumber.toString().replace(pattern, '8$2$3$4$5')
         axios.post('/api/users/update',
             {
                     UserID: updatedUser.UserID,
                     FIO: updatedUser.FIO,
-                    TNumber: updatedUser.TNumber.replace(pattern, '8$2$3$4$5'),
+                    TNumber: updatedUser.TNumber,
                     ChatID: ChatID,
                     WebAccess: updatedUser.WebAccess,
                     TelegramAccess: updatedUser.TelegramAccess

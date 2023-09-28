@@ -50,6 +50,9 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::post('/settype', [App\Http\Controllers\Product\ProductController::class, 'settype'])->name('product.settype');
     Route::get('/stats', [App\Http\Controllers\Product\ProductController::class, 'stats'])->name('product.stats');
     Route::get('/countMonitor', [App\Http\Controllers\Product\ProductController::class, 'countMonitor'])->name('product.countMonitor');
+    Route::post('/getSimilarType', [App\Http\Controllers\Product\ProductController::class, 'getSimilarType'])->name('product.getSimilarType');
+    Route::post('/updateSimilarType', [App\Http\Controllers\Product\ProductController::class, 'updateSimilarType'])->name('product.updateSimilarType');
+
 });
 
 Route::group(['namespace' => 'Types', 'prefix' => 'types', 'middleware' => 'auth:sanctum'], function (){
