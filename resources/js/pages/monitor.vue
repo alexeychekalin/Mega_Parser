@@ -518,7 +518,7 @@ export default {
         })
         .catch(function (error) {
           useToast().error('Ошибка получения списка типов')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'monitor.vue' })
         });
     },
 
@@ -529,7 +529,7 @@ export default {
         })
         .catch(function (error) {
           useToast().error('Ошибка получения списка поставщиков')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'monitor.vue' })
         });
     },
 
@@ -558,7 +558,7 @@ export default {
       })
         .catch(function (error) {
           useToast().error('Ошибка обновления данных о ' + toast)
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ОБНОВЛЕНИИ данных о: '+ toast + '. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ОБНОВЛЕНИИ данных о: '+ toast + '. Описание: ' + error, Place: 'monitor.vue' })
         });
     },
 
@@ -616,7 +616,7 @@ export default {
       })
         .catch(function (error) {
           useToast().error('Ошибка удаления товара')
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.Model + '. Описание: ' + error, Place: 'monitor.vue' })
         });
     },
 
@@ -687,7 +687,7 @@ export default {
                   Time: Date.now(),
                   User: store.state.auth.user.UserID,
                   Message: 'Ошибка при ДОБАВЛЕНИИ измененной модели в классификатор: ' + updatedProduct.Model + '. Описание: ' + error,
-                  Place: 'product.vue'
+                  Place: 'monitor.vue'
                 })
               });
           }
@@ -704,7 +704,7 @@ export default {
                   Time: Date.now(),
                   User: store.state.auth.user.UserID,
                   Message: 'Ошибка при ДОБАВЛЕНИИ цвета: ' + updatedProduct.Model + '. Описание: ' + error,
-                  Place: 'product.vue'
+                  Place: 'monitor.vue'
                 })
               });
           }
@@ -716,7 +716,7 @@ export default {
             Time: Date.now(),
             User: store.state.auth.user.UserID,
             Message: 'Ошибка при ИЗМЕНЕНИИ товара: ' + updatedProduct.Model + '. Описание: ' + error,
-            Place: 'product.vue'
+            Place: 'monitor.vue'
           })
         });
     },

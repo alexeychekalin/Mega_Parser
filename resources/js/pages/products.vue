@@ -98,6 +98,15 @@
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
     </template>
 
+    <template v-slot:item.actions="{ item }">
+      <v-icon
+        size="small"
+        @click="deleteItem(item.raw)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
+
     <template v-slot:no-data>
       <p class="text-subtitle-1 text-truncate">
         Ничего не найдено
@@ -148,7 +157,7 @@ export default {
       // { title: 'Бонусы', key: 'Bonus', align: 'center' },
       // { title: 'Карта', key: 'CardCash', align: 'center' },
       { title: 'Мониторинг', key: 'Monitor', align: 'center' },
-      // { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
+      { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],
     products: [],
   }),
@@ -175,6 +184,33 @@ export default {
   },
 
   methods: {
+    deleteItem (item) {
+      this.editedIndex = this.products.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
+
+    deleteItemConfirm () {
+      let currentProduct = this.products[this.editedIndex]
+      axios.post('api/product/delete', {ProductID : currentProduct.ProductId}).then(res => {
+        useToast().success('Товар удален')
+        this.products.splice(this.editedIndex, 1)
+        this.closeDelete()
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка удаления товара')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.Model + '. Описание: ' + error, Place: 'products.vue' })
+        });
+    },
+
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
     columnValueList: function (val) {
       return this.products.map((d) => d[val]).filter((value, index, self) => self.indexOf(value) === index);
     },
