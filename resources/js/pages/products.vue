@@ -114,6 +114,17 @@
     </template>
 
   </v-data-table>
+    <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5">Удалить?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Отмена</v-btn>
+          <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">Удалить</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </VCard>
 </template>
 
@@ -132,6 +143,7 @@ import moment from 'moment'
 export default {
   data: () => ({
     loading: false,
+    dialogDelete: false,
     sortBy: [{ key: 'parseDate', order: 'desc' }],
     page:1,
     search:'',
@@ -185,6 +197,7 @@ export default {
 
   methods: {
     deleteItem (item) {
+      console.log('d')
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
