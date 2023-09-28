@@ -578,8 +578,8 @@ export default {
       this.loading = true
       axios.get('/api/product')
         .then(res => {
+          this.loading = false
           this.products = res.data.map(item => {
-            this.loading = false
             return {
               ...item,
               SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
