@@ -307,7 +307,7 @@
       item-title="typeName"
       item-value="typeID"
       variant="solo"
-      @update:model-value = "searchSimilar(item.value.Model, item.columns.Type)"
+      @update:model-value = "searchSimilar(item.value.Model, item.columns.Type, item.value.ProductId)"
     ></v-select>
   </template>
 
@@ -494,6 +494,7 @@ export default {
         this.newType = ''
         this.typesDialog = false
         this.getProducts()
+        useToast().success('Тип ' + toUpdate.length + ' товаров обновлен')
       })
         .catch(function (error) {
           useToast().error('Ошибка обновления схожих товаров, при изменении типа')
@@ -501,7 +502,7 @@ export default {
         });
 
     },
-    searchSimilar(model, Type){
+    searchSimilar(model, Type, id){
       this.newType = this.types.find(f => f.typeID === Type).typeName;
       this.similar = model
       axios.post('api/product/getSimilarType', {Model : model}).then(res => {
@@ -513,6 +514,16 @@ export default {
               selected : true
             }
           })
+        }
+        else{
+          axios.post('api/product/settype', {Type : Type, ProductId: id}).then(res => {
+            this.getProducts()
+            useToast().success('Тип товара обновлен')
+          })
+            .catch(function (error) {
+              useToast().error('Ошибка изменения типа')
+              axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при изменении типа: Тип ' + Type + '. Описание: ' + error, Place: 'notype.vue/searchSimilar' })
+            });
         }
       })
         .catch(function (error) {
