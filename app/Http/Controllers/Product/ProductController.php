@@ -130,12 +130,31 @@ class ProductController extends Controller
         return json_decode(json_encode($product), true);
     }
 
+    public function getSimilarTypeTrash(Request $request)
+    {
+        $product = DB::select('SELECT Model, ProductId FROM product WHERE DAMLEVP(Model, :model) < 0.5 and Type in (100, 101)', ['model' => $request['Model']]);
+        return json_decode(json_encode($product), true);
+    }
+
     public function updateSimilarType(Request $request)
     {
         DB::table('product' )
             ->whereIn('ProductId', $request['Models'])
             ->update(['Type' => $request['Type']]);
         return $request['Models'];
+    }
+
+    public function trashSimilar(Request $request): void
+    {
+       foreach ($request['Models'] as $i){
+           DB::table('trash')->upsert(
+               ['trashString' => $i['Model']],
+               ['trashString'],
+               ['trashString']
+           );
+           Product::where('ProductId', $i['ProductId'])->delete();
+       }
+
     }
 
     public function stats()
@@ -170,8 +189,19 @@ class ProductController extends Controller
             ['OldModel'],
             ['NewModel']
         );
-        //$cnt = DB::insert('INSERT INTO edits (OldModel, NewModel) VALUES (:old, :new) ON DUPLICATE KEY UPDATE NewModel = VALUES (:new)', ['new' => $request['new'], 'old' => $request['old']] );
-        //return json_decode(json_encode($cnt), true);
+    }
+
+    public function addTrash(Request $request)
+    {
+        DB::table('trash')->upsert(
+            [
+                'trashString' => $request['trashString'],
+            ],
+            ['trashString'],
+            ['trashString']
+        );
+
+        $this->delete($request);
     }
 
 }

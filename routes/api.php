@@ -34,6 +34,7 @@ Route::group(['namespace' => 'Log', 'prefix' => 'log', 'middleware' => 'auth:san
 Route::group(['namespace' => 'Shell', 'prefix' => 'shell', 'middleware' => 'auth:sanctum'], function (){
     Route::get('/status', [App\Http\Controllers\ShellController::class, 'status'])->name('shell.status');
     Route::get('/run', [App\Http\Controllers\ShellController::class, 'run'])->name('shell.run');
+    Route::get('/update', [App\Http\Controllers\ShellController::class, 'update'])->name('shell.update');
 });
 
 Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => 'auth:sanctum'], function (){
@@ -52,7 +53,10 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::get('/countMonitor', [App\Http\Controllers\Product\ProductController::class, 'countMonitor'])->name('product.countMonitor');
     Route::post('/getSimilarType', [App\Http\Controllers\Product\ProductController::class, 'getSimilarType'])->name('product.getSimilarType');
     Route::post('/updateSimilarType', [App\Http\Controllers\Product\ProductController::class, 'updateSimilarType'])->name('product.updateSimilarType');
+    Route::post('/getSimilarTypeTrash', [App\Http\Controllers\Product\ProductController::class, 'getSimilarTypeTrash'])->name('product.getSimilarTypeTrash');
     Route::post('/addEdits', [App\Http\Controllers\Product\ProductController::class, 'addEdits'])->name('product.addEdits');
+    Route::post('/addTrash', [App\Http\Controllers\Product\ProductController::class, 'addTrash'])->name('product.addTrash');
+    Route::post('/trashSimilar', [App\Http\Controllers\Product\ProductController::class, 'trashSimilar'])->name('product.trashSimilar');
 });
 
 Route::group(['namespace' => 'Types', 'prefix' => 'types', 'middleware' => 'auth:sanctum'], function (){

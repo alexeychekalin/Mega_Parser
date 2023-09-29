@@ -39,7 +39,7 @@ export default {
 
 <template>
   <VCard
-    title="Мониторинг в 9:00 и 19:00"
+    title="Мониторинг в 9:00 и 18:00"
     subtitle="автозапуск настроен"
     class="position-relative"
   >

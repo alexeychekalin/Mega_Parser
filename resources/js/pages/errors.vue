@@ -280,19 +280,61 @@
   </template>
 
   <template v-slot:item.actions="{ item }">
-    <v-icon
-      size="small"
-      class="me-2"
-      @click="editItem(item.raw)"
+    <v-tooltip
+      location="top"
     >
-      mdi-pencil
-    </v-icon>
-    <v-icon
-      size="small"
-      @click="deleteItem(item.raw)"
+      <template v-slot:activator="{ props }">
+        <v-btn
+          icon
+          v-bind="props"
+          @click="editItem(item.raw)"
+          color="primary"
+        >
+          <v-icon color="grey-lighten-1">
+            mdi-pencil
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>Редактировать</span>
+    </v-tooltip>
+
+    <v-tooltip
+      location="top"
     >
-      mdi-delete
-    </v-icon>
+      <template v-slot:activator="{ props }">
+        <v-btn
+          icon
+          v-bind="props"
+          color="error"
+          class="ma-2"
+          @click="deleteItem(item.raw)"
+        >
+          <v-icon color="grey-lighten-1">
+            mdi-delete
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>Удалить</span>
+    </v-tooltip>
+
+    <v-tooltip
+      location="top"
+    >
+      <template v-slot:activator="{ props }">
+        <v-btn
+          icon
+          v-bind="props"
+          @click="searchSimilar(item.raw.Model, item.raw.ProductId)"
+          color="warning"
+        >
+          <v-icon color="grey-lighten-1">
+            mdi-delete-variant
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>Мусор</span>
+    </v-tooltip>
+
   </template>
 
   <template v-slot:item.parseDate="{ item }">
@@ -307,6 +349,41 @@
 
 </v-data-table>
   </VCard>
+  <v-dialog
+    v-model="typesDialog"
+    scrollable
+    width="auto"
+  >
+    <template v-slot:default="{ isActive }">
+      <v-card>
+        <v-alert
+          color="warning"
+          :title="'Найдены похожие на '+ similar +  ' товары:' "
+          variant="outlined"
+          border="start"
+          border-color="warning"
+        >
+          <v-list :lines="newTypes.length" select-strategy="classic" style="max-height: 500px;" >
+            <v-list-subheader>Выбранный тип: {{newType}}</v-list-subheader>
+            <v-list-item v-for="(item, key, index) in newTypes" :value=key>
+              <template v-slot:prepend="{ isActive=true }">
+                <v-list-item-action start>
+                  <v-checkbox :key="item['ProductId']" :label="item['Model']" :model-value="isActive" v-model="newTypes[key]['selected']" color="success"></v-checkbox>
+                </v-list-item-action>
+              </template>
+            </v-list-item>
+          </v-list>
+          <v-card-actions class="justify-end">
+            <v-btn
+              variant="text"
+              @click="toTrash"
+            >Обновить</v-btn>
+          </v-card-actions>
+        </v-alert>
+
+      </v-card>
+    </template>
+  </v-dialog>
 </template>
 
 
@@ -398,7 +475,11 @@ export default {
         const pattern = /^\d*(\.\d{1,2})?$/
         return pattern.test(value) || 'Введите число, формат 12345.67'
       },
-    }
+    },
+    newTypes:[],
+    newType:'',
+    similar:'',
+    typesDialog: false
   }),
 
   components:{
@@ -434,6 +515,50 @@ export default {
   },
 
   methods: {
+    searchSimilar(model, id){
+      this.similar = model
+      axios.post('api/product/getSimilarTypeTrash', {Model : model}).then(res => {
+        if(res.data.length >= 2){
+          this.typesDialog = true
+          this.newTypes = res.data.map(item => {
+            return {
+              ...item,
+              selected : true
+            }
+          })
+        }
+        else{
+          axios.post('api/product/addTrash', {trashString : model, ProductID: id}).then(res => {
+            this.getProducts()
+            useToast().success('Строка помечена как мусор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          })
+            .catch(function (error) {
+              useToast().error('Ошибка пометки строки', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+              axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка пометки строки в мусор: ' +model+ '. Описание: ' + error, Place: 'errors.vue/toTrash' })
+            });
+        }
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка поиска схожих строк')
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка поиска схожих строк, MODEL ' + model + '. Описание: ' + error, Place: 'notype.vue/searchSimilar' })
+        });
+    },
+
+    toTrash(){
+      let toUpdate = this.newTypes.filter((x) => x.selected === true);
+      axios.post('api/product/trashSimilar', {Models : toUpdate}).then(res => {
+        this.newTypes = []
+        this.similar = ''
+        this.newType = ''
+        this.typesDialog = false
+        this.getProducts()
+        useToast().success('В мусор отправлено - ' + toUpdate.length + ' строк')
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка пометки строк', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка пометки строк в мусор. Описание: ' + error, Place: 'errors.vue/toTrash' })
+        });
+    },
 
     getTypes (){
       axios.get('/api/types')
@@ -441,7 +566,7 @@ export default {
           this.types = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка типов')
+          useToast().error('Ошибка получения списка типов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'product.vue' })
         });
     },
@@ -452,7 +577,7 @@ export default {
           this.provider = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка поставщиков')
+          useToast().error('Ошибка получения списка поставщиков', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'product.vue' })
         });
     },
@@ -499,6 +624,7 @@ export default {
       this.editedItem.Bonus = this.editedItem.Bonus === 1
       this.editedItem.CardCash = this.editedItem.CardCash === 1
       this.editedItem.Rostest = this.editedItem.Rostest === 1
+      this.editedItem.Type = ''
 
       console.log(this.editedItem.Wholesaler)
       this.dialog = true
@@ -513,12 +639,12 @@ export default {
     deleteItemConfirm () {
       let currentProduct = this.products[this.editedIndex]
       axios.post('api/product/delete', {ProductID : currentProduct.ProductId}).then(res => {
-        useToast().success('Товар удален')
+        useToast().success('Товар удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.products.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления товара')
+          useToast().error('Ошибка удаления товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
         });
     },
@@ -540,6 +666,10 @@ export default {
     },
 
     save () {
+      if(this.editedItem.Type === '') {
+        useToast().error('Не указан тип товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+        return;
+      }
       if (this.editedItem.providerName !== null && this.editedItem.providerName !== "" && !isNaN(this.editedItem.providerName)) {
         let provider = this.provider.find(f => f.providerID === this.editedItem.providerName)
         this.editedItem.Wholesaler = provider.providerID
@@ -563,7 +693,7 @@ export default {
           }
       )
         .then(res => {
-          useToast().success('Товар обновлен')
+          useToast().success('Товар обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           this.close()
           this.editedItem.Bonus = this.editedItem.Bonus === true ? 1 : 0
           this.editedItem.CardCash = this.editedItem.CardCash === true ? 1 : 0
@@ -577,10 +707,10 @@ export default {
             axios.post('/api/colors/check',{Color: updatedProduct.Color,})
               .then(res => {
                 if(!res.data)
-                  useToast().success('Цвет добавлен в классификатор')
+                  useToast().success('Цвет добавлен в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
               })
               .catch(function (error) {
-                useToast().error('Ошибка добавления цвета')
+                useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
                 axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
               });
           }
@@ -589,9 +719,12 @@ export default {
             this.products.splice(this.editedIndex, 1)
           }
 
+          useToast().info('Запущен поиск похожих ошибок')
+          this.$axios.get('/api/shell/update').then((res) => { res.data.answer === 1 ? useToast().success('Поиск завершен') : useToast().error('Произошла ошибка. Смотрите логи')})
+
         })
         .catch(function (error) {
-          useToast().error('Ошибка обновления товара')
+          useToast().error('Ошибка обновления товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ товара: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
         });
     },

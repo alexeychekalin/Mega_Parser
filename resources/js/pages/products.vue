@@ -99,13 +99,25 @@
     </template>
 
     <template v-slot:item.actions="{ item }">
-      <v-icon
-        size="small"
-        @click="deleteItem(item.raw)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
+          <v-tooltip
+            location="top"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                icon
+                v-bind="props"
+                color="error"
+                class="ma-1"
+                @click="deleteItem(item.raw)"
+              >
+                <v-icon color="grey-lighten-1">
+                  mdi-delete
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Удалить</span>
+          </v-tooltip>
+      </template>
 
     <template v-slot:no-data>
       <p class="text-subtitle-1 text-truncate">

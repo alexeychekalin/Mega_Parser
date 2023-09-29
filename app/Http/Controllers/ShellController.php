@@ -36,6 +36,21 @@ class ShellController extends Controller
                 'answer' => 0
             ]);
         }
+    }
+    public function update(): \Illuminate\Http\JsonResponse
+    {
+        exec("cd /home/mega_parser; echo megaparser13 | sudo -S -k python3 /home/mega_parser/CategorizerStart.py 2>&1", $output);
 
+        if($output[0] == '[sudo] password for www-data:'){
+            return response()->json([
+                'answer' => 1,
+            ]);
+        }
+        else{
+            return response()->json([
+                'output' => $output,
+                'answer' => 0
+            ]);
+        }
     }
 }
