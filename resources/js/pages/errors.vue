@@ -100,6 +100,7 @@
       ></v-divider>
       <v-dialog
         v-model="dialog"
+        scrollable
         max-width="800px"
       >
         <template v-slot:activator="{ props }">
@@ -280,61 +281,62 @@
   </template>
 
   <template v-slot:item.actions="{ item }">
-    <v-tooltip
-      location="top"
-    >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon
-          v-bind="props"
-          @click="editItem(item.raw)"
-          color="primary"
-        >
-          <v-icon color="grey-lighten-1">
-            mdi-pencil
-          </v-icon>
-        </v-btn>
-      </template>
-      <span>Редактировать</span>
-    </v-tooltip>
+    <div style="white-space: nowrap">
+      <v-tooltip
+        location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click="editItem(item.raw)"
+            color="primary"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-pencil
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Редактировать</span>
+      </v-tooltip>
 
-    <v-tooltip
-      location="top"
-    >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon
-          v-bind="props"
-          color="error"
-          class="ma-2"
-          @click="deleteItem(item.raw)"
-        >
-          <v-icon color="grey-lighten-1">
-            mdi-delete
-          </v-icon>
-        </v-btn>
-      </template>
-      <span>Удалить</span>
-    </v-tooltip>
+      <v-tooltip
+        location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            color="error"
+            class="ma-2"
+            @click="deleteItem(item.raw)"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-delete
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Удалить</span>
+      </v-tooltip>
 
-    <v-tooltip
-      location="top"
-    >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon
-          v-bind="props"
-          @click="searchSimilar(item.raw.Model, item.raw.ProductId)"
-          color="warning"
-        >
-          <v-icon color="grey-lighten-1">
-            mdi-delete-variant
-          </v-icon>
-        </v-btn>
-      </template>
-      <span>Мусор</span>
-    </v-tooltip>
-
+      <v-tooltip
+        location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click="searchSimilar(item.raw.Model, item.raw.ProductId)"
+            color="warning"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-delete-variant
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Мусор</span>
+      </v-tooltip>
+    </div>
   </template>
 
   <template v-slot:item.parseDate="{ item }">
@@ -626,7 +628,6 @@ export default {
       this.editedItem.Rostest = this.editedItem.Rostest === 1
       this.editedItem.Type = ''
 
-      console.log(this.editedItem.Wholesaler)
       this.dialog = true
     },
 
