@@ -395,7 +395,10 @@
     <div class="text-truncate" style="max-width: 70px;">
       <v-tooltip :text=item.columns.Retailer>
         <template v-slot:activator="{ props }">
-          <div v-bind="props">{{item.columns.Retailer}}</div>
+          <div v-bind="props">
+            <a v-if="item.raw.LinkToSMM !== ''" :href="item.raw.LinkToSMM" target="_blank" >{{item.columns.Retailer}}</a>
+            <p v-else >{{item.columns.Retailer}}</p>
+          </div>
         </template>
       </v-tooltip>
     </div>
@@ -618,6 +621,7 @@ export default {
     },
 
     editItem (item) {
+      console.log(item.LinkToSMM)
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.editedItem.Monitor = this.editedItem.Monitor === 1

@@ -31,6 +31,7 @@ class Product extends Authenticatable
         'SellPrice',
         'parseDate',
         'SberParseDate',
+        'LinkToSMM',
     ];
 
     protected $primaryKey = 'ProductID';
