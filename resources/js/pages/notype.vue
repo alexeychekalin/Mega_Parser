@@ -520,10 +520,10 @@ export default {
         this.newType = ''
         this.typesDialog = false
         this.getProducts()
-        useToast().success('Тип ' + toUpdate.length + ' товаров обновлен')
+        useToast().success('Тип ' + toUpdate.length + ' товаров обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
       })
         .catch(function (error) {
-          useToast().error('Ошибка обновления схожих товаров, при изменении типа')
+          useToast().error('Ошибка обновления схожих товаров, при изменении типа', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка обновления схожих товаров, при изменении типа: Тип ' + this.newType + '. Описание: ' + error, Place: 'notype.vue/updateTypes' })
         });
 
@@ -544,16 +544,16 @@ export default {
         else{
           axios.post('api/product/settype', {Type : Type, ProductId: id}).then(res => {
             this.getProducts()
-            useToast().success('Тип товара обновлен')
+            useToast().success('Тип товара обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           })
             .catch(function (error) {
-              useToast().error('Ошибка изменения типа')
+              useToast().error('Ошибка изменения типа', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
               axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при изменении типа: Тип ' + Type + '. Описание: ' + error, Place: 'notype.vue/searchSimilar' })
             });
         }
       })
         .catch(function (error) {
-          useToast().error('Ошибка поиска схожих товаров, при изменении типа')
+          useToast().error('Ошибка поиска схожих товаров, при изменении типа', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка поиска схожих товаров, при изменении типа: Тип ' + Type + '. Описание: ' + error, Place: 'notype.vue/searchSimilar' })
         });
     },
@@ -563,7 +563,7 @@ export default {
           this.types = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка типов')
+          useToast().error('Ошибка получения списка типов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'product.vue' })
         });
     },
@@ -574,7 +574,7 @@ export default {
           this.provider = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка поставщиков')
+          useToast().error('Ошибка получения списка поставщиков', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'product.vue' })
         });
     },
@@ -633,12 +633,12 @@ export default {
     deleteItemConfirm () {
       let currentProduct = this.products[this.editedIndex]
       axios.post('api/product/delete', {ProductID : currentProduct.ProductId}).then(res => {
-        useToast().success('Товар удален')
+        useToast().success('Товар удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.products.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления товара')
+          useToast().error('Ошибка удаления товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.Model + '. Описание: ' + error, Place: 'product.vue' })
         });
     },
@@ -683,7 +683,7 @@ export default {
           }
       )
         .then(res => {
-          useToast().success('Товар обновлен')
+          useToast().success('Товар обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           this.close()
           this.editedItem.Bonus = this.editedItem.Bonus === true ? 1 : 0
           this.editedItem.CardCash = this.editedItem.CardCash === true ? 1 : 0
@@ -697,10 +697,10 @@ export default {
             axios.post('/api/colors/check',{Color: updatedProduct.Color,})
               .then(res => {
                 if(!res.data)
-                  useToast().success('Цвет добавлен в классификатор')
+                  useToast().success('Цвет добавлен в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
               })
               .catch(function (error) {
-                useToast().error('Ошибка добавления цвета')
+                useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
                 axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'notype.vue' })
               });
           }
@@ -711,7 +711,7 @@ export default {
 
         })
         .catch(function (error) {
-          useToast().error('Ошибка обновления товара')
+          useToast().error('Ошибка обновления товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ товара: '+ updatedProduct.Model + '. Описание: ' + error, Place: 'notype.vue' })
         });
     },

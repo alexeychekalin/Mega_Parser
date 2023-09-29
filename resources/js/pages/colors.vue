@@ -209,7 +209,7 @@ export default {
           this.colors = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка цветов')
+          useToast().error('Ошибка получения списка цветов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ цветов. Описание: ' + error, Place: 'colors.vue' })
         });
     },
@@ -229,12 +229,12 @@ export default {
     deleteItemConfirm () {
       let currentColor = this.colors[this.editedIndex]
       axios.post('api/colors/delete', {idColor : currentColor.idColor}).then(res => {
-        useToast().success('Цвет удален')
+        useToast().success('Цвет удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.colors.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления цвета')
+          useToast().error('Ошибка удаления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ цвета: '+ currentColor.Color + '. Описание: ' + error, Place: 'colors.vue' })
         });
 
@@ -268,11 +268,11 @@ export default {
             }
         )
           .then(res => {
-              useToast().success('цвет обновлен')
+              useToast().success('цвет обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка обновления цвета')
+            useToast().error('Ошибка обновления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ цвета: '+ updatedColor.Color + '. Описание: ' + error, Place: 'colors.vue' })
           });
       } else {
@@ -282,12 +282,12 @@ export default {
               Color: this.editedItem.Color,
           } )
           .then(res => {
-            useToast().success('Цвет добавлен')
+            useToast().success('Цвет добавлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.colors.push(this.editedItem)
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка добавления цвета')
+            useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ цвета: '+ name + '. Описание: ' + error, Place: 'colors.vue' })
           });
       }

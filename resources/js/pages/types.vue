@@ -183,7 +183,7 @@ export default {
           this.types = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка типов')
+          useToast().error('Ошибка получения списка типов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'types.vue' })
         });
     },
@@ -192,7 +192,7 @@ export default {
       this.editedIndex = this.types.indexOf(item)
       this.editedItem = Object.assign({}, item)
       if([99, 100, 101, 102].includes(this.editedItem.typeID)){
-        useToast().error('Служебный тип товара не может быть изменен!')
+        useToast().error('Служебный тип товара не может быть изменен!', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         return
       }
       this.dialog = true
@@ -202,7 +202,7 @@ export default {
       this.editedIndex = this.types.indexOf(item)
       this.editedItem = Object.assign({}, item)
       if([99, 100, 101, 102].includes(this.editedItem.typeID)){
-        useToast().error('Служебный тип товара не может быть удален!')
+        useToast().error('Служебный тип товара не может быть удален!', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         return
       }
       this.dialogDelete = true
@@ -211,12 +211,12 @@ export default {
     deleteItemConfirm () {
       let currentType = this.types[this.editedIndex]
       axios.post('api/types/delete', {typeID : currentType.typeID}).then(res => {
-        useToast().success('Тип товара удален')
+        useToast().success('Тип товара удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.types.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления типа товара')
+          useToast().error('Ошибка удаления типа товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ типа товара: '+ currentType.typeName + '. Описание: ' + error, Place: 'types.vue' })
         });
 
@@ -251,12 +251,12 @@ export default {
             }
         )
           .then(res => {
-              useToast().success('Тип товара обновлен')
+              useToast().success('Тип товара обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.addPassword = ''
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка обновления типа товара')
+            useToast().error('Ошибка обновления типа товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16}
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ типа товара: '+ updatedType.typeName + '. Описание: ' + error, Place: 'types.vue' })
           });
       } else {
@@ -266,12 +266,12 @@ export default {
               typeName: this.editedItem.typeName,
           } )
           .then(res => {
-            useToast().success('Тип товара создан')
+            useToast().success('Тип товара создан', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.types.push(this.editedItem)
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка создания типа товара')
+            useToast().error('Ошибка создания типа товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ типа товара: '+ name + '. Описание: ' + error, Place: 'types.vue' })
           });
       }

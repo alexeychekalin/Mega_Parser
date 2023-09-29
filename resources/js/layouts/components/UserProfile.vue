@@ -21,11 +21,11 @@ export default {
     },
     changePassword(){
       axios.post('/api/users/change', {password: this.password, UserID: store.state.auth.user.UserID}).then(res => {
-        useToast().success('Пароль обновлен')
+        useToast().success('Пароль обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.dialog = false;
       })
         .catch(function (error) {
-          useToast().error('Ошибка смены пароля')
+          useToast().error('Ошибка смены пароля', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при изменении пароля. Пользователь:  '+ store.state.auth.user.FIO + '. Описание: ' + error, Place: 'UserProfile.vue' })
         });
     }

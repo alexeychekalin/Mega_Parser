@@ -539,7 +539,7 @@ export default {
         }
       })
         .catch(function (error) {
-          useToast().error('Ошибка поиска схожих строк')
+          useToast().error('Ошибка поиска схожих строк', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка поиска схожих строк, MODEL ' + model + '. Описание: ' + error, Place: 'notype.vue/searchSimilar' })
         });
     },
@@ -552,7 +552,7 @@ export default {
         this.newType = ''
         this.typesDialog = false
         this.getProducts()
-        useToast().success('В мусор отправлено - ' + toUpdate.length + ' строк')
+        useToast().success('В мусор отправлено - ' + toUpdate.length + ' строк', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
       })
         .catch(function (error) {
           useToast().error('Ошибка пометки строк', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
@@ -719,8 +719,8 @@ export default {
             this.products.splice(this.editedIndex, 1)
           }
 
-          useToast().info('Запущен поиск похожих ошибок')
-          this.$axios.get('/api/shell/update').then((res) => { res.data.answer === 1 ? useToast().success('Поиск завершен') : useToast().error('Произошла ошибка. Смотрите логи')})
+          useToast().info('Запущен поиск похожих ошибок', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          this.$axios.get('/api/shell/update').then((res) => { res.data.answer === 1 ? useToast().success('Поиск завершен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16}) : useToast().error('Произошла ошибка. Смотрите логи', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})})
 
         })
         .catch(function (error) {

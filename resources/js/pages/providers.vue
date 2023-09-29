@@ -209,7 +209,7 @@ export default {
           this.providers = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка поставщиков')
+          useToast().error('Ошибка получения списка поставщиков', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'providers.vue' })
         });
     },
@@ -229,12 +229,12 @@ export default {
     deleteItemConfirm () {
       let currentProvider = this.providers[this.editedIndex]
       axios.post('api/providers/delete', {providerID : currentProvider.providerID}).then(res => {
-        useToast().success('Поставщик удален')
+        useToast().success('Поставщик удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.providers.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления поставщика')
+          useToast().error('Ошибка удаления поставщика', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ поставщика: '+ currentProvider.providerName + '. Описание: ' + error, Place: 'providers.vue' })
         });
 
@@ -267,11 +267,11 @@ export default {
             }
         )
           .then(res => {
-              useToast().success('поставщик обновлен')
+              useToast().success('поставщик обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка обновления поставщика')
+            useToast().error('Ошибка обновления поставщика', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ поставщика: '+ updatedProvider.providerName + '. Описание: ' + error, Place: 'providers.vue' })
           });
       } else {
@@ -281,12 +281,12 @@ export default {
             providerName: this.editedItem.providerName,
           } )
           .then(res => {
-            useToast().success('Поставщик добавлен')
+            useToast().success('Поставщик добавлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.providers.push(this.editedItem)
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка добавления поставщика')
+            useToast().error('Ошибка добавления поставщика', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ поставщика: '+ name + '. Описание: ' + error, Place: 'providers.vue' })
           });
       }

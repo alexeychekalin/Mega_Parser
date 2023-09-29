@@ -19,8 +19,8 @@ export default {
 
   methods: {
     run(){
-      useToast().info('Парсинг запущен')
-      this.$axios.get('/api/shell/run').then((res) => { res.data.answer === 1 ? useToast().success('Парсинг товаров завершен') : useToast().error('Произошла ошибка парсинга. Смотрите логи')})
+      useToast().info('Парсинг запущен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+      this.$axios.get('/api/shell/run').then((res) => { res.data.answer === 1 ? useToast().success('Парсинг товаров завершен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16}) : useToast().error('Произошла ошибка парсинга. Смотрите логи', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})})
     },
 
     Statistics() {

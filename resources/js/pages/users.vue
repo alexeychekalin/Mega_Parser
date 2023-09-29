@@ -329,7 +329,7 @@ export default {
           this.users = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка пользователей')
+          useToast().error('Ошибка получения списка пользователей', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ пользователей. Описание: ' + error, Place: 'users.vue' })
         });
     },
@@ -349,12 +349,12 @@ export default {
     deleteItemConfirm () {
       let currentUser = this.users[this.editedIndex]
       axios.post('api/users/delete', {UserID : currentUser.UserID}).then(res => {
-        useToast().success('Пользователь удален')
+        useToast().success('Пользователь удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.users.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления пользователя')
+          useToast().error('Ошибка удаления пользователя', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ пользователя: '+ currentUser.FIO + '. Описание: ' + error, Place: 'users.vue' })
         });
 
@@ -397,12 +397,12 @@ export default {
             }
         )
           .then(res => {
-              useToast().success('Пользователь обновлен')
+              useToast().success('Пользователь обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.addPassword = ''
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка обновления пользователя')
+            useToast().error('Ошибка обновления пользователя', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ пользователя: '+ updatedUser.FIO + '. Описание: ' + error, Place: 'users.vue' })
           });
       } else {
@@ -417,13 +417,13 @@ export default {
                   password: this.addPassword
           } )
           .then(res => {
-            useToast().success('Пользователь создан')
+            useToast().success('Пользователь создан', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.users.push(this.editedItem)
             this.addPassword = ''
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка создания пользователя')
+            useToast().error('Ошибка создания пользователя', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ пользователя: '+ name + '. Описание: ' + error, Place: 'users.vue' })
           });
       }

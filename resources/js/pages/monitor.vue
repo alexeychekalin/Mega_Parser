@@ -544,7 +544,7 @@ export default {
           this.types = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка типов')
+          useToast().error('Ошибка получения списка типов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'monitor.vue' })
         });
     },
@@ -555,7 +555,7 @@ export default {
           this.provider = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка поставщиков')
+          useToast().error('Ошибка получения списка поставщиков', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'monitor.vue' })
         });
     },
@@ -581,10 +581,10 @@ export default {
       this.editedIndex = this.products.indexOf(item)
       this.products[this.editedIndex][what] = set ? 1 : 0
       axios.post('api/product/set', {what : what, set : set, ProductId : item.ProductId}).then(res => {
-        useToast().success('Данные о ' + toast + ' обновлены')
+        useToast().success('Данные о ' + toast + ' обновлены', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
       })
         .catch(function (error) {
-          useToast().error('Ошибка обновления данных о ' + toast)
+          useToast().error('Ошибка обновления данных о ' + toast, {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ОБНОВЛЕНИИ данных о: '+ toast + '. Описание: ' + error, Place: 'monitor.vue' })
         });
     },
@@ -637,12 +637,12 @@ export default {
     deleteItemConfirm () {
       let currentProduct = this.products[this.editedIndex]
       axios.post('api/product/delete', {ProductID : currentProduct.ProductId}).then(res => {
-        useToast().success('Товар удален')
+        useToast().success('Товар удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.products.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления товара')
+          useToast().error('Ошибка удаления товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.Model + '. Описание: ' + error, Place: 'monitor.vue' })
         });
     },
@@ -688,7 +688,7 @@ export default {
         }
       )
         .then(res => {
-          useToast().success('Товар обновлен')
+          useToast().success('Товар обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           this.close()
           this.editedItem.Bonus = this.editedItem.Bonus === true ? 1 : 0
           this.editedItem.CardCash = this.editedItem.CardCash === true ? 1 : 0
@@ -706,10 +706,10 @@ export default {
             axios.post('/api/product/addEdits', {new: updatedProduct.Model, old : this.oldModel})
               .then(res => {
                 if (!res.data)
-                  useToast().success('Изменение модели добавлено в классификатор')
+                  useToast().success('Изменение модели добавлено в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
               })
               .catch(function (error) {
-                useToast().error('Ошибка добавления измененной модели в классификатор')
+                useToast().error('Ошибка добавления измененной модели в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
                 axios.post('/api/log', {
                   Time: Date.now(),
                   User: store.state.auth.user.UserID,
@@ -723,10 +723,10 @@ export default {
             axios.post('/api/colors/check', {Color: updatedProduct.Color,})
               .then(res => {
                 if (!res.data)
-                  useToast().success('Цвет добавлен в классификатор')
+                  useToast().success('Цвет добавлен в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
               })
               .catch(function (error) {
-                useToast().error('Ошибка добавления цвета')
+                useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
                 axios.post('/api/log', {
                   Time: Date.now(),
                   User: store.state.auth.user.UserID,
@@ -738,7 +738,7 @@ export default {
           this.loading = false
         })
         .catch(function (error) {
-          useToast().error('Ошибка обновления товара')
+          useToast().error('Ошибка обновления товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {
             Time: Date.now(),
             User: store.state.auth.user.UserID,

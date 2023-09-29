@@ -109,7 +109,7 @@ export default {
           this.types = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка типов')
+          useToast().error('Ошибка получения списка типов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'monitorTypes.vue' })
         });
     },
@@ -119,15 +119,15 @@ export default {
       this.types[this.editedIndex].monitor = set ? 1 : 0
       console.log(this.types[this.editedIndex].monitor)
       axios.post('api/product/setbytype', {set : set, typeID : item.typeID}).then(res => {
-        useToast().success('Данные о мониторинге обновлены')
+        useToast().success('Данные о мониторинге обновлены', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         axios.post('api/types/setbytype', {set : set, typeID : item.typeID})
           .catch(function (error) {
-            useToast().error('Ошибка установки мониторинга ' + this.types[this.editedIndex].typeName)
+            useToast().error('Ошибка установки мониторинга ' + this.types[this.editedIndex].typeName, {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОСТАНОВКЕ на мониторинг по типу: '+ this.types[this.editedIndex].typeName + '. Описание: ' + error, Place: 'monitorTypes.vue' })
           });
       })
         .catch(function (error) {
-          useToast().error('Ошибка установки мониторинга ' + this.types[this.editedIndex].typeName)
+          useToast().error('Ошибка установки мониторинга ' + this.types[this.editedIndex].typeName, {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОСТАНОВКЕ на мониторинг по типу: '+ this.types[this.editedIndex].typeName + '. Описание: ' + error, Place: 'monitorTypes.vue' })
         });
     },

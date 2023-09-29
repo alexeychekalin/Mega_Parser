@@ -42,7 +42,7 @@ export default {
           this.types = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка типов')
+          useToast().error('Ошибка получения списка типов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'NewProduct.vue' })
         });
     },
@@ -53,7 +53,7 @@ export default {
           this.provider = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка поставщиков')
+          useToast().error('Ошибка получения списка поставщиков', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ поставщиков. Описание: ' + error, Place: 'product.vue' })
         });
     },
@@ -83,14 +83,14 @@ export default {
           Retailer: this.Retailer,
         } )
         .then(res => {
-          useToast().success('Товар создан')
+          useToast().success('Товар создан', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/colors/check',{Color: this.Color,})
             .then(res => {
               if(!res.data)
-                useToast().success('Цвет добавлен в классификатор')
+                useToast().success('Цвет добавлен в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             })
             .catch(function (error) {
-              useToast().error('Ошибка добавления цвета')
+              useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
               axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ this.Model + '. Описание: ' + error, Place: 'Dashboard/NewProduct.vue' })
             });
 
@@ -98,7 +98,7 @@ export default {
           this.clear()
         })
         .catch(function (error) {
-          useToast().error('Ошибка создания товара')
+          useToast().error('Ошибка создания товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ товара: '+ name + '. Описание: ' + error, Place: 'Dashboard/NewProduct.vue' })
         });
     }

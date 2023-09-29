@@ -85,7 +85,7 @@ export default {
      */
     checkState(){
       this.$axios.get('/api/shell/status').then((res) => {
-        useToast().info('Опрос систем завершен')
+        useToast().info('Опрос систем завершен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.solidCardData[0].state = this.state[res.data.answer]
         this.solidCardData[1].state = this.state[res.data.answer]
         this.solidCardData[2].state = this.state[res.data.answer]

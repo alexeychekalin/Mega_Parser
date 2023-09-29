@@ -218,12 +218,12 @@ export default {
     deleteItemConfirm () {
       let currentProduct = this.products[this.editedIndex]
       axios.post('api/product/delete', {ProductID : currentProduct.ProductId}).then(res => {
-        useToast().success('Товар удален')
+        useToast().success('Товар удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         this.products.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления товара')
+          useToast().error('Ошибка удаления товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ товара: '+ currentProduct.Model + '. Описание: ' + error, Place: 'products.vue' })
         });
     },
@@ -246,7 +246,7 @@ export default {
           this.types = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка типов')
+          useToast().error('Ошибка получения списка типов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ типов. Описание: ' + error, Place: 'NewProduct.vue' })
         });
     },
@@ -273,10 +273,10 @@ export default {
       this.editedIndex = this.products.indexOf(item)
       this.products[this.editedIndex][what] = set ? 1 : 0
       axios.post('api/product/set', {what : what, set : set, ProductId : item.ProductId}).then(res => {
-        useToast().success('Данные о ' + toast + ' обновлены')
+        useToast().success('Данные о ' + toast + ' обновлены', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
       })
         .catch(function (error) {
-          useToast().error('Ошибка обновления данных о ' + toast)
+          useToast().error('Ошибка обновления данных о ' + toast, {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
           axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ОБНОВЛЕНИИ данных о: '+ toast + '. Описание: ' + error, Place: 'product.vue' })
         });
     },
