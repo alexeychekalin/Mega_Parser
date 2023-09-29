@@ -256,7 +256,7 @@ export default {
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка обновления типа товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16}
+            useToast().error('Ошибка обновления типа товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ типа товара: '+ updatedType.typeName + '. Описание: ' + error, Place: 'types.vue' })
           });
       } else {
