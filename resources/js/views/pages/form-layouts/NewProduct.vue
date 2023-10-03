@@ -84,16 +84,18 @@ export default {
         } )
         .then(res => {
           useToast().success('Товар создан', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-          axios.post('/api/colors/check',{Color: this.Color,})
-            .then(res => {
-              if(!res.data)
-                useToast().success('Цвет добавлен в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-            })
-            .catch(function (error) {
-              useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-              axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ this.Model + '. Описание: ' + error, Place: 'Dashboard/NewProduct.vue' })
-            });
-
+          if(this.Color !== "")
+          {
+            axios.post('/api/colors/check',{Color: this.Color,})
+              .then(res => {
+                if(!res.data)
+                  useToast().success('Цвет добавлен в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+              })
+              .catch(function (error) {
+                useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+                axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ДОБАВЛЕНИИ цвета: '+ this.Model + '. Описание: ' + error, Place: 'Dashboard/NewProduct.vue' })
+              });
+          }
           this.$refs.newProduct.reset()
           this.clear()
         })

@@ -72,7 +72,7 @@
           v-model="search"
           density="compact"
           variant="plain"
-          append-icon="mdi-magnify"
+          prepend-inner-icon="mdi-magnify"
           label="Поиск по всем полям"
           single-line
           hide-details
@@ -83,16 +83,14 @@
         inset
         vertical
       ></v-divider>
-      <VCol cols="12" md="1">
         <v-btn
-          color="primary"
-          dark
+          class="ma-2"
           variant="text"
+          icon="mdi-microsoft-excel"
           @click="download"
         >
-          Скачать XLSX
         </v-btn>
-      </VCol>
+
       <v-divider
         class="mx-4"
         inset
@@ -105,12 +103,11 @@
       >
         <template v-slot:activator="{ props }">
           <v-btn
-            color="primary"
-            dark
-            class="mb-2"
+            class="ma-2"
+            variant="text"
+            icon="mdi-cart-plus"
             v-bind="props"
           >
-            Создать
           </v-btn>
         </template>
         <v-form @submit.prevent="save">
@@ -396,7 +393,7 @@
       <v-tooltip :text=item.columns.Retailer>
         <template v-slot:activator="{ props }">
           <div v-bind="props">
-            <a v-if="item.raw.LinkToSMM !== ''" :href="item.raw.LinkToSMM+'#?details_block=prices'" target="_blank" >{{item.columns.Retailer}}</a>
+            <a v-if="item.raw.LinkToSMM !== ''" :href="item.raw.LinkToSMM.split('#')[0]+'#?details_block=prices'" target="_blank" >{{item.columns.Retailer}}</a>
             <p v-else >{{item.columns.Retailer}}</p>
           </div>
         </template>

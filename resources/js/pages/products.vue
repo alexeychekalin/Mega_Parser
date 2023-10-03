@@ -72,13 +72,19 @@
             v-model="search"
             density="compact"
             variant="plain"
-            append-icon="mdi-magnify"
+            prepend-inner-icon="mdi-magnify"
             label="Поиск по всем полям"
             single-line
             hide-details
           ></v-text-field>
         </v-toolbar-title>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
       </v-toolbar>
+
     </template>
 
     <template v-slot:item.Monitor="{ item }" >
@@ -209,7 +215,6 @@ export default {
 
   methods: {
     deleteItem (item) {
-      console.log('d')
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true

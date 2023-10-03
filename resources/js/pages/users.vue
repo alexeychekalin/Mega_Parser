@@ -17,7 +17,7 @@
           v-model="search"
           density="compact"
           variant="plain"
-          append-icon="mdi-magnify"
+          prepend-inner-icon="mdi-magnify"
           label="Поиск по всем полям"
           single-line
           hide-details
@@ -34,12 +34,11 @@
       >
         <template v-slot:activator="{ props }">
           <v-btn
-            color="primary"
-            dark
-            class="mb-2"
+            class="ma-2"
+            variant="text"
+            icon="mdi-account-plus"
             v-bind="props"
           >
-            Создать
           </v-btn>
         </template>
         <v-form @submit.prevent="save">

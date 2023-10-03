@@ -16,12 +16,17 @@
             v-model="search"
             density="compact"
             variant="plain"
-            append-icon="mdi-magnify"
+            prepend-inner-icon="mdi-magnify"
             label="Поиск по всем полям"
             single-line
             hide-details
           ></v-text-field>
         </v-toolbar-title>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
       </v-toolbar>
     </template>
 
