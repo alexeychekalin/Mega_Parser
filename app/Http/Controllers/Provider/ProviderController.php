@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Provider;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProviderRequest;
+use App\Models\Product;
 use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class ProviderController extends Controller
         return $request['providerID'];
     }
     public function delete(Request $request){
+        Product::where('Wholesaler', $request['providerID'])->delete();
         Provider::where('providerID',$request['providerID'])->delete();
     }
 }
