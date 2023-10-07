@@ -214,6 +214,13 @@ export default {
           to: '/providers',
         }"
       />
+      <VerticalNavLink
+        :item="{
+          title: 'Логи',
+          icon: 'mdi-math-log',
+          to: '/logs',
+        }"
+      />
       <!-- 👉 Pages -->
       <VerticalNavSectionTitle
         :item="{

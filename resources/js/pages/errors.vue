@@ -96,6 +96,173 @@
         inset
         vertical
       ></v-divider>
+      <v-dialog
+        v-model="dialog"
+        scrollable
+        width="auto"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            class="ma-2"
+            variant="text"
+            icon="mdi-cart-plus"
+            v-bind="props"
+          >
+          </v-btn>
+        </template>
+        <v-form @submit.prevent="save">
+          <v-card style="max-height: 700px;">
+            <v-card-title>
+              <span class="text-h5">{{ formTitle }}</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-text-field
+                      v-model="editedItem.Model"
+                      label="Название"
+                      :rules="[rules.required]"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-autocomplete
+                      v-model="editedItem.Type"
+                      label="Тип"
+                      :items="types"
+                      item-title="typeName"
+                      item-value="typeID"
+                      :rules="[rules.required]"
+                    ></v-autocomplete>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-select
+                      v-model="editedItem.providerName"
+                      label="Поставщик"
+                      :items="provider"
+                      item-title="providerName"
+                      item-value="providerID"
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-text-field
+                      v-model="editedItem.Retailer"
+                      label="Ретейлер"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="4"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.PurchasePrice"
+                      label="Цена закупки"
+                      :rules="[rules.required]"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="4"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.SellPrice"
+                      label="Цена продажи"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="4"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.Color"
+                      label="Цвет"
+                    ></v-text-field>
+                  </v-col>
+                  <VCol cols="12" md="3" class='d-flex justify-center'>
+                    <VCheckbox
+                      color="success"
+                      true-icon="mdi-alpha-r-circle-outline"
+                      false-icon="mdi-alpha-s-circle-outline"
+                      label="Ростест"
+                      v-model="editedItem.Rostest"
+                    ></VCheckbox>
+                  </VCol>
+                  <VCol cols="12" md="3" class='d-flex justify-center'>
+                    <VCheckbox
+                      color="success"
+                      true-icon="mdi-credit-card-check-outline"
+                      false-icon="mdi-credit-card-off-outline"
+                      label="Оплата картой"
+                      v-model="editedItem.CardCash"
+                    ></VCheckbox>
+                  </VCol>
+                  <VCol cols="12" md="3" class='d-flex justify-center'>
+                    <VCheckbox
+                      color="success"
+                      true-icon="mdi-gift-open-outline"
+                      false-icon="mdi-gift-off-outline"
+                      label="Бонусы Спасибо"
+                      v-model="editedItem.Bonus"
+                    ></VCheckbox>
+                  </VCol>
+                  <VCol cols="12" md="3" class='d-flex justify-center'>
+                    <VCheckbox
+                      color="success"
+                      true-icon="mdi-shopping-search"
+                      false-icon="mdi-shopping-search-outline"
+                      label="Мониторинг"
+                      v-model="editedItem.Monitor"
+                    ></VCheckbox>
+                  </VCol>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue-darken-1"
+                variant="text"
+                @click="close"
+              >
+                Закрыть
+              </v-btn>
+              <v-btn
+                :disabled="false"
+                color="blue-darken-1"
+                variant="text"
+                type="submit"
+              >
+                Сохранить
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+      </v-dialog>
       <v-dialog v-model="dialogDelete" max-width="500px">
         <v-card>
           <v-card-title class="text-h5">Удалить?</v-card-title>
@@ -435,6 +602,14 @@ export default {
       return value === 1 || value === true ? 'success' : 'error'
     },
 
+    formatNumber(i){
+      return Intl.NumberFormat('ru-RU').format(i.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ',''))
+    },
+
+    formatPrice(i){
+      return i.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ','')
+    },
+
     getProducts (){
       this.loading = true
       axios.get('/api/product/geterrors')
@@ -443,7 +618,9 @@ export default {
           this.products = res.data.map(item => {
             return {
               ...item,
-              PurchasePrice : item.PurchasePrice !== null ? Intl.NumberFormat('ru-RU').format(item.PurchasePrice.split(" ")[0].replace('₽', '').replace(',','')) : null,
+              SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
+              PurchasePrice : item.PurchasePrice !== null ? this.formatNumber(item.PurchasePrice) : null,
+              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
             }
           });
         })

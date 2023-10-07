@@ -21,11 +21,12 @@ class LogController extends Controller
     public function readLogs(Request $request)
     {
         if($request['tab'] == 'one')
-            $data = file_get_contents('../public/SberParseApi.log');
+            $data = file_get_contents('/home/mega_parser/log/SberParseApi.log');
         else
-            $data = file_get_contents('../public/SberParseApi2.log');
+            $data = file_get_contents('./home/mega_parser/log/TelegramApi.log');
         return response()->json([
             'log' => $data
         ]);
+
     }
 }

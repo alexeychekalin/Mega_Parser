@@ -8,7 +8,7 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $product = Type::all();
+        $product = Type::orderBy('typeName')->get();
         return json_decode(json_encode($product), true);
     }
 }

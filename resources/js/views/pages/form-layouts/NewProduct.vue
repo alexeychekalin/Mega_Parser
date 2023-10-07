@@ -131,7 +131,7 @@ export default {
         cols="12"
         md="6"
       >
-        <v-select
+        <v-autocomplete
           v-model="Type"
           label="Тип"
           :items="types"
@@ -139,7 +139,7 @@ export default {
           item-value="typeID"
           :rules="[rules.required]"
           prepend-inner-icon="mdi-format-list-bulleted-type"
-        ></v-select>
+        ></v-autocomplete >
       </VCol>
 
       <VCol

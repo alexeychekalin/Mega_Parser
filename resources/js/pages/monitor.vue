@@ -135,14 +135,14 @@
                   sm="6"
                   md="6"
                 >
-                  <v-select
+                  <v-autocomplete
                     v-model="editedItem.Type"
                     label="Тип"
                     :items="types"
                     item-title="typeName"
                     item-value="typeID"
                     :rules="[rules.required]"
-                  ></v-select>
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
               <v-row>
@@ -618,7 +618,6 @@ export default {
     },
 
     editItem (item) {
-      console.log(item.LinkToSMM)
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.editedItem.Monitor = this.editedItem.Monitor === 1
