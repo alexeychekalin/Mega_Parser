@@ -393,7 +393,7 @@
       <v-tooltip :text=item.columns.Retailer>
         <template v-slot:activator="{ props }">
           <div v-bind="props">
-            <a v-if="item.raw.LinkToSMM !== ''" :href="item.raw.LinkToSMM.split('#')[0]+'#?details_block=prices'" target="_blank" >{{item.columns.Retailer}}</a>
+            <a v-if="item.raw.LinkToSMM !== ''" :href="item.raw.LinkToSMM" target="_blank" >{{item.columns.Retailer}}</a>
             <p v-else >{{item.columns.Retailer}}</p>
           </div>
         </template>

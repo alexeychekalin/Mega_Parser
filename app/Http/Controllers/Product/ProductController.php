@@ -32,6 +32,7 @@ class ProductController extends Controller
                     'Rostest' =>  $request['Rostest'] == "" ? 0 : $request['Rostest'],
                     'Wholesaler' => $request['Wholesaler'] == "" ? null : $request['Wholesaler'],
                     'Retailer' => $request['Retailer'] == "" ? null : $request['Retailer'],
+                    'LinkToSMM' => ''
                 ]
             );
         return $request['id'];
@@ -71,8 +72,8 @@ class ProductController extends Controller
             ->select('product.*', 'types.typeName', 'providers.providerName')
             ->leftJoin('types', 'product.Type', '=', 'types.typeID')
             ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
-            ->where('types.typeId', '=', 102)
-            ->whereNotNull('product.Wholesaler')
+            ->where('product.SMMNotFound', '=', 1)
+            //->whereNotNull('product.Wholesaler')
             ->get();
         return json_decode(json_encode($product), true);
     }
@@ -86,7 +87,7 @@ class ProductController extends Controller
             )
             ->leftJoin('types', 'product.Type', '=', 'types.typeID')
             ->leftJoin('providers', 'product.Wholesaler', '=', 'providers.providerID')
-            ->whereNotIn('types.typeId', [99, 100, 101, 102])
+            ->whereNotIn('types.typeId', [99, 100, 101])
            // ->where('product.Monitor', '=', 0)->orWhereNull('product.Monitor')
             ->whereNotNull('product.Wholesaler')
             ->get();
@@ -162,10 +163,15 @@ class ProductController extends Controller
         $product = DB::table('product' )
             ->select('product.Type', 'types.typeName', DB::raw('COUNT(Type) as count'))
             ->leftJoin('types', 'product.Type', '=', 'types.typeID')
-            ->whereIn('types.typeId', [99, 100, 101, 102])
+            ->whereIn('types.typeId', [99, 100, 101])
             ->groupBy('types.typeName', 'product.Type')
             ->whereNotNull('product.Wholesaler')
             ->get();
+        $nosmm = DB::table('product' )
+            ->select( DB::raw('COUNT(SMMNotFound) as count'))
+            ->where('SMMNotFound', '=', 1)
+            ->get();
+        $product[] = ['Type' => 102, 'typeName' => 'Не найдено на СММ', 'count' => $nosmm[0]->count];
         return json_decode(json_encode($product), true);
     }
 

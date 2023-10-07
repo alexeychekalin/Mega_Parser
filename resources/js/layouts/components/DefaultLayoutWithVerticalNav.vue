@@ -24,7 +24,7 @@ export default {
       'Не найдена модель': [{icon: 'mdi-robot-vacuum-alert', link: '/errors'}],
       'Недостаточно полей': [{icon: 'mdi-robot-vacuum-alert', link: '/errors'}],
       'Неизвестный тип': [{icon: 'mdi-call-merge', link: '/notype'}],
-      'Не найдено на СберМегаМаркете': [{icon: 'mdi-store-off-outline', link: '/nosmm'}],
+      'Не найдено на СММ': [{icon: 'mdi-store-off-outline', link: '/nosmm'}],
   }],
     stats:[],
     sm:0,

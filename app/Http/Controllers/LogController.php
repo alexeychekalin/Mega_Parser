@@ -18,12 +18,14 @@ class LogController extends Controller
         return Log::create($data);
     }
 
-    public function readLocal(Request $request)
+    public function readLogs(Request $request)
     {
-        $data = file('../public/SberParseApi.log');
-        //return  implode('<br>', $data);
+        if($request['tab'] == 'one')
+            $data = file_get_contents('../public/SberParseApi.log');
+        else
+            $data = file_get_contents('../public/SberParseApi2.log');
         return response()->json([
-            'api' => $data
+            'log' => $data
         ]);
     }
 }

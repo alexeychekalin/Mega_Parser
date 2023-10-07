@@ -1,28 +1,35 @@
 <template>
-    <VCol cols="12">
-      <VCard title="Headlines">
-        <v-tabs
-          v-model="tab"
-          color="deep-purple-accent-4"
-          align-tabs="center"
-        >
-          <v-tab :value="1">Landscape</v-tab>
-          <v-tab :value="2">City</v-tab>
-          <v-tab :value="3">Abstract</v-tab>
-        </v-tabs>
-        <v-window v-model="tab">
-          <v-window-item
-            :key="1"
-            :value="1"
-          >
-            <VCardText class="d-flex flex-column gap-y-8">
-              {{logs.api}}
-            </VCardText>
-          </v-window-item>
-        </v-window>
+  <VCard title="Просмотр логов работы посистем">
+    <template #append>
+      <VCheckbox
+        color="success"
+        true-icon="mdi-refresh-auto"
+        false-icon="mdi-refresh-circle"
+        label="Автообновление"
+        v-model="autoUpdate"
+        @change="start"
+      ></VCheckbox>
+    </template>
+    <v-tabs
+      v-model="tab"
+      @click="tabChanged"
+    >
+      <v-tab value="one">Парсинг СММ</v-tab>
+      <v-tab value="two">Работа TG</v-tab>
+    </v-tabs>
 
-      </VCard>
-    </VCol>
+    <v-card-text>
+      <v-window v-model="tab">
+        <v-window-item value="one">
+          <textarea rows="100" style="width: 100%" v-model="this.logs.one"> </textarea>
+        </v-window-item>
+
+        <v-window-item value="two">
+          <textarea rows="100" style="width: 100%" v-model="this.logs.two"> </textarea>
+        </v-window-item>
+      </v-window>
+    </v-card-text>
+  </VCard>
 </template>
 
 <script>
@@ -31,24 +38,39 @@ import { useToast } from "vue-toastification";
 import store from "@/store";
 export default {
   data: () => ({
-    tab: null,
-    logs: []
+    tab: 'one',
+    logs: {
+      'one' : '',
+      'two' : '',
+    },
+    autoUpdate: false,
+    interval:''
   }),
 
   components:{
     axios
   },
-
-
   created () {
     this.getLogs()
   },
-
   methods: {
     getLogs(){
-      this.$axios.get('/api/log').then((res) => this.logs = JSON.stringify(res.data.api))
+      this.$axios.post('/api/log/get', {tab: this.tab}).then((res) => {this.logs[this.tab] =  res.data.log;} )
+    },
+    start(){
+      if(this.autoUpdate){
+        this.interval = setInterval(() => this.getLogs(), 3000);
+      }
+    },
+    tabChanged(){
+      console.log('dd')
+      //this.autoUpdate = false;
+      this.getLogs()
     }
   },
+  beforeUnmount() {
+    clearInterval(this.interval)
+  }
 }
 </script>
 
