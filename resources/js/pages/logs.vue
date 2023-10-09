@@ -61,9 +61,9 @@ export default {
       if(this.autoUpdate){
         this.interval = setInterval(() => this.getLogs(), 3000);
       }
+      else clearInterval(this.interval)
     },
     tabChanged(){
-      console.log('dd')
       //this.autoUpdate = false;
       this.getLogs()
     }

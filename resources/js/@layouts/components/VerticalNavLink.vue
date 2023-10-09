@@ -28,7 +28,7 @@ const props = defineProps({
       <v-badge
         class=""
         v-if="item.badge"
-        color="error"
+        :color="item.colorBadge"
         :content=item.badge
         inline
       ></v-badge>

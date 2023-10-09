@@ -28,7 +28,8 @@ export default {
   }],
     stats:[],
     sm:0,
-    countAll : 0
+    countAll : 0,
+    stats2:[]
   }),
 
   methods: {
@@ -40,8 +41,9 @@ export default {
     },
     Statistics() {
       this.$axios.get('/api/product/stats').then((res) => {
-       this.stats = res.data
-        this.countAll = res.data.reduce((sum, { count }) => sum + count, 0)
+        this.stats = res.data[0]
+        this.countAll = res.data[0].reduce((sum, { count }) => sum + count, 0)
+        this.stats2 = res.data[1]
       })
     },
   },
@@ -127,6 +129,8 @@ export default {
           title: 'Мониторинг',
           icon: 'mdi-cart-variant',
           to: '/monitor',
+          badge: this.stats2.monitor,
+          colorBadge: 'success'
         }"
       />
 
@@ -141,6 +145,8 @@ export default {
           title: 'Товары',
           icon: 'mdi-shopping-search-outline',
           to: '/products',
+          badge: this.stats2.products,
+          colorBadge: 'warning'
         }"
       />
       <VerticalNavLink
@@ -148,6 +154,8 @@ export default {
           title: 'Категории',
           icon: 'mdi-store-search-outline',
           to: '/monitorTypes',
+          badge: this.stats2.type,
+          colorBadge: 'warning'
         }"
       />
       <!-- 👉 Pages -->
@@ -161,6 +169,7 @@ export default {
           title: 'Ошибки',
           icon: 'mdi-robot-vacuum-alert',
           to: '/errors',
+          colorBadge: 'error',
           badge: stats.filter(x => x.Type === 100 || x.Type === 101).reduce((ac, obj) =>  {return ac + obj.count}, 0)
         }"
       />
@@ -169,6 +178,7 @@ export default {
           title: 'Неопределен тип',
           icon: 'mdi-call-merge',
           to: '/notype',
+          colorBadge: 'error',
           badge: stats.filter(x => x.Type === 99).reduce((ac, obj) =>  {return ac + obj.count}, 0)
         }"
       />
@@ -177,6 +187,7 @@ export default {
           title: 'Не найден на СММ',
           icon: 'mdi-store-off-outline',
           to: '/nosmm',
+          colorBadge: 'error',
           badge: stats.filter(x => x.Type === 102).reduce((ac, obj) =>  {return ac + obj.count}, 0)
         }"
       />
@@ -198,6 +209,8 @@ export default {
           title: 'Типы',
           icon: 'mdi-store-cog-outline',
           to: '/types',
+          badge: this.stats2.typeAll,
+          colorBadge: 'info'
         }"
       />
       <VerticalNavLink
@@ -205,6 +218,8 @@ export default {
           title: 'Цвета',
           icon: 'mdi-palette',
           to: '/colors',
+          badge: this.stats2.colors,
+          colorBadge: 'info'
         }"
       />
       <VerticalNavLink
@@ -212,6 +227,8 @@ export default {
           title: 'Поставщики',
           icon: 'mdi-account-group-outline',
           to: '/providers',
+          badge: this.stats2.providers,
+          colorBadge: 'info'
         }"
       />
       <VerticalNavLink
@@ -232,6 +249,8 @@ export default {
           title: 'Список',
           icon: 'mdi-account-details-outline',
           to: '/users',
+          badge: this.stats2.users,
+          colorBadge: 'info'
         }"
       />
       <VerticalNavLink

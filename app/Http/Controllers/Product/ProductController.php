@@ -158,6 +158,24 @@ class ProductController extends Controller
 
     }
 
+    public function countMonitor()
+    {
+        $cnt = DB::table('product' )
+            ->select(DB::raw('COUNT(ProductId) as count'))
+            ->where('Monitor', '=', 1)
+            ->whereNotNull('product.Wholesaler')
+            ->get();
+        return json_decode(json_encode($cnt), true);
+    }
+
+    public function countProducts()
+    {
+        $cnt = DB::table('product' )
+            ->select(DB::raw('COUNT(ProductId) as count'))
+            ->get();
+        return json_decode(json_encode($cnt), true);
+    }
+
     public function stats()
     {
         $product = DB::table('product' )
@@ -172,17 +190,21 @@ class ProductController extends Controller
             ->where('SMMNotFound', '=', 1)
             ->get();
         $product[] = ['Type' => 102, 'typeName' => 'Не найдено на СММ', 'count' => $nosmm[0]->count];
-        return json_decode(json_encode($product), true);
-    }
 
-    public function countMonitor()
-    {
-        $cnt = DB::table('product' )
-            ->select(DB::raw('COUNT(ProductId) as count'))
-            ->where('Monitor', '=', 1)
-            ->whereNotNull('product.Wholesaler')
-            ->get();
-        return json_decode(json_encode($cnt), true);
+        $answer[0] = $product;
+        $answer[1] = [
+            'monitor' => $this->countMonitor()[0]['count'],
+            'products' => $this->countProducts()[0]['count'],
+            'type' => count((new \App\Http\Controllers\Type\TypeController)->monitor()),
+            'typeAll' => count((new \App\Http\Controllers\Type\TypeController)->getall()),
+            'colors' => count((new \App\Http\Controllers\Color\IndexController())->index()),
+            'providers' => count((new \App\Http\Controllers\Provider\IndexController())->index()),
+            'users' => count((new \App\Http\Controllers\User\IndexController())->index()),
+
+        ];
+
+
+        return json_decode(json_encode($answer), true);
     }
 
     public function addEdits(Request $request)
