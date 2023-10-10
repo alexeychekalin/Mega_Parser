@@ -275,7 +275,68 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-toolbar>
+      <v-divider
+        class="mx-4"
+        inset
+        vertical
+      ></v-divider>
+      <v-dialog
+        v-model="dialogType"
+        max-width="500px"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            class="ma-2"
+            variant="text"
+            icon="mdi-home-plus"
+            v-bind="props"
+          >
+          </v-btn>
+        </template>
+        <v-form @submit.prevent="saveType">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">Новый тип</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="12"
+                  >
+                    <v-text-field
+                      v-model="typeName"
+                      label="Название"
+                      :rules="[rules.required]"
+                    ></v-text-field>
+                  </v-col>
+
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue-darken-1"
+                variant="text"
+                @click="closeType"
+              >
+                Закрыть
+              </v-btn>
+              <v-btn
+                :disabled="false"
+                color="blue-darken-1"
+                variant="text"
+                type="submit"
+              >
+                Сохранить
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+      </v-dialog></v-toolbar>
   </template>
 
   <template v-slot:item.actions="{ item }">
@@ -475,7 +536,10 @@ export default {
     newTypes:[],
     newType:'',
     similar:'',
-    typesDialog: false
+    typesDialog: false,
+    saveType:'',
+    closeType:''
+
   }),
   components:{
     axios,
@@ -510,6 +574,9 @@ export default {
   },
 
   methods: {
+    saveType(){
+
+    },
     updateTypes(){
       let toUpdate = this.newTypes.filter((x) => x.selected === true).map(value => value.ProductId);
       axios.post('api/product/updateSimilarType', {Models : toUpdate, Type: this.types.find(f => f.typeName === this.newType).typeID}).then(res => {

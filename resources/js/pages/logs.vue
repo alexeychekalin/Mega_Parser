@@ -59,7 +59,7 @@ export default {
     },
     start(){
       if(this.autoUpdate){
-        this.interval = setInterval(() => this.getLogs(), 3000);
+        this.interval = setInterval(() => this.getLogs(), 60000);
       }
       else clearInterval(this.interval)
     },
