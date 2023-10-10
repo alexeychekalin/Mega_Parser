@@ -336,7 +336,8 @@
             </v-card-actions>
           </v-card>
         </v-form>
-      </v-dialog></v-toolbar>
+      </v-dialog>
+    </v-toolbar>
   </template>
 
   <template v-slot:item.actions="{ item }">
@@ -537,8 +538,8 @@ export default {
     newType:'',
     similar:'',
     typesDialog: false,
-    saveType:'',
-    closeType:''
+    dialogType: false,
+    typeName:''
 
   }),
   components:{
@@ -565,6 +566,9 @@ export default {
     dialogDelete (val) {
       val || this.closeDelete()
     },
+    dialogType (val) {
+      val || this.closeType()
+    }
   },
 
   created () {
@@ -575,7 +579,19 @@ export default {
 
   methods: {
     saveType(){
-
+      axios.post('/api/types',
+        {
+          typeName: this.typeName,
+        } )
+        .then(res => {
+          useToast().success('Тип товара создан', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          this.getTypes()
+          this.closeType()
+        })
+        .catch(function (error) {
+          useToast().error('Ошибка создания типа товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ типа товара: '+ this.typeName + '. Описание: ' + error, Place: 'notype.vue' })
+        });
     },
     updateTypes(){
       let toUpdate = this.newTypes.filter((x) => x.selected === true).map(value => value.ProductId);
@@ -724,6 +740,11 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+    },
+
+    closeType () {
+      this.dialogType = false
+      this.typeName = ''
     },
 
     closeDelete () {
