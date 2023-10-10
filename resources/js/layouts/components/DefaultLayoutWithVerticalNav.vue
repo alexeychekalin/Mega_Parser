@@ -129,7 +129,7 @@ export default {
           title: 'Мониторинг',
           icon: 'mdi-cart-variant',
           to: '/monitor',
-          badge: this.stats2.monitor,
+          badge: stats2.monitor,
           colorBadge: 'success'
         }"
       />
@@ -145,7 +145,7 @@ export default {
           title: 'Товары',
           icon: 'mdi-shopping-search-outline',
           to: '/products',
-          badge: this.stats2.products,
+          badge: stats2.products,
           colorBadge: 'warning'
         }"
       />
@@ -154,7 +154,7 @@ export default {
           title: 'Категории',
           icon: 'mdi-store-search-outline',
           to: '/monitorTypes',
-          badge: this.stats2.type,
+          badge: stats2.type,
           colorBadge: 'warning'
         }"
       />
@@ -209,7 +209,7 @@ export default {
           title: 'Типы',
           icon: 'mdi-store-cog-outline',
           to: '/types',
-          badge: this.stats2.typeAll,
+          badge: stats2.typeAll,
           colorBadge: 'info'
         }"
       />
@@ -218,7 +218,7 @@ export default {
           title: 'Цвета',
           icon: 'mdi-palette',
           to: '/colors',
-          badge: this.stats2.colors,
+          badge: stats2.colors,
           colorBadge: 'info'
         }"
       />
@@ -227,7 +227,7 @@ export default {
           title: 'Поставщики',
           icon: 'mdi-account-group-outline',
           to: '/providers',
-          badge: this.stats2.providers,
+          badge: stats2.providers,
           colorBadge: 'info'
         }"
       />
@@ -249,7 +249,7 @@ export default {
           title: 'Список',
           icon: 'mdi-account-details-outline',
           to: '/users',
-          badge: this.stats2.users,
+          badge: stats2.users,
           colorBadge: 'info'
         }"
       />
