@@ -33,7 +33,7 @@
             <v-btn
               class="ma-2"
               variant="text"
-              icon="mdi-home-plus"
+              icon="mdi-playlist-plus"
               v-bind="props"
             >
             </v-btn>
