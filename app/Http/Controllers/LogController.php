@@ -25,7 +25,7 @@ class LogController extends Controller
         else
             $data = file_get_contents('./home/mega_parser/log/TelegramApi.log');
         return response()->json([
-            'log' => $data
+            'log' => sort($data)
         ]);
 
     }
