@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     getLogs(){
-      this.$axios.post('/api/log/get', {tab: this.tab}).then((res) => {this.logs[this.tab] =  res.data.log.join(' ');} )
+      this.$axios.post('/api/log/get', {tab: this.tab}).then((res) => {this.logs[this.tab] =  ' ' + res.data.log.join(' ');} )
     },
     start(){
       if(this.autoUpdate){
