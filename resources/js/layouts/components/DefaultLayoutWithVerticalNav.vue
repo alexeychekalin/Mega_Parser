@@ -242,6 +242,15 @@ export default {
       />
       <VerticalNavLink
         :item="{
+          title: 'Мусор',
+          icon: 'mdi-trash-can-outline',
+          to: '/trash',
+          badge: stats2.trash,
+          colorBadge: 'info'
+        }"
+      />
+      <VerticalNavLink
+        :item="{
           title: 'Логи',
           icon: 'mdi-math-log',
           to: '/logs',

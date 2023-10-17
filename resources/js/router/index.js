@@ -143,6 +143,15 @@ const router = createRouter({
             admin: true
           },
         },
+        {
+          path: 'trash',
+          name: 'trash',
+          component: () => import('../pages/trash.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
           /*
         {
           path: 'test',

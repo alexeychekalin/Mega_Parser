@@ -38,6 +38,13 @@ Route::group(['namespace' => 'Edits', 'prefix' => 'edits', 'middleware' => 'auth
     Route::post('/update', [App\Http\Controllers\EditsController::class, 'update'])->name('edits.update');
 });
 
+Route::group(['namespace' => 'Trash', 'prefix' => 'trash', 'middleware' => 'auth:sanctum'], function (){
+    Route::get('/', [App\Http\Controllers\TrashController::class, 'index']);
+    Route::post('/', [App\Http\Controllers\TrashController::class, 'insert']);
+    Route::post('/delete', [App\Http\Controllers\TrashController::class, 'delete'])->name('edits.delete');
+    Route::post('/update', [App\Http\Controllers\TrashController::class, 'insert'])->name('edits.update');
+});
+
 Route::group(['namespace' => 'Shell', 'prefix' => 'shell', 'middleware' => 'auth:sanctum'], function (){
     Route::get('/status', [App\Http\Controllers\ShellController::class, 'status'])->name('shell.status');
     Route::get('/run', [App\Http\Controllers\ShellController::class, 'run'])->name('shell.run');
