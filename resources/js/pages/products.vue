@@ -260,6 +260,10 @@ export default {
       return value === 1 || value === true ? 'success' : 'error'
     },
 
+    formatNumber(i){
+      return Intl.NumberFormat('ru-RU').format(i.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ',''))
+    },
+
     getProducts (){
       this.loading = true
       axios.get('/api/product/monitor')
@@ -268,7 +272,8 @@ export default {
           this.products = res.data.map(item => {
             return {
               ...item,
-              PurchasePrice : item.PurchasePrice !== null ? Intl.NumberFormat('ru-RU').format(item.PurchasePrice.split(" ")[0].replace('₽', '').replace(',','')) : null,
+              SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
+              PurchasePrice : item.PurchasePrice !== null ? this.formatNumber(item.PurchasePrice) : null,
             }
           });
         })
