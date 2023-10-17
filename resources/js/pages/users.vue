@@ -34,7 +34,7 @@
       >
         <template v-slot:activator="{ props }">
           <v-btn
-            class="ma-2"
+            class="mr-4"
             variant="text"
             icon="mdi-account-plus"
             v-bind="props"

@@ -422,7 +422,7 @@ import axios from "axios";
 import { useToast } from "vue-toastification";
 import store from "@/store";
 import * as XLSX from 'xlsx/xlsx.mjs';
-import moment from 'moment'
+
 export default {
   data: () => ({
     loading: false,

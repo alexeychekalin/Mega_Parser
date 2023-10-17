@@ -200,7 +200,7 @@ class ProductController extends Controller
             'colors' => count((new \App\Http\Controllers\Color\IndexController())->index()),
             'providers' => count((new \App\Http\Controllers\Provider\IndexController())->index()),
             'users' => count((new \App\Http\Controllers\User\IndexController())->index()),
-
+            'edits' => count((new \App\Http\Controllers\EditsController())->index()),
         ];
 
 

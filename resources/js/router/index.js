@@ -134,6 +134,15 @@ const router = createRouter({
             admin: true
           },
         },
+        {
+          path: 'edits',
+          name: 'edits',
+          component: () => import('../pages/edits.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
           /*
         {
           path: 'test',

@@ -1,5 +1,6 @@
 <template>
-  <v-data-table
+  <VCard title="Список поставщиков">
+    <v-data-table
     :headers="headers"
     :items="providers"
     :search="search"
@@ -31,7 +32,7 @@
         >
           <template v-slot:activator="{ props }">
             <v-btn
-              class="ma-2"
+              class="mr-4"
               variant="text"
               icon="mdi-account-multiple-plus"
               v-bind="props"
@@ -144,6 +145,7 @@
       </p>
     </template>
   </v-data-table>
+  </VCard>
 </template>
 
 

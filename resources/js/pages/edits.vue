@@ -1,8 +1,9 @@
 <template>
-  <VCard title="Список цветов">
+  <Spinner v-if="loading"/>
+  <VCard title="Список измененных моделей">
     <v-data-table
     :headers="headers"
-    :items="colors"
+    :items="edits"
     :search="search"
     class="elevation-1"
   >
@@ -34,7 +35,7 @@
             <v-btn
               class="mr-4"
               variant="text"
-              icon="mdi-palette"
+              icon="mdi-link-variant-plus"
               v-bind="props"
             >
             </v-btn>
@@ -52,8 +53,17 @@
                     cols="12"
                   >
                     <v-text-field
-                      v-model="editedItem.Color"
-                      label="Название"
+                      v-model="editedItem.OldModel"
+                      label="Старая модель"
+                      :rules="[rules.required]"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                  >
+                    <v-text-field
+                      v-model="editedItem.NewModel"
+                      label="Новая модель"
                       :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
@@ -148,9 +158,9 @@
   </VCard>
 </template>
 
-
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import Spinner from "@/layouts/spinner.vue";
 </script>
 
 <script>
@@ -159,20 +169,24 @@ import { useToast } from "vue-toastification";
 import store from "@/store";
 export default {
   data: () => ({
+    loading: false,
     search: '',
     dialog: false,
     dialogDelete: false,
     headers: [
-      { title: 'Название', align: 'center', key: 'Color'},
+      { title: 'Старое название', align: 'center', key: 'OldModel'},
+      { title: 'Новое название', align: 'center', key: 'NewModel'},
       { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],
-    colors: [],
+    edits: [],
     editedIndex: -1,
     editedItem: {
-      Color: '',
+      OldModel: '',
+      NewModel: '',
     },
     defaultItem: {
-      Color: '',
+      OldModel: '',
+      NewModel: '',
     },
     rules: {
       required: value => !!value || 'Поле обязательно',
@@ -185,7 +199,7 @@ export default {
 
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'Новый цвет' : 'Редактирование цвета'
+      return this.editedIndex === -1 ? 'Новая связка' : 'Редактирование связки'
     },
   },
 
@@ -199,46 +213,49 @@ export default {
   },
 
   created () {
-    this.getColors()
+    this.getEdits()
   },
 
   methods: {
 
-    getColors (){
-      axios.get('/api/colors')
+    getEdits (){
+      this.loading = true
+      axios.get('/api/edits')
         .then(res => {
-          this.colors = res.data;
+          this.edits = res.data;
         })
         .catch(function (error) {
-          useToast().error('Ошибка получения списка цветов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ цветов. Описание: ' + error, Place: 'colors.vue' })
+          useToast().error('Ошибка получения списка соответствия моделей', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ПОЛУЧЕНИИ списка соответствия моделей. Описание: ' + error, Place: 'edits.vue' })
         });
+      this.loading = false
     },
 
     editItem (item) {
-      this.editedIndex = this.colors.indexOf(item)
+      this.editedIndex = this.edits.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem (item) {
-      this.editedIndex = this.colors.indexOf(item)
+      this.editedIndex = this.edits.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm () {
-      let currentColor = this.colors[this.editedIndex]
-      axios.post('api/colors/delete', {idColor : currentColor.idColor}).then(res => {
-        useToast().success('Цвет удален', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-        this.colors.splice(this.editedIndex, 1)
+      this.loading = true
+      let currentEdit = this.edits[this.editedIndex]
+      axios.post('api/edits/delete', {idEdits : currentEdit.idEdits}).then(res => {
+        useToast().success('Соответствие удалено', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+        this.edits.splice(this.editedIndex, 1)
         this.closeDelete()
       })
         .catch(function (error) {
-          useToast().error('Ошибка удаления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ цвета: '+ currentColor.Color + '. Описание: ' + error, Place: 'colors.vue' })
+          useToast().error('Ошибка удаления соответствия моделей', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при УДАЛЕНИИ соответствия моделей: '+ currentEdit.OldModel + '. Описание: ' + error, Place: 'edits.vue' })
         });
-
+      this.loading = false
     },
 
     close () {
@@ -258,40 +275,43 @@ export default {
     },
 
     save () {
+      this.loading = true
       if (this.editedIndex > -1) {
-        Object.assign(this.colors[this.editedIndex], this.editedItem)
-        let updatedColor = this.editedItem;
-
-        axios.post('/api/colors/update',
+        let updatedEdits = this.editedItem;
+        axios.post('/api/edits/update',
             {
-                    idColor: updatedColor.idColor,
-                    Color: updatedColor.Color,
+                    idEdits: updatedEdits.idEdits,
+                    OldModel: updatedEdits.OldModel,
+                    NewModel: updatedEdits.NewModel,
             }
         )
           .then(res => {
-              useToast().success('цвет обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+              Object.assign(this.edits[this.editedIndex], this.editedItem)
+              useToast().success('Соответствие обновлено', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка обновления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-            axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ цвета: '+ updatedColor.Color + '. Описание: ' + error, Place: 'colors.vue' })
+            useToast().error('Старая модель с таким названием уже существует', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+            axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ соответствия моделей: '+ updatedEdits.OldModel + '. Описание: ' + error, Place: 'edits.vue' })
           });
       } else {
-        let name = this.editedItem.Color
-        axios.post('/api/colors',
+        let name = this.editedItem.OldModel
+        axios.post('/api/edits',
           {
-              Color: this.editedItem.Color,
+              OldModel: this.editedItem.OldModel,
+              NewModel: this.editedItem.NewModel,
           } )
           .then(res => {
-            useToast().success('Цвет добавлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-            this.colors.push(this.editedItem)
+            useToast().success('Соответствие добавлено', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+            this.edits.push(this.editedItem)
             this.close()
           })
           .catch(function (error) {
-            useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-            axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ цвета: '+ name + '. Описание: ' + error, Place: 'colors.vue' })
+            useToast().error('Ошибка добавления соответствия моделей', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+            axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID, Message: 'Ошибка при СОЗДАНИИ соответствия моделей: '+ name + '. Описание: ' + error, Place: 'edits.vue' })
           });
       }
+      this.loading = false
     },
   },
 }

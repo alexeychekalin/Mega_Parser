@@ -31,6 +31,13 @@ Route::group(['namespace' => 'Log', 'prefix' => 'log', 'middleware' => 'auth:san
     Route::post('/get', [App\Http\Controllers\LogController::class, 'readLogs'])->name('log.get');
 });
 
+Route::group(['namespace' => 'Edits', 'prefix' => 'edits', 'middleware' => 'auth:sanctum'], function (){
+    Route::get('/', [App\Http\Controllers\EditsController::class, 'index']);
+    Route::post('/', [App\Http\Controllers\EditsController::class, 'insert']);
+    Route::post('/delete', [App\Http\Controllers\EditsController::class, 'delete'])->name('edits.delete');
+    Route::post('/update', [App\Http\Controllers\EditsController::class, 'update'])->name('edits.update');
+});
+
 Route::group(['namespace' => 'Shell', 'prefix' => 'shell', 'middleware' => 'auth:sanctum'], function (){
     Route::get('/status', [App\Http\Controllers\ShellController::class, 'status'])->name('shell.status');
     Route::get('/run', [App\Http\Controllers\ShellController::class, 'run'])->name('shell.run');

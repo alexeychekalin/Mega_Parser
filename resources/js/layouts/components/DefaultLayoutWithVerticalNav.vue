@@ -233,6 +233,15 @@ export default {
       />
       <VerticalNavLink
         :item="{
+          title: 'Соответствия',
+          icon: 'mdi-link-variant',
+          to: '/edits',
+          badge: stats2.edits,
+          colorBadge: 'info'
+        }"
+      />
+      <VerticalNavLink
+        :item="{
           title: 'Логи',
           icon: 'mdi-math-log',
           to: '/logs',

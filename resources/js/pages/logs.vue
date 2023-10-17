@@ -1,5 +1,5 @@
 <template>
-  <VCard title="Просмотр логов работы посистем">
+  <VCard title="Логи работы посистем">
     <template #append>
       <VCheckbox
         color="success"
