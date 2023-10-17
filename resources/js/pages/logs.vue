@@ -21,11 +21,11 @@
     <v-card-text>
       <v-window v-model="tab">
         <v-window-item value="one">
-          <textarea rows="100" style="width: 100%" v-model="this.logs.one"> </textarea>
+          <textarea rows="100" style="width: 100%" v-model="this.logs.one" disabled> </textarea>
         </v-window-item>
 
         <v-window-item value="two">
-          <textarea rows="100" style="width: 100%" v-model="this.logs.two"> </textarea>
+          <textarea rows="100" style="width: 100%" v-model="this.logs.two" disabled> </textarea>
         </v-window-item>
       </v-window>
     </v-card-text>
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     getLogs(){
-      this.$axios.post('/api/log/get', {tab: this.tab}).then((res) => {this.logs[this.tab] =  res.data.log;} )
+      this.$axios.post('/api/log/get', {tab: this.tab}).then((res) => {this.logs[this.tab] =  res.data.log.join(' ');} )
     },
     start(){
       if(this.autoUpdate){
