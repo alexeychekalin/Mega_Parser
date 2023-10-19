@@ -100,6 +100,19 @@
       </VAvatar>
     </template>
 
+    <template v-slot:item.Rostest="{ item }">
+      <VAvatar
+        size="40"
+        variant="tonal"
+        :color="getColor(item.columns.Rostest)"
+        class="me-3"
+        @click="set(item.raw, 'Rostest', !item.columns.Rostest, 'Ростесте')"
+        style="cursor: pointer"
+      >
+        {{ item.columns.Rostest === 1 ? "Да" : "Нет" }}
+      </VAvatar>
+    </template>
+
     <template v-slot:item.parseDate="{ item }">
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
     </template>
@@ -186,6 +199,7 @@ export default {
       // { title: 'Дата', key: 'SberParseDate', align: 'center' },
       // { title: 'Бонусы', key: 'Bonus', align: 'center' },
       // { title: 'Карта', key: 'CardCash', align: 'center' },
+      { title: 'РСТ', key: 'Rostest', align: 'center' },
       { title: 'Мониторинг', key: 'Monitor', align: 'center' },
       { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],

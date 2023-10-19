@@ -379,7 +379,7 @@
   </template>
 
   <template v-slot:item.SberParseDate="{ item }">
-    {{item.columns.SberParseDate !== null ? moment(item.columns.SberParseDate).format("DD.MM.YY") : ''}}
+    {{item.columns.SberParseDate !== null ? moment(item.columns.SberParseDate).format("DD.MM.YY HH:mm") : ''}}
   </template>
 
   <template v-slot:item.profit="{ item }">
