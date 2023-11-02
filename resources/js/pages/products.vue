@@ -331,6 +331,7 @@
 
     <template v-slot:item.typeName="{ item }">
       <v-select
+        class="fit"
         v-model="item.columns.typeName"
         :items="types"
         item-title="typeName"
@@ -761,5 +762,10 @@ export default {
   font-size: 14px;
   text-transform: uppercase
 }
-
+.v-select.fit {
+  width: max-content;
+}
+.v-select.fit  .v-select__selection--comma {
+  text-overflow: unset;
+}
 </style>
