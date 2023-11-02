@@ -728,7 +728,8 @@ export default {
           }
 
           useToast().info('Запущен поиск похожих ошибок', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
-          this.$axios.get('/api/shell/update').then((res) => { res.data.answer === 1 ? useToast().success('Поиск завершен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16}) : useToast().error('Произошла ошибка. Смотрите логи', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})})
+          this.$axios.get('/api/' +
+            'shell/update').then((res) => { res.data.answer === 1 ? useToast().success('Поиск завершен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16}) : useToast().error('Произошла ошибка. Смотрите логи', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})})
 
         })
         .catch(function (error) {

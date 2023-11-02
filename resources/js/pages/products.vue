@@ -83,6 +83,173 @@
           inset
           vertical
         ></v-divider>
+        <v-dialog
+          v-model="dialog"
+          scrollable
+          width="auto"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              class="ma-2"
+              variant="text"
+              icon="mdi-cart-plus"
+              v-bind="props"
+            >
+            </v-btn>
+          </template>
+          <v-form @submit.prevent="save">
+            <v-card style="max-height: 700px;">
+              <v-card-title>
+                <span class="text-h5">{{ formTitle }}</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="6"
+                    >
+                      <v-text-field
+                        v-model="editedItem.Model"
+                        label="Название"
+                        :rules="[rules.required]"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="6"
+                    >
+                      <v-autocomplete
+                        v-model="editedItem.Type"
+                        label="Тип"
+                        :items="types"
+                        item-title="typeName"
+                        item-value="typeID"
+                        :rules="[rules.required]"
+                      ></v-autocomplete>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="6"
+                    >
+                      <v-select
+                        v-model="editedItem.providerName"
+                        label="Поставщик"
+                        :items="provider"
+                        item-title="providerName"
+                        item-value="providerID"
+                      ></v-select>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="6"
+                    >
+                      <v-text-field
+                        v-model="editedItem.Retailer"
+                        label="Ретейлер"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="4"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.PurchasePrice"
+                        label="Цена закупки"
+                        :rules="[rules.required]"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="4"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.SellPrice"
+                        label="Цена продажи"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="4"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.Color"
+                        label="Цвет"
+                      ></v-text-field>
+                    </v-col>
+                    <VCol cols="12" md="3" class='d-flex justify-center'>
+                      <VCheckbox
+                        color="success"
+                        true-icon="mdi-alpha-r-circle-outline"
+                        false-icon="mdi-alpha-s-circle-outline"
+                        label="Ростест"
+                        v-model="editedItem.Rostest"
+                      ></VCheckbox>
+                    </VCol>
+                    <VCol cols="12" md="3" class='d-flex justify-center'>
+                      <VCheckbox
+                        color="success"
+                        true-icon="mdi-credit-card-check-outline"
+                        false-icon="mdi-credit-card-off-outline"
+                        label="Оплата картой"
+                        v-model="editedItem.CardCash"
+                      ></VCheckbox>
+                    </VCol>
+                    <VCol cols="12" md="3" class='d-flex justify-center'>
+                      <VCheckbox
+                        color="success"
+                        true-icon="mdi-gift-open-outline"
+                        false-icon="mdi-gift-off-outline"
+                        label="Бонусы Спасибо"
+                        v-model="editedItem.Bonus"
+                      ></VCheckbox>
+                    </VCol>
+                    <VCol cols="12" md="3" class='d-flex justify-center'>
+                      <VCheckbox
+                        color="success"
+                        true-icon="mdi-shopping-search"
+                        false-icon="mdi-shopping-search-outline"
+                        label="Мониторинг"
+                        v-model="editedItem.Monitor"
+                      ></VCheckbox>
+                    </VCol>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="close"
+                >
+                  Закрыть
+                </v-btn>
+                <v-btn
+                  :disabled="false"
+                  color="blue-darken-1"
+                  variant="text"
+                  type="submit"
+                >
+                  Сохранить
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-form>
+        </v-dialog>
       </v-toolbar>
 
     </template>
@@ -118,24 +285,42 @@
     </template>
 
     <template v-slot:item.actions="{ item }">
-          <v-tooltip
-            location="top"
+      <v-tooltip
+        location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click="editItem(item.raw)"
+            color="primary"
+            size="40px"
           >
-            <template v-slot:activator="{ props }">
-              <v-btn
-                icon
-                v-bind="props"
-                color="error"
-                class="ma-1"
-                @click="deleteItem(item.raw)"
-              >
-                <v-icon color="grey-lighten-1">
-                  mdi-delete
-                </v-icon>
-              </v-btn>
-            </template>
-            <span>Удалить</span>
-          </v-tooltip>
+            <v-icon color="grey-lighten-1">
+              mdi-pencil
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Редактировать</span>
+      </v-tooltip>
+      <v-tooltip
+        location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            color="error"
+            class="ma-1"
+            @click="deleteItem(item.raw)"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-delete
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Удалить</span>
+      </v-tooltip>
       </template>
 
     <template v-slot:no-data>
@@ -178,6 +363,7 @@ export default {
     sortBy: [{ key: 'parseDate', order: 'desc' }],
     page:1,
     search:'',
+    dialog: false,
     itemsPerPage: 15,
     types:[],
     filters: {
@@ -204,6 +390,44 @@ export default {
       { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],
     products: [],
+    editedIndex: -1,
+    editedItem: {
+      Model:'',
+      PurchasePrice:'',
+      SellPrice: '',
+      Bonus: false,
+      CardCash: false,
+      Monitor: false,
+      Rostest: false,
+      Type: '',
+      ProductId: '',
+      Color: '',
+      Wholesaler: '',
+      Retailer: '',
+    },
+    defaultItem: {
+      Model:'',
+      PurchasePrice:'',
+      SellPrice: '',
+      Bonus: false,
+      CardCash: false,
+      Monitor: false,
+      Rostest: false,
+      Type: '',
+      ProductId: '',
+      Color: '',
+      Wholesaler: '',
+      Retailer: '',
+    },
+    oldType:'',
+    rules: {
+      required: value => !!value || 'Поле обязательно',
+      //number: value => value.length <= 20 || 'Max 20 characters',
+      number: value => {
+        const pattern = /^\d*(\.\d{1,2})?$/
+        return pattern.test(value) || 'Введите число, формат 12345.67'
+      },
+    }
   }),
 
   components:{
@@ -222,6 +446,14 @@ export default {
     },
   },
 
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
+    },
+  },
   created () {
     this.getProducts()
     this.getTypes()
@@ -305,6 +537,118 @@ export default {
         });
     },
 
+    editItem (item) {
+      this.editedIndex = this.products.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.editedItem.Monitor = this.editedItem.Monitor === 1
+      this.editedItem.Bonus = this.editedItem.Bonus === 1
+      this.editedItem.CardCash = this.editedItem.CardCash === 1
+      this.editedItem.Rostest = this.editedItem.Rostest === 1
+      this.oldModel = item.Model
+      this.dialog = true
+      this.oldType = item.Type
+    },
+
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    save: function () {
+      this.loading = true
+      if (this.editedItem.providerName !== null && this.editedItem.providerName !== "" && !isNaN(this.editedItem.providerName)) {
+        let provider = this.provider.find(f => f.providerID === this.editedItem.providerName)
+        this.editedItem.Wholesaler = provider.providerID
+        this.editedItem.providerName = provider.providerName
+      }
+      let updatedProduct = this.editedItem;
+      axios.post('/api/product/update',
+        {
+          Model: updatedProduct.Model,
+          PurchasePrice: updatedProduct.PurchasePrice,
+          SellPrice: updatedProduct.SellPrice,
+          Bonus: updatedProduct.Bonus,
+          CardCash: updatedProduct.CardCash,
+          Monitor: updatedProduct.Monitor,
+          Type: updatedProduct.Type,
+          ProductId: updatedProduct.ProductId,
+          Color: updatedProduct.Color,
+          Rostest: updatedProduct.Rostest,
+          Wholesaler: updatedProduct.Wholesaler,
+          Retailer: updatedProduct.Retailer,
+        }
+      )
+        .then(res => {
+          useToast().success('Товар обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          this.close()
+          this.editedItem.Bonus = this.editedItem.Bonus === true ? 1 : 0
+          this.editedItem.CardCash = this.editedItem.CardCash === true ? 1 : 0
+          this.editedItem.Monitor = this.editedItem.Monitor === true ? 1 : 0
+          this.editedItem.Rostest = this.editedItem.Rostest === true ? 1 : 0
+
+          Object.assign(this.products[this.editedIndex], this.editedItem)
+
+          this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
+          if (this.editedItem.SellPrice !== "" && this.editedItem.SellPrice !== null && this.editedItem.PurchasePrice !== "" && this.editedItem.PurchasePrice != null) {
+            this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].replace("\u00A0", '') / this.products[this.editedIndex]['SellPrice'].replace("\u00A0", ''))) * 100).toFixed(2)
+          }
+
+          if(updatedProduct.Model !== this.oldModel){
+            axios.post('/api/product/addEdits', {new: updatedProduct.Model, old : this.oldModel})
+              .then(res => {
+                if (!res.data)
+                  useToast().success('Изменение модели добавлено в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+              })
+              .catch(function (error) {
+                useToast().error('Ошибка добавления измененной модели в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+                axios.post('/api/log', {
+                  Time: Date.now(),
+                  User: store.state.auth.user.UserID,
+                  Message: 'Ошибка при ДОБАВЛЕНИИ измененной модели в классификатор: ' + updatedProduct.Model + '. Описание: ' + error,
+                  Place: 'products.vue'
+                })
+              });
+          }
+
+          if (updatedProduct.Color !== null && updatedProduct.Color !== "") {
+            axios.post('/api/colors/check', {Color: updatedProduct.Color,})
+              .then(res => {
+                if (!res.data)
+                  useToast().success('Цвет добавлен в классификатор', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+              })
+              .catch(function (error) {
+                useToast().error('Ошибка добавления цвета', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+                axios.post('/api/log', {
+                  Time: Date.now(),
+                  User: store.state.auth.user.UserID,
+                  Message: 'Ошибка при ДОБАВЛЕНИИ цвета: ' + updatedProduct.Model + '. Описание: ' + error,
+                  Place: 'products.vue'
+                })
+              });
+          }
+
+          if(this.oldType !== updatedProduct.Type){
+            useToast().info('Запущен поиск похожих типов', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+            this.$axios.get('/api/' +
+              'shell/update').then((res) => { res.data.answer === 1 ? useToast().success('Поиск завершен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16}) : useToast().error('Произошла ошибка. Смотрите логи', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})})
+
+          }
+
+          this.loading = false
+        })
+        .catch(function (error) {
+          useToast().error('Ошибка обновления товара', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {
+            Time: Date.now(),
+            User: store.state.auth.user.UserID,
+            Message: 'Ошибка при ИЗМЕНЕНИИ товара: ' + updatedProduct.Model + '. Описание: ' + error,
+            Place: 'products.vue'
+          })
+        });
+    },
   },
 }
 </script>
