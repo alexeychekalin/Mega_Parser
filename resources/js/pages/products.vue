@@ -596,6 +596,7 @@ export default {
             this.products[this.editedIndex]['profit'] = ((1 - (this.products[this.editedIndex]['PurchasePrice'].replace("\u00A0", '') / this.products[this.editedIndex]['SellPrice'].replace("\u00A0", ''))) * 100).toFixed(2)
           }
 
+/*
           if(updatedProduct.Model !== this.oldModel){
             axios.post('/api/product/addEdits', {new: updatedProduct.Model, old : this.oldModel})
               .then(res => {
@@ -612,7 +613,7 @@ export default {
                 })
               });
           }
-
+*/
           if (updatedProduct.Color !== null && updatedProduct.Color !== "") {
             axios.post('/api/colors/check', {Color: updatedProduct.Color,})
               .then(res => {
