@@ -66,6 +66,7 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::get('/stats', [App\Http\Controllers\Product\ProductController::class, 'stats'])->name('product.stats');
     Route::get('/countMonitor', [App\Http\Controllers\Product\ProductController::class, 'countMonitor'])->name('product.countMonitor');
     Route::post('/getSimilarType', [App\Http\Controllers\Product\ProductController::class, 'getSimilarType'])->name('product.getSimilarType');
+    Route::post('/getSimilarTypeProducts', [App\Http\Controllers\Product\ProductController::class, 'getSimilarTypeProducts'])->name('product.getSimilarTypeProducts');
     Route::post('/updateSimilarType', [App\Http\Controllers\Product\ProductController::class, 'updateSimilarType'])->name('product.updateSimilarType');
     Route::post('/getSimilarTypeTrash', [App\Http\Controllers\Product\ProductController::class, 'getSimilarTypeTrash'])->name('product.getSimilarTypeTrash');
     Route::post('/addEdits', [App\Http\Controllers\Product\ProductController::class, 'addEdits'])->name('product.addEdits');

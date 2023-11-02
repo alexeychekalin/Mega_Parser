@@ -329,6 +329,17 @@
       </p>
     </template>
 
+    <template v-slot:item.typeName="{ item }">
+      <v-select
+        v-model="item.columns.typeName"
+        :items="types"
+        item-title="typeName"
+        item-value="typeID"
+        variant="solo"
+        @update:model-value = "searchSimilar(item.value.Model, item.columns.typeName, item.value.ProductId)"
+      ></v-select>
+    </template>
+
   </v-data-table>
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
@@ -342,6 +353,42 @@
       </v-card>
     </v-dialog>
   </VCard>
+
+  <v-dialog
+    v-model="typesDialog"
+    width="auto"
+  >
+    <template v-slot:default="{ isActive }">
+      <v-card>
+        <v-alert
+          color="warning"
+          :title="'Найдены похожие на '+ similar +  ' товары:' "
+          variant="outlined"
+          border="start"
+          border-color="warning"
+        >
+          <v-list :lines="newTypes.length" select-strategy="classic" style="max-height: 400px;">
+            <v-list-subheader>Выбранный тип: {{newType}}</v-list-subheader>
+            <v-list-item v-for="(item, key, index) in newTypes" :value=key>
+              <template v-slot:prepend="{ isActive=true }">
+                <v-list-item-action start>
+                  <v-checkbox :key="item['ProductId']"   :label="item['Model']" :model-value="isActive" v-model="newTypes[key]['selected']" color="success"></v-checkbox>
+                </v-list-item-action>
+              </template>
+            </v-list-item>
+          </v-list>
+          <v-card-actions class="justify-end">
+            <v-btn
+              variant="text"
+              @click="updateTypes"
+            >Обновить</v-btn>
+          </v-card-actions>
+        </v-alert>
+
+      </v-card>
+    </template>
+  </v-dialog>
+
 </template>
 
 
@@ -420,6 +467,10 @@ export default {
       Retailer: '',
     },
     oldType:'',
+    newTypes:[],
+    newType:'',
+    similar:'',
+    typesDialog: false,
     rules: {
       required: value => !!value || 'Поле обязательно',
       //number: value => value.length <= 20 || 'Max 20 characters',
@@ -649,6 +700,54 @@ export default {
             Place: 'products.vue'
           })
         });
+    },
+
+    searchSimilar(model, Type, id){
+      console.log(Type)
+      this.newType = this.types.find(f => f.typeID === Type).typeName;
+      this.similar = model
+      axios.post('api/product/getSimilarTypeProducts', {Model : model}).then(res => {
+        if(res.data.length >= 2){
+          this.typesDialog = true
+          this.newTypes = res.data.map(item => {
+            return {
+              ...item,
+              selected : true
+            }
+          })
+        }
+        else{
+          axios.post('api/product/settype', {Type : Type, ProductId: id}).then(res => {
+            this.getProducts()
+            useToast().success('Тип товара обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          })
+            .catch(function (error) {
+              useToast().error('Ошибка изменения типа', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+              axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при изменении типа: Тип ' + Type + '. Описание: ' + error, Place: 'notype.vue/searchSimilar' })
+            });
+        }
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка поиска схожих товаров, при изменении типа', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка поиска схожих товаров, при изменении типа: Тип ' + Type + '. Описание: ' + error, Place: 'notype.vue/searchSimilar' })
+        });
+    },
+
+    updateTypes(){
+      let toUpdate = this.newTypes.filter((x) => x.selected === true).map(value => value.ProductId);
+      axios.post('api/product/updateSimilarType', {Models : toUpdate, Type: this.types.find(f => f.typeName === this.newType).typeID}).then(res => {
+        this.newTypes = []
+        this.similar = ''
+        this.newType = ''
+        this.typesDialog = false
+        this.getProducts()
+        useToast().success('Тип ' + toUpdate.length + ' товаров обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка обновления схожих товаров, при изменении типа', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка обновления схожих товаров, при изменении типа: Тип ' + this.newType + '. Описание: ' + error, Place: 'notype.vue/updateTypes' })
+        });
+
     },
   },
 }

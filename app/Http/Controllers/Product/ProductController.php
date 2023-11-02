@@ -131,6 +131,12 @@ class ProductController extends Controller
         return json_decode(json_encode($product), true);
     }
 
+    public function getSimilarTypeProducts(Request $request)
+    {
+        $product = DB::select('SELECT Model, ProductId FROM product WHERE DAMLEVP(Model, :model) < 0.5 and Type not in (99, 100, 101) and product.Wholesaler is not null', ['model' => $request['Model']]);
+        return json_decode(json_encode($product), true);
+    }
+
     public function getSimilarTypeTrash(Request $request)
     {
         $product = DB::select('SELECT Model, ProductId FROM product WHERE DAMLEVP(Model, :model) < 0.5 and Type in (100, 101)', ['model' => $request['Model']]);
