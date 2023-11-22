@@ -148,8 +148,8 @@
               <v-row>
                 <v-col
                   cols="12"
-                  sm="6"
-                  md="6"
+                  sm="4"
+                  md="4"
                 >
                   <v-select
                     v-model="editedItem.providerName"
@@ -161,12 +161,22 @@
                 </v-col>
                 <v-col
                   cols="12"
-                  sm="6"
-                  md="6"
+                  sm="4"
+                  md="4"
                 >
                   <v-text-field
                     v-model="editedItem.Retailer"
                     label="Ретейлер"
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="4"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="editedItem.FeedID"
+                    label="FeedID"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -423,6 +433,7 @@ import axios from "axios";
 import { useToast } from "vue-toastification";
 import store from "@/store";
 import * as XLSX from 'xlsx/xlsx.mjs';
+import { th } from 'vuetify/locale'
 
 export default {
   data: () => ({
@@ -449,7 +460,7 @@ export default {
       //Retailer: []
     },
     headers: [
-      { title: 'Рент', key: 'profit', align: 'center'  },
+      { title: 'Рын. рент', key: 'profit', align: 'center'  },
       { title: 'Название', align: 'center', key: 'Model'},
       { title: 'Цвет', align: 'center', key: 'Color'},
       { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
@@ -457,8 +468,10 @@ export default {
       { title: 'Ретейлер', key: 'Retailer', align: 'center'  },
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
       { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
+      { title: 'Опт. цена', key: 'optPrice', align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
       { title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
+      { title: 'FeedID', key: 'FeedID', align: 'center' },
       //{ title: 'Бонусы', key: 'Bonus', align: 'center' },
       { title: 'РСТ', key: 'Rostest', align: 'center' },
      // { title: 'Карта', key: 'CardCash', align: 'center' },
@@ -480,6 +493,7 @@ export default {
       Color: '',
       Wholesaler: '',
       Retailer: '',
+      FeedID:'',
     },
     defaultItem: {
       Model:'',
@@ -494,6 +508,7 @@ export default {
       Color: '',
       Wholesaler: '',
       Retailer: '',
+      FeedID:'',
     },
     rules: {
       required: value => !!value || 'Поле обязательно',
@@ -502,7 +517,9 @@ export default {
         const pattern = /^\d*(\.\d{1,2})?$/
         return pattern.test(value) || 'Введите число, формат 12345.67'
       },
-    }
+    },
+    tax: '',
+    rent: '',
   }),
 
   components:{
@@ -607,12 +624,15 @@ export default {
       axios.get('/api/product')
         .then(res => {
           this.loading = false
-          this.products = res.data.map(item => {
+          this.tax = res.data.tax[0].value
+          this.rent = res.data.rent[0].value
+          this.products = res.data.values.map(item => {
             return {
               ...item,
               SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
               PurchasePrice : item.PurchasePrice !== null ? this.formatNumber(item.PurchasePrice) : null,
               profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
+              optPrice: item.PurchasePrice !== null ? Intl.NumberFormat('ru-RU').format(item.PurchasePrice.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ','') * (1 + (this.tax + this.rent + item.commission)/100)) : null,
             }
           });
         })
@@ -686,6 +706,7 @@ export default {
           Rostest: updatedProduct.Rostest,
           Wholesaler: updatedProduct.Wholesaler,
           Retailer: updatedProduct.Retailer,
+          FeedID: updatedProduct.FeedID,
         }
       )
         .then(res => {

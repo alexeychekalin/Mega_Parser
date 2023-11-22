@@ -32,6 +32,7 @@ class ProductController extends Controller
                     'Rostest' =>  $request['Rostest'] == "" ? 0 : $request['Rostest'],
                     'Wholesaler' => $request['Wholesaler'] == "" ? null : $request['Wholesaler'],
                     'Retailer' => $request['Retailer'] == "" ? null : $request['Retailer'],
+                    'FeedID' => $request['FeedID'],
                     'LinkToSMM' => ''
                 ]
             );
@@ -80,7 +81,7 @@ class ProductController extends Controller
 
     public function monitor(){
         $product = DB::table('product')
-            ->select('product.*', 'types.typeName', 'providers.providerName',
+            ->select('product.*', 'types.typeName', 'providers.providerName', 'types.commission',
                 DB::raw('(CASE WHEN product.Bonus = 0 THEN false WHEN product.Bonus is NULL THEN false ELSE true END) as Bonus'),
                 DB::raw('(CASE WHEN product.CardCash = 0 THEN false WHEN product.CardCash is NULL THEN false ELSE true END) as CardCash'),
                 DB::raw('(CASE WHEN product.Monitor = 0 THEN false WHEN product.Monitor is NULL THEN false ELSE true END) as Monitor')

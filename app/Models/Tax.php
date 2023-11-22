@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Product extends Authenticatable
+class Tax extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -18,24 +18,9 @@ class Product extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'Type',
-        'Model',
-        'Color',
-        'Rostest',
-        'PurchasePrice',
-        'Wholesaler',
-        'Retailer',
-        'Bonus',
-        'CardCash',
-        'Monitor',
-        'SellPrice',
-        'parseDate',
-        'SberParseDate',
-        'LinkToSMM',
-        'FeedID',
+        'name',
+        'value',
     ];
-
-    protected $primaryKey = 'ProductID';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -43,9 +28,18 @@ class Product extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+
     ];
 
-    protected $table = 'product';
-    public $timestamps = false;
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
 
+    ];
+
+    protected $table = 'taxes';
+    public $timestamps = false;
 }

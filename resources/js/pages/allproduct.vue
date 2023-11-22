@@ -339,7 +339,7 @@ export default {
       providerName:[]
     },
     headers: [
-      { title: 'Рент', key: 'profit', align: 'center' },
+      { title: 'Рын. Рент.', key: 'profit', align: 'center' },
       { title: 'Название', align: 'center', key: 'ClassName', width: '25%'},
       { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
       { title: 'Поставщик', key: 'providerName', align: 'center' },

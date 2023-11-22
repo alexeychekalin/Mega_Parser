@@ -135,8 +135,8 @@
                   <v-row>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="6"
+                      sm="4"
+                      md="4"
                     >
                       <v-select
                         v-model="editedItem.providerName"
@@ -148,12 +148,22 @@
                     </v-col>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="6"
+                      sm="4"
+                      md="4"
                     >
                       <v-text-field
                         v-model="editedItem.Retailer"
                         label="Ретейлер"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="4"
+                      md="4"
+                    >
+                      <v-text-field
+                        v-model="editedItem.FeedID"
+                        label="FeedID"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -285,42 +295,44 @@
     </template>
 
     <template v-slot:item.actions="{ item }">
-      <v-tooltip
-        location="top"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-            @click="editItem(item.raw)"
-            color="primary"
-            size="40px"
-          >
-            <v-icon color="grey-lighten-1">
-              mdi-pencil
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Редактировать</span>
-      </v-tooltip>
-      <v-tooltip
-        location="top"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-            color="error"
-            class="ma-1"
-            @click="deleteItem(item.raw)"
-          >
-            <v-icon color="grey-lighten-1">
-              mdi-delete
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Удалить</span>
-      </v-tooltip>
+      <div style="white-space: nowrap">
+        <v-tooltip
+          location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon
+              v-bind="props"
+              @click="editItem(item.raw)"
+              color="primary"
+              size="40px"
+            >
+              <v-icon color="grey-lighten-1">
+                mdi-pencil
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>Редактировать</span>
+        </v-tooltip>
+        <v-tooltip
+          location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon
+              v-bind="props"
+              color="error"
+              class="ma-1"
+              @click="deleteItem(item.raw)"
+            >
+              <v-icon color="grey-lighten-1">
+                mdi-delete
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>Удалить</span>
+        </v-tooltip>
+      </div>
       </template>
 
     <template v-slot:no-data>
@@ -430,12 +442,13 @@ export default {
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
       // { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
+      { title: 'FeedID', key: 'FeedID', align: 'center' },
       // { title: 'Дата', key: 'SberParseDate', align: 'center' },
       // { title: 'Бонусы', key: 'Bonus', align: 'center' },
       // { title: 'Карта', key: 'CardCash', align: 'center' },
       { title: 'РСТ', key: 'Rostest', align: 'center' },
-      { title: 'Мониторинг', key: 'Monitor', align: 'center' },
-      { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
+      { title: 'СММ', key: 'Monitor', align: 'center' },
+      { title: '', key: 'actions', sortable: false, align: 'center' },
     ],
     products: [],
     editedIndex: -1,
@@ -452,6 +465,7 @@ export default {
       Color: '',
       Wholesaler: '',
       Retailer: '',
+      FeedID: '',
     },
     defaultItem: {
       Model:'',
@@ -466,6 +480,7 @@ export default {
       Color: '',
       Wholesaler: '',
       Retailer: '',
+      FeedID:'',
     },
     oldType:'',
     newTypes:[],
@@ -631,6 +646,7 @@ export default {
           Rostest: updatedProduct.Rostest,
           Wholesaler: updatedProduct.Wholesaler,
           Retailer: updatedProduct.Retailer,
+          FeedID: updatedProduct.FeedID,
         }
       )
         .then(res => {
@@ -763,9 +779,7 @@ export default {
   text-transform: uppercase
 }
 .v-select.fit {
-  width: max-content;
+  //width: max-content;
 }
-.v-select.fit  .v-select__selection--comma {
-  text-overflow: unset;
-}
+
 </style>

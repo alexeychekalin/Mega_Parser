@@ -81,6 +81,7 @@ Route::group(['namespace' => 'Types', 'prefix' => 'types', 'middleware' => 'auth
     Route::post('/delete', [App\Http\Controllers\Type\TypeController::class, 'delete'])->name('types.delete');
     Route::get('/monitor', [App\Http\Controllers\Type\TypeController::class, 'monitor'])->name('types.monitor');
     Route::post('/setbytype', [App\Http\Controllers\Type\TypeController::class, 'setbytype'])->name('types.setbytype');
+    Route::post('/commission', [App\Http\Controllers\Type\TypeController::class, 'saveCommission'])->name('types.commission');
 });
 
 Route::group(['namespace' => 'Colors', 'prefix' => 'colors', 'middleware' => 'auth:sanctum'], function (){
@@ -96,6 +97,11 @@ Route::group(['namespace' => 'Providers', 'prefix' => 'providers', 'middleware' 
     Route::get('/', [App\Http\Controllers\Provider\IndexController::class, 'index']);
     Route::post('/update', [App\Http\Controllers\Provider\ProviderController::class, 'update'])->name('providers.update');
     Route::post('/delete', [App\Http\Controllers\Provider\ProviderController::class, 'delete'])->name('providers.delete');
+});
+
+Route::group(['namespace' => 'Tax', 'prefix' => 'tax', 'middleware' => 'auth:sanctum'], function (){
+    Route::get('/', [App\Http\Controllers\TaxController::class, 'index']);
+    Route::post('/update', [App\Http\Controllers\TaxController::class, 'update'])->name('providers.update');
 });
 
 Route::middleware('auth:web')->group(function () {
