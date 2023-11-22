@@ -206,6 +206,13 @@ export default {
       />
       <VerticalNavLink
         :item="{
+          title: 'Эк. показатели',
+          icon: 'mdi-cash-multiple',
+          to: '/economic',
+        }"
+      />
+      <VerticalNavLink
+        :item="{
           title: 'Типы',
           icon: 'mdi-store-cog-outline',
           to: '/types',

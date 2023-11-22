@@ -72,6 +72,15 @@ const router = createRouter({
           },
         },
         {
+          path: 'economic',
+          name: 'economic',
+          component: () => import('../pages/economic.vue'),
+          meta:{
+            middleware:"auth",
+            admin: true
+          },
+        },
+        {
           path: 'types',
           name: 'types',
           component: () => import('../pages/types.vue'),

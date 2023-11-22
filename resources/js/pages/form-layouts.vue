@@ -31,36 +31,6 @@ import DemoFormLayoutVerticalFormWithIcons from '@/views/pages/form-layouts/Demo
           </VCardText>
         </VCard>
       </VCol>
-      <VCol
-        cols="12"
-        md="6"
-      >
-        <!-- 👉 Vertical Form -->
-        <VCard title="Vertical Form">
-          <VCardText>
-            <DemoFormLayoutVerticalForm />
-          </VCardText>
-        </VCard>
-      </VCol>
-      <VCol
-        cols="12"
-        md="6"
-      >
-        <!-- 👉 Vertical Form with Icons -->
-        <VCard title="Vertical Form with Icons">
-          <VCardText>
-            <DemoFormLayoutVerticalFormWithIcons />
-          </VCardText>
-        </VCard>
-      </VCol>
-      <VCol cols="12">
-        <!-- 👉 Multiple Column -->
-        <VCard title="Multiple Column">
-          <VCardText>
-            <DemoFormLayoutMultipleColumn />
-          </VCardText>
-        </VCard>
-      </VCol>
     </VRow>
   </div>
 </template>

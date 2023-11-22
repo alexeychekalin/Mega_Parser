@@ -36,7 +36,8 @@ class ProductRequest extends FormRequest
             'Monitor' => '',
             'SellPrice' => '',
             'parseDate' => '',
-            'SberParseDate' => ''
+            'SberParseDate' => '',
+            'FeedID' => '',
         ];
     }
 

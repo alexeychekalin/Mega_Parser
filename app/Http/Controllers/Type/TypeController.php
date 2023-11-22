@@ -54,4 +54,19 @@ class TypeController extends Controller
             );
         return $request['typeID'];
     }
+
+    public function saveCommission(Request $request){
+        $cnt = count($request['types']);
+        $j = 0;
+        while($j < $cnt){
+            DB::table('types')
+                ->where('typeID', $request['types'][$j]['typeID'])
+                ->update(
+                    [
+                        'commission' => $request['types'][$j]['commission'],
+                    ]
+                );
+            $j++;
+        }
+    }
 }
