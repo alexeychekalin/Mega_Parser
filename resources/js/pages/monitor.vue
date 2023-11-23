@@ -454,7 +454,7 @@ export default {
     filters: {
       Model:[],
       Bonus: [],
-      // CardCash: [],
+      Color: [],
       typeName: [],
       providerName:[],
       //Retailer: []
@@ -631,7 +631,8 @@ export default {
               ...item,
               SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
               PurchasePrice : item.PurchasePrice !== null ? this.formatNumber(item.PurchasePrice) : null,
-              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
+              //profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
+              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((this.formatPrice(item.SellPrice) - this.formatPrice(item.PurchasePrice) - (this.formatPrice(item.SellPrice) * (this.tax + item.commission) / 100))/ this.formatPrice(item.PurchasePrice) * 100).toFixed(2): '-',
               optPrice: item.PurchasePrice !== null ? Intl.NumberFormat('ru-RU').format(item.PurchasePrice.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ','') * (1 + (this.tax + this.rent + item.commission)/100)) : null,
             }
           });
