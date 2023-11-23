@@ -98,20 +98,46 @@
     </template>
 
     <template v-slot:item.actions="{ item }">
-      <v-icon
-        size="small"
-        class="me-2"
-        @click="editItem(item.raw)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        size="small"
-        @click="deleteItem(item.raw)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
+        <div style="white-space: nowrap">
+          <v-tooltip
+            location="top"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                icon
+                v-bind="props"
+                @click="editItem(item.raw)"
+                color="primary"
+                size="40px"
+              >
+                <v-icon color="grey-lighten-1">
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Редактировать</span>
+          </v-tooltip>
+
+          <v-tooltip
+            location="top"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                icon
+                v-bind="props"
+                color="error"
+                class="ma-1"
+                @click="deleteItem(item.raw)"
+              >
+                <v-icon color="grey-lighten-1">
+                  mdi-delete
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Удалить</span>
+          </v-tooltip>
+        </div>
+      </template>
 
     <template v-slot:no-data>
       <p class="text-subtitle-1 text-truncate">

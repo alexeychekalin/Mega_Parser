@@ -81,4 +81,15 @@ class UserController extends Controller
         return $request['id'];
     }
 
+    public function set(Request $request): void
+    {
+        DB::table('users')
+            ->where('UserID', $request['UserID'])
+            ->update(
+                [
+                    $request['what'] => $request['set'],
+                ]
+            );
+    }
+
 }

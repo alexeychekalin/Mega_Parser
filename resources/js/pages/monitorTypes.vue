@@ -31,16 +31,25 @@
     </template>
 
     <template v-slot:item.monitor="{ item }" >
-      <VAvatar
-        size="40"
-        variant="tonal"
-        :color="item.columns.monitor === 1 ? 'success' : 'error'"
-        class="me-3"
-        @click="set(item.raw, !item.columns.monitor)"
-        style="cursor: pointer"
+      <v-tooltip text='Мониторинг'
+                 location="top"
       >
-        {{ item.columns.monitor === 1 ? "Да" : "Нет"}}
-      </VAvatar>
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click="set(item.raw, !item.columns.monitor)"
+            size="40px"
+            class='mr-1'
+            :color="item.columns.monitor === 1 ? 'success' : 'warning'"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-shopping-search-outline
+            </v-icon>
+          </v-btn>
+        </template>
+        Мониторинг
+      </v-tooltip>
     </template>
 
     <template v-slot:no-data>

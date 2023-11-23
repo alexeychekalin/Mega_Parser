@@ -264,6 +264,7 @@
 
     </template>
 
+<!--
     <template v-slot:item.Monitor="{ item }" >
       <VAvatar
         size="40"
@@ -276,7 +277,8 @@
         {{ item.columns.Monitor === 1 || item.columns.Monitor === true ? "Да" : "Нет"}}
       </VAvatar>
     </template>
-
+-->
+<!--
     <template v-slot:item.Rostest="{ item }">
       <VAvatar
         size="40"
@@ -289,13 +291,51 @@
         {{ item.columns.Rostest === 1 ? "Да" : "Нет" }}
       </VAvatar>
     </template>
-
+-->
     <template v-slot:item.parseDate="{ item }">
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
     </template>
 
     <template v-slot:item.actions="{ item }">
       <div style="white-space: nowrap">
+        <v-tooltip text='Мониторинг'
+                   location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon
+              v-bind="props"
+              @click="set(item.raw, 'Monitor', !products[products.indexOf(item.raw)].Monitor, 'мониторинге')"
+              size="40px"
+              class='mr-1'
+              :color="getColor(products[products.indexOf(item.raw)].Monitor)"
+            >
+              <v-icon color="grey-lighten-1">
+                mdi-shopping-search-outline
+              </v-icon>
+            </v-btn>
+          </template>
+          Мониторинг
+        </v-tooltip>
+        <v-tooltip text='Ростест'
+                   location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon
+              v-bind="props"
+              @click="set(item.raw, 'Rostest', !products[products.indexOf(item.raw)].Rostest, 'Ростесте')"
+              size="40px"
+              class='mr-1'
+              :color="getColor(products[products.indexOf(item.raw)].Rostest)"
+            >
+              <v-icon color="grey-lighten-1">
+                mdi-alpha-r-circle-outline
+              </v-icon>
+            </v-btn>
+          </template>
+          Ростест
+        </v-tooltip>
         <v-tooltip
           location="top"
         >
@@ -446,8 +486,8 @@ export default {
       // { title: 'Дата', key: 'SberParseDate', align: 'center' },
       // { title: 'Бонусы', key: 'Bonus', align: 'center' },
       // { title: 'Карта', key: 'CardCash', align: 'center' },
-      { title: 'РСТ', key: 'Rostest', align: 'center' },
-      { title: 'СММ', key: 'Monitor', align: 'center' },
+      //{ title: 'РСТ', key: 'Rostest', align: 'center' },
+      //{ title: 'СММ', key: 'Monitor', align: 'center' },
       { title: '', key: 'actions', sortable: false, align: 'center' },
     ],
     products: [],
@@ -570,7 +610,7 @@ export default {
     },
 
     getColor (value) {
-      return value === 1 || value === true ? 'success' : 'error'
+      return value === 1 || value === true ? 'success' : 'warning'
     },
 
     formatNumber(i){

@@ -305,7 +305,7 @@
             icon
             v-bind="props"
             color="error"
-            class="ma-2"
+            class="ma-1"
             @click="deleteItem(item.raw)"
           >
             <v-icon color="grey-lighten-1">
