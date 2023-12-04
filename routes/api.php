@@ -62,6 +62,7 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::get('/getsmm', [App\Http\Controllers\Product\ProductController::class, 'getsmm'])->name('product.getsmm');
     Route::get('/monitor', [App\Http\Controllers\Product\ProductController::class, 'monitor'])->name('product.monitor');
     Route::post('/set', [App\Http\Controllers\Product\ProductController::class, 'set'])->name('product.set');
+    Route::post('/feedid', [App\Http\Controllers\Product\ProductController::class, 'updateFeedID'])->name('product.feedid');
     Route::post('/setbytype', [App\Http\Controllers\Product\ProductController::class, 'setbytype'])->name('product.setbytype');
     Route::post('/settype', [App\Http\Controllers\Product\ProductController::class, 'settype'])->name('product.settype');
     Route::get('/stats', [App\Http\Controllers\Product\ProductController::class, 'stats'])->name('product.stats');

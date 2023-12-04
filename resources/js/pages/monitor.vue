@@ -454,6 +454,14 @@
     </div>
   </template>
 
+  <template v-slot:item.FeedID="{ item }">
+    <v-text-field
+      variant="solo"
+      v-model="item.columns.FeedID"
+      @blur='updateFeedID(item.columns.FeedID, item.value.ProductId, item.raw)'
+    ></v-text-field>
+  </template>
+
   <template v-slot:no-data>
     <p class="text-subtitle-1 text-truncate">
       Ничего не найдено
@@ -598,6 +606,17 @@ export default {
   },
 
   methods: {
+    updateFeedID(feedid, id, item){
+      if(feedid === null || feedid === ' ' || feedid === '') return
+      axios.post('api/product/feedid', {ProductId : id, FeedID: feedid}).then(res => {
+        useToast().success('FeedID обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+        this.products[this.products.indexOf(item)].FeedID = feedid;
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка обновления FeedID', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ FeedID у товара с ID '+ id + '. Описание: ' + error, Place: 'monitor.vue' })
+        });
+    },
 
     getTypes (){
       axios.get('/api/types')
