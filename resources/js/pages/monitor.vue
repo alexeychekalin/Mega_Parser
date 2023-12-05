@@ -289,6 +289,47 @@
 
   <template v-slot:item.actions="{ item }">
     <div style="white-space: nowrap">
+
+      <v-tooltip text='Мониторинг'
+                 location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click="set(item.raw, 'Monitor', !products[products.indexOf(item.raw)].Monitor, 'мониторинге')"
+            size="40px"
+            class='mr-1'
+            :color="getColor(products[products.indexOf(item.raw)].Monitor)"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-shopping-search-outline
+            </v-icon>
+          </v-btn>
+        </template>
+        Мониторинг
+      </v-tooltip>
+
+      <v-tooltip text='Ростест'
+        location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click="set(item.raw, 'Rostest', !products[products.indexOf(item.raw)].Rostest, 'Ростесте')"
+            size="40px"
+            class='mr-1'
+            :color="getColor(products[products.indexOf(item.raw)].Rostest)"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-alpha-r-circle-outline
+            </v-icon>
+          </v-btn>
+        </template>
+        Ростест
+      </v-tooltip>
+
       <v-tooltip
         location="top"
       >
@@ -343,6 +384,8 @@
     </VAvatar>
   </template>
 -->
+
+<!--
   <template v-slot:item.Rostest="{ item }">
     <VAvatar
       size="40"
@@ -352,10 +395,10 @@
       @click="set(item.raw, 'Rostest', !item.columns.Rostest, 'Ростесте')"
       style="cursor: pointer"
     >
-      {{ item.columns.Rostest === 1 ? "Да" : "Нет" }}
+      {{ item.columns.Rostest === 1 ? "PCT" : "PCT" }}
     </VAvatar>
   </template>
-
+-->
   <!--
   <template v-slot:item.CardCash="{ item }">
     <VAvatar
@@ -370,7 +413,7 @@
     </VAvatar>
   </template>
   -->
-
+<!--
   <template v-slot:item.Monitor="{ item }" >
     <VAvatar
       size="40"
@@ -380,10 +423,10 @@
       @click="set(item.raw, 'Monitor', !item.columns.Monitor, 'мониторинге')"
       style="cursor: pointer"
     >
-      {{ item.columns.Monitor === 1 || item.columns.Monitor === true ? "Да" : "Нет"}}
+      {{ item.columns.Monitor === 1 || item.columns.Monitor === true ? "СММ" : "СММ"}}
     </VAvatar>
   </template>
-
+-->
   <template v-slot:item.parseDate="{ item }">
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
   </template>
@@ -409,6 +452,14 @@
         </template>
       </v-tooltip>
     </div>
+  </template>
+
+  <template v-slot:item.FeedID="{ item }">
+    <v-text-field
+      variant="solo"
+      v-model="item.columns.FeedID"
+      @blur='updateFeedID(item.columns.FeedID, item.value.ProductId, item.raw)'
+    ></v-text-field>
   </template>
 
   <template v-slot:no-data>
@@ -454,7 +505,7 @@ export default {
     filters: {
       Model:[],
       Bonus: [],
-      // CardCash: [],
+      Color: [],
       typeName: [],
       providerName:[],
       //Retailer: []
@@ -473,9 +524,9 @@ export default {
       { title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
       { title: 'FeedID', key: 'FeedID', align: 'center' },
       //{ title: 'Бонусы', key: 'Bonus', align: 'center' },
-      { title: 'РСТ', key: 'Rostest', align: 'center' },
-     // { title: 'Карта', key: 'CardCash', align: 'center' },
-      { title: 'СММ', key: 'Monitor', align: 'center' },
+      //{ title: 'РСТ', key: 'Rostest', align: 'center' },
+      // { title: 'Карта', key: 'CardCash', align: 'center' },
+      //{ title: 'СММ', key: 'Monitor', align: 'center' },
       { title: '', key: 'actions', sortable: false, align: 'right' },
     ],
     products: [],
@@ -555,6 +606,17 @@ export default {
   },
 
   methods: {
+    updateFeedID(feedid, id, item){
+      if(feedid === null || feedid === ' ' || feedid === '') return
+      axios.post('api/product/feedid', {ProductId : id, FeedID: feedid}).then(res => {
+        useToast().success('FeedID обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+        this.products[this.products.indexOf(item)].FeedID = feedid;
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка обновления FeedID', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ FeedID у товара с ID '+ id + '. Описание: ' + error, Place: 'monitor.vue' })
+        });
+    },
 
     getTypes (){
       axios.get('/api/types')
@@ -608,7 +670,7 @@ export default {
     },
 
     getColor (value) {
-      return value === 1 || value === true ? 'success' : 'error'
+      return value === 1 || value === true ? 'success' : 'warning'
     },
 
     formatNumber(i){
@@ -631,7 +693,8 @@ export default {
               ...item,
               SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
               PurchasePrice : item.PurchasePrice !== null ? this.formatNumber(item.PurchasePrice) : null,
-              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
+              //profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
+              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((this.formatPrice(item.SellPrice) - this.formatPrice(item.PurchasePrice) - (this.formatPrice(item.SellPrice) * (this.tax + item.commission) / 100))/ this.formatPrice(item.PurchasePrice) * 100).toFixed(2): '-',
               optPrice: item.PurchasePrice !== null ? Intl.NumberFormat('ru-RU').format(item.PurchasePrice.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ','') * (1 + (this.tax + this.rent + item.commission)/100)) : null,
             }
           });

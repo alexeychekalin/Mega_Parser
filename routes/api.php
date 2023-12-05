@@ -24,6 +24,7 @@ Route::group(['namespace' => 'User', 'prefix' => 'users', 'middleware' => 'auth:
     Route::post('/update', [App\Http\Controllers\User\UserController::class, 'update'])->name('user.update');
     Route::post('/delete', [App\Http\Controllers\User\UserController::class, 'delete'])->name('user.delete');
     Route::post('/change', [App\Http\Controllers\User\UserController::class, 'changePassword'])->name('user.change');
+    Route::post('/set', [App\Http\Controllers\User\UserController::class, 'set'])->name('user.set');
 });
 
 Route::group(['namespace' => 'Log', 'prefix' => 'log', 'middleware' => 'auth:sanctum'], function (){
@@ -61,6 +62,7 @@ Route::group(['namespace' => 'Product', 'prefix' => 'product', 'middleware' => '
     Route::get('/getsmm', [App\Http\Controllers\Product\ProductController::class, 'getsmm'])->name('product.getsmm');
     Route::get('/monitor', [App\Http\Controllers\Product\ProductController::class, 'monitor'])->name('product.monitor');
     Route::post('/set', [App\Http\Controllers\Product\ProductController::class, 'set'])->name('product.set');
+    Route::post('/feedid', [App\Http\Controllers\Product\ProductController::class, 'updateFeedID'])->name('product.feedid');
     Route::post('/setbytype', [App\Http\Controllers\Product\ProductController::class, 'setbytype'])->name('product.setbytype');
     Route::post('/settype', [App\Http\Controllers\Product\ProductController::class, 'settype'])->name('product.settype');
     Route::get('/stats', [App\Http\Controllers\Product\ProductController::class, 'stats'])->name('product.stats');

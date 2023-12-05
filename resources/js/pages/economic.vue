@@ -1,6 +1,6 @@
 <script setup>
 import smmCommission from '@/views/pages/form-layouts/smmCommission.vue'
-import nalogindicator from '@/views/pages/form-layouts/nalogindicator.vue'
+import nalogindicator from '@/views/pages/form-layouts/nalogIndicator.vue'
 </script>
 
 <template>

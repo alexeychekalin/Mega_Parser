@@ -240,4 +240,17 @@ class ProductController extends Controller
         $this->delete($request);
     }
 
+    public function updateFeedID(Request $request)
+    {
+        DB::table('product')
+            ->where('ProductId', $request['ProductId'])
+            ->update(
+                [
+                    'FeedID' => $request['FeedID'],
+                ]
+            );
+
+        return 'kkk';
+    }
+
 }

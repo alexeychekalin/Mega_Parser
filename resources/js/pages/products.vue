@@ -264,6 +264,7 @@
 
     </template>
 
+<!--
     <template v-slot:item.Monitor="{ item }" >
       <VAvatar
         size="40"
@@ -276,7 +277,8 @@
         {{ item.columns.Monitor === 1 || item.columns.Monitor === true ? "Да" : "Нет"}}
       </VAvatar>
     </template>
-
+-->
+<!--
     <template v-slot:item.Rostest="{ item }">
       <VAvatar
         size="40"
@@ -289,13 +291,51 @@
         {{ item.columns.Rostest === 1 ? "Да" : "Нет" }}
       </VAvatar>
     </template>
-
+-->
     <template v-slot:item.parseDate="{ item }">
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
     </template>
 
     <template v-slot:item.actions="{ item }">
       <div style="white-space: nowrap">
+        <v-tooltip text='Мониторинг'
+                   location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon
+              v-bind="props"
+              @click="set(item.raw, 'Monitor', !products[products.indexOf(item.raw)].Monitor, 'мониторинге')"
+              size="40px"
+              class='mr-1'
+              :color="getColor(products[products.indexOf(item.raw)].Monitor)"
+            >
+              <v-icon color="grey-lighten-1">
+                mdi-shopping-search-outline
+              </v-icon>
+            </v-btn>
+          </template>
+          Мониторинг
+        </v-tooltip>
+        <v-tooltip text='Ростест'
+                   location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon
+              v-bind="props"
+              @click="set(item.raw, 'Rostest', !products[products.indexOf(item.raw)].Rostest, 'Ростесте')"
+              size="40px"
+              class='mr-1'
+              :color="getColor(products[products.indexOf(item.raw)].Rostest)"
+            >
+              <v-icon color="grey-lighten-1">
+                mdi-alpha-r-circle-outline
+              </v-icon>
+            </v-btn>
+          </template>
+          Ростест
+        </v-tooltip>
         <v-tooltip
           location="top"
         >
@@ -351,6 +391,13 @@
         variant="solo"
         @update:model-value = "searchSimilar(item.value.Model, item.columns.typeName, item.value.ProductId)"
       ></v-select>
+    </template>
+    <template v-slot:item.FeedID="{ item }">
+      <v-text-field
+        variant="solo"
+        v-model="item.columns.FeedID"
+        @blur='updateFeedID(item.columns.FeedID, item.value.ProductId, item.raw)'
+      ></v-text-field>
     </template>
 
   </v-data-table>
@@ -446,8 +493,8 @@ export default {
       // { title: 'Дата', key: 'SberParseDate', align: 'center' },
       // { title: 'Бонусы', key: 'Bonus', align: 'center' },
       // { title: 'Карта', key: 'CardCash', align: 'center' },
-      { title: 'РСТ', key: 'Rostest', align: 'center' },
-      { title: 'СММ', key: 'Monitor', align: 'center' },
+      //{ title: 'РСТ', key: 'Rostest', align: 'center' },
+      //{ title: 'СММ', key: 'Monitor', align: 'center' },
       { title: '', key: 'actions', sortable: false, align: 'center' },
     ],
     products: [],
@@ -527,6 +574,18 @@ export default {
   },
 
   methods: {
+    updateFeedID(feedid, id, item){
+      if(feedid === null || feedid === ' ' || feedid === '') return
+      axios.post('api/product/feedid', {ProductId : id, FeedID: feedid}).then(res => {
+        useToast().success('FeedID обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+        this.products[this.products.indexOf(item)].FeedID = feedid;
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка обновления FeedID', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ FeedID у товара с ID '+ id + '. Описание: ' + error, Place: 'products.vue' })
+        });
+    },
+
     deleteItem (item) {
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -570,7 +629,7 @@ export default {
     },
 
     getColor (value) {
-      return value === 1 || value === true ? 'success' : 'error'
+      return value === 1 || value === true ? 'success' : 'warning'
     },
 
     formatNumber(i){

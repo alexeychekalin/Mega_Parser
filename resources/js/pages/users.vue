@@ -157,6 +157,44 @@
 
   <template v-slot:item.actions="{ item }">
         <div style="white-space: nowrap">
+          <v-tooltip text='Telegram'
+                     location="top"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                icon
+                v-bind="props"
+                @click="set(item.raw, 'TelegramAccess', !users[users.indexOf(item.raw)].TelegramAccess, 'к Telegram-боту')"
+                size="40px"
+                class='mr-1'
+                :color="getColor(users[users.indexOf(item.raw)].TelegramAccess)"
+              >
+                <v-icon color="grey-lighten-1">
+                  mdi-telegram
+                </v-icon>
+              </v-btn>
+            </template>
+            Telegram
+          </v-tooltip>
+          <v-tooltip text='Web-панель'
+                     location="top"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                icon
+                v-bind="props"
+                @click="set(item.raw, 'WebAccess', !users[users.indexOf(item.raw)].WebAccess, 'в Web-панель')"
+                size="40px"
+                class='mr-1'
+                :color="getColor(users[users.indexOf(item.raw)].WebAccess)"
+              >
+                <v-icon color="grey-lighten-1">
+                  mdi-cog-sync
+                </v-icon>
+              </v-btn>
+            </template>
+            Web Panel
+          </v-tooltip>
           <v-tooltip
             location="top"
           >
@@ -175,7 +213,6 @@
             </template>
             <span>Редактировать</span>
           </v-tooltip>
-
           <v-tooltip
             location="top"
           >
@@ -196,7 +233,7 @@
           </v-tooltip>
         </div>
       </template>
-
+<!--
   <template v-slot:item.TelegramAccess="{ item }">
     <VAvatar
       size="40"
@@ -207,6 +244,8 @@
       {{ getAccess(item.columns.TelegramAccess) }}
     </VAvatar>
   </template>
+  -->
+ <!--
   <template v-slot:item.WebAccess="{ item }">
     <VAvatar
       size="40"
@@ -217,7 +256,7 @@
       {{ getAccess(item.columns.WebAccess) }}
     </VAvatar>
   </template>
-
+-->
   <template v-slot:no-data>
     <p class="text-subtitle-1 text-truncate">
       Ничего не найдено
@@ -251,8 +290,8 @@ export default {
       { title: 'ФИО', align: 'center', key: 'FIO'},
       { title: 'Телефон', key: 'TNumber', align: 'center' },
       { title: 'ChatId', key: 'ChatId', align: 'center' },
-      { title: 'Доступ в TG', key: 'TelegramAccess', sortable: false, align: 'center' },
-      { title: 'Доступ в ЛК', key: 'WebAccess', sortable: false, align: 'center' },
+      // { title: 'Доступ в TG', key: 'TelegramAccess', sortable: false, align: 'center' },
+      // { title: 'Доступ в ЛК', key: 'WebAccess', sortable: false, align: 'center' },
       { title: 'Действия', key: 'actions', sortable: false, align: 'center' },
     ],
     users: [],
@@ -315,11 +354,20 @@ export default {
   },
 
   methods: {
-    getColor (value) {
-      return value ? 'success' : 'error'
+    set(item, what, set, toast){
+      this.editedIndex = this.users.indexOf(item)
+      this.users[this.editedIndex][what] = set ? 1 : 0
+      axios.post('api/users/set', {what : what, set : set, UserID : item.UserID}).then(res => {
+        useToast().success('Данные о предоставлении доступа ' + toast + ' обновлены', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка предоставления доступа ' + toast, {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка предоставления доступа к '+ toast + '. Описание: ' + error, Place: 'users.vue' })
+        });
     },
-    getAccess (value) {
-      return value ? 'да' : 'нет'
+
+    getColor (value) {
+      return value ? 'success' : 'warning'
     },
 
     getUsers (){
