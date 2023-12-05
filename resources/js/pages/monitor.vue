@@ -456,6 +456,7 @@
 
   <template v-slot:item.FeedID="{ item }">
     <v-text-field
+      class="pa-0"
       variant="solo"
       v-model="item.columns.FeedID"
       @blur='updateFeedID(item.columns.FeedID, item.value.ProductId, item.raw)'
@@ -521,7 +522,7 @@ export default {
       { title: 'Опт. цена', key: 'optPrice', align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
       { title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
-      { title: 'FeedID', key: 'FeedID', align: 'center' },
+      { title: 'FeedID', key: 'FeedID', align: 'center', width: "125px"},
       //{ title: 'Бонусы', key: 'Bonus', align: 'center' },
       //{ title: 'РСТ', key: 'Rostest', align: 'center' },
       // { title: 'Карта', key: 'CardCash', align: 'center' },
