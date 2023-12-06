@@ -645,12 +645,29 @@ export default {
     },
 
     download : function() {
-      let output = this.products.filter((d) => {
+      let i = 0
+      let prod = this.products
+      while(i < prod.length-1){
+        if(prod[i].PurchasePrice !== null)
+          prod[i].PurchasePrice = prod[i].PurchasePrice.replace(' ', '');
+        if(prod[i].SellPrice !== null)
+          prod[i].SellPrice= prod[i].SellPrice.replace(' ', '');
+        if(prod[i].optPrice !== null)
+          prod[i].optPrice= prod[i].optPrice.replace(' ', '');
+        i++;
+      }
+      let output = prod.filter((d) => {
         return Object.keys(this.filters).every((f) => {
           return this.filters[f].length < 1 || this.filters[f].includes(d[f]);
         });
       });
+      while(i < output.length){
+        //output[i].PurchasePrice = 123;
+        i++;
+        console.log(output)
+      }
       output.forEach(e => delete e.value)
+
       const data = XLSX.utils.json_to_sheet(output)
       const wb = XLSX.utils.book_new()
       XLSX.utils.book_append_sheet(wb, data, 'data')
