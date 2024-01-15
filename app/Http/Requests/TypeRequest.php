@@ -25,7 +25,8 @@ class TypeRequest extends FormRequest
     {
         return [
             'typeID' => '',
-            'typeName' => 'required'
+            'typeName' => 'required',
+            'image' => ''
         ];
     }
 }

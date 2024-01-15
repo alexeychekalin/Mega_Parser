@@ -148,8 +148,8 @@
               <v-row>
                 <v-col
                   cols="12"
-                  sm="6"
-                  md="6"
+                  sm="4"
+                  md="4"
                 >
                   <v-select
                     v-model="editedItem.providerName"
@@ -161,12 +161,22 @@
                 </v-col>
                 <v-col
                   cols="12"
-                  sm="6"
-                  md="6"
+                  sm="4"
+                  md="4"
                 >
                   <v-text-field
                     v-model="editedItem.Retailer"
                     label="Ретейлер"
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="4"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="editedItem.FeedID"
+                    label="FeedID"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -279,6 +289,47 @@
 
   <template v-slot:item.actions="{ item }">
     <div style="white-space: nowrap">
+
+      <v-tooltip text='Мониторинг'
+                 location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click="set(item.raw, 'Monitor', !products[products.indexOf(item.raw)].Monitor, 'мониторинге')"
+            size="40px"
+            class='mr-1'
+            :color="getColor(products[products.indexOf(item.raw)].Monitor)"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-shopping-search-outline
+            </v-icon>
+          </v-btn>
+        </template>
+        Мониторинг
+      </v-tooltip>
+
+      <v-tooltip text='Ростест'
+        location="top"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click="set(item.raw, 'Rostest', !products[products.indexOf(item.raw)].Rostest, 'Ростесте')"
+            size="40px"
+            class='mr-1'
+            :color="getColor(products[products.indexOf(item.raw)].Rostest)"
+          >
+            <v-icon color="grey-lighten-1">
+              mdi-alpha-r-circle-outline
+            </v-icon>
+          </v-btn>
+        </template>
+        Ростест
+      </v-tooltip>
+
       <v-tooltip
         location="top"
       >
@@ -333,6 +384,8 @@
     </VAvatar>
   </template>
 -->
+
+<!--
   <template v-slot:item.Rostest="{ item }">
     <VAvatar
       size="40"
@@ -342,10 +395,10 @@
       @click="set(item.raw, 'Rostest', !item.columns.Rostest, 'Ростесте')"
       style="cursor: pointer"
     >
-      {{ item.columns.Rostest === 1 ? "Да" : "Нет" }}
+      {{ item.columns.Rostest === 1 ? "PCT" : "PCT" }}
     </VAvatar>
   </template>
-
+-->
   <!--
   <template v-slot:item.CardCash="{ item }">
     <VAvatar
@@ -360,7 +413,7 @@
     </VAvatar>
   </template>
   -->
-
+<!--
   <template v-slot:item.Monitor="{ item }" >
     <VAvatar
       size="40"
@@ -370,10 +423,10 @@
       @click="set(item.raw, 'Monitor', !item.columns.Monitor, 'мониторинге')"
       style="cursor: pointer"
     >
-      {{ item.columns.Monitor === 1 || item.columns.Monitor === true ? "Да" : "Нет"}}
+      {{ item.columns.Monitor === 1 || item.columns.Monitor === true ? "СММ" : "СММ"}}
     </VAvatar>
   </template>
-
+-->
   <template v-slot:item.parseDate="{ item }">
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
   </template>
@@ -399,6 +452,15 @@
         </template>
       </v-tooltip>
     </div>
+  </template>
+
+  <template v-slot:item.FeedID="{ item }">
+    <v-text-field
+      class="pa-0"
+      variant="solo"
+      v-model="item.columns.FeedID"
+      @blur='updateFeedID(item.columns.FeedID, item.value.ProductId, item.raw)'
+    ></v-text-field>
   </template>
 
   <template v-slot:no-data>
@@ -443,13 +505,13 @@ export default {
     filters: {
       Model:[],
       Bonus: [],
-      // CardCash: [],
+      Color: [],
       typeName: [],
       providerName:[],
       //Retailer: []
     },
     headers: [
-      { title: 'Рент', key: 'profit', align: 'center'  },
+      { title: 'Рын. рент', key: 'profit', align: 'center'  },
       { title: 'Название', align: 'center', key: 'Model'},
       { title: 'Цвет', align: 'center', key: 'Color'},
       { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
@@ -457,12 +519,14 @@ export default {
       { title: 'Ретейлер', key: 'Retailer', align: 'center'  },
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
       { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
+      { title: 'Опт. цена', key: 'optPrice', align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
       { title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
+      { title: 'FeedID', key: 'FeedID', align: 'center', width: "125px"},
       //{ title: 'Бонусы', key: 'Bonus', align: 'center' },
-      { title: 'РСТ', key: 'Rostest', align: 'center' },
-     // { title: 'Карта', key: 'CardCash', align: 'center' },
-      { title: 'СММ', key: 'Monitor', align: 'center' },
+      //{ title: 'РСТ', key: 'Rostest', align: 'center' },
+      // { title: 'Карта', key: 'CardCash', align: 'center' },
+      //{ title: 'СММ', key: 'Monitor', align: 'center' },
       { title: '', key: 'actions', sortable: false, align: 'right' },
     ],
     products: [],
@@ -480,6 +544,7 @@ export default {
       Color: '',
       Wholesaler: '',
       Retailer: '',
+      FeedID:'',
     },
     defaultItem: {
       Model:'',
@@ -494,6 +559,7 @@ export default {
       Color: '',
       Wholesaler: '',
       Retailer: '',
+      FeedID:'',
     },
     rules: {
       required: value => !!value || 'Поле обязательно',
@@ -502,7 +568,9 @@ export default {
         const pattern = /^\d*(\.\d{1,2})?$/
         return pattern.test(value) || 'Введите число, формат 12345.67'
       },
-    }
+    },
+    tax: '',
+    rent: '',
   }),
 
   components:{
@@ -538,6 +606,17 @@ export default {
   },
 
   methods: {
+    updateFeedID(feedid, id, item){
+      if(feedid === null || feedid === ' ' || feedid === '') return
+      axios.post('api/product/feedid', {ProductId : id, FeedID: feedid}).then(res => {
+        useToast().success('FeedID обновлен', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+        this.products[this.products.indexOf(item)].FeedID = feedid;
+      })
+        .catch(function (error) {
+          useToast().error('Ошибка обновления FeedID', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
+          axios.post('/api/log', {Time: Date.now(), User: store.state.auth.user.UserID , Message: 'Ошибка при ИЗМЕНЕНИИ FeedID у товара с ID '+ id + '. Описание: ' + error, Place: 'monitor.vue' })
+        });
+    },
 
     getTypes (){
       axios.get('/api/types')
@@ -566,12 +645,29 @@ export default {
     },
 
     download : function() {
-      let output = this.products.filter((d) => {
+      let i = 0
+      let prod = this.products
+      while(i < prod.length-1){
+        if(prod[i].PurchasePrice !== null)
+          prod[i].PurchasePrice = prod[i].PurchasePrice.replace(' ', '');
+        if(prod[i].SellPrice !== null)
+          prod[i].SellPrice= prod[i].SellPrice.replace(' ', '');
+        if(prod[i].optPrice !== null)
+          prod[i].optPrice= prod[i].optPrice.replace(' ', '');
+        i++;
+      }
+      let output = prod.filter((d) => {
         return Object.keys(this.filters).every((f) => {
           return this.filters[f].length < 1 || this.filters[f].includes(d[f]);
         });
       });
+      while(i < output.length){
+        //output[i].PurchasePrice = 123;
+        i++;
+        console.log(output)
+      }
       output.forEach(e => delete e.value)
+
       const data = XLSX.utils.json_to_sheet(output)
       const wb = XLSX.utils.book_new()
       XLSX.utils.book_append_sheet(wb, data, 'data')
@@ -591,7 +687,7 @@ export default {
     },
 
     getColor (value) {
-      return value === 1 || value === true ? 'success' : 'error'
+      return value === 1 || value === true ? 'success' : 'warning'
     },
 
     formatNumber(i){
@@ -602,17 +698,26 @@ export default {
       return i.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ','')
     },
 
+    roundTo10 (i) {
+      return Intl.NumberFormat('ru-RU').format(Math.ceil(i/10)*10);
+    },
+
     getProducts (){
       this.loading = true
       axios.get('/api/product')
         .then(res => {
           this.loading = false
-          this.products = res.data.map(item => {
+          this.tax = res.data.tax[0].value
+          this.rent = res.data.rent[0].value
+          this.products = res.data.values.map(item => {
             return {
               ...item,
               SellPrice : item.SellPrice !== null ? this.formatNumber(item.SellPrice) : null,
               PurchasePrice : item.PurchasePrice !== null ? this.formatNumber(item.PurchasePrice) : null,
-              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
+              //profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((1 - (this.formatPrice(item.PurchasePrice)/this.formatPrice(item.SellPrice)))*100).toFixed(2) : '-',
+              profit: item.SellPrice !== null && item.PurchasePrice !== null ? ((this.formatPrice(item.SellPrice) - this.formatPrice(item.PurchasePrice) - (this.formatPrice(item.SellPrice) * (this.tax + item.commission) / 100))/ this.formatPrice(item.PurchasePrice) * 100).toFixed(2): '-',
+              //optPrice: item.PurchasePrice !== null ? Intl.NumberFormat('ru-RU').format(item.PurchasePrice.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ','') * (1 + (this.tax + this.rent + item.commission)/100)) : null,
+              optPrice: item.PurchasePrice !== null ? this.roundTo10(item.PurchasePrice.replace(/[\u0000-\u001F\u007F-\u009F\u00A0]/g, "").replace('₽', '').replace(',','').replace(' ','') * (1 + this.rent/100)/(1 - (this.tax/100 + item.commission/100))) : null,
             }
           });
         })
@@ -686,6 +791,7 @@ export default {
           Rostest: updatedProduct.Rostest,
           Wholesaler: updatedProduct.Wholesaler,
           Retailer: updatedProduct.Retailer,
+          FeedID: updatedProduct.FeedID,
         }
       )
         .then(res => {

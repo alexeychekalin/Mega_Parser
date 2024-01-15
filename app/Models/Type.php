@@ -18,7 +18,8 @@ class Type extends Authenticatable
      */
     protected $fillable = [
         'typeID',
-        'typeName'
+        'typeName',
+        'image'
     ];
 
     public $timestamps = false;

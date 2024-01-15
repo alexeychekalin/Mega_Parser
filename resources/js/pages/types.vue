@@ -57,7 +57,27 @@
                       :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
-
+                </v-row>
+                <v-row>
+                  <v-col
+                    cols="10"
+                  >
+                    <v-text-field
+                      v-model="editedItem.image"
+                      label="Ссылка на фото"
+                    >
+                    </v-text-field>
+                  </v-col>
+                  <v-col
+                    cols='2'
+                  >
+                    <VAvatar
+                      rounded="0"
+                      style="height: 50px; width: 50px"
+                      v-html="editedItem.image"
+                    >
+                    </VAvatar>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -131,6 +151,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import axios from "axios";
 import { useToast } from "vue-toastification";
 import store from "@/store";
+import gumroad from '@images/logos/gumroad.png'
 export default {
   data: () => ({
     search: '',
