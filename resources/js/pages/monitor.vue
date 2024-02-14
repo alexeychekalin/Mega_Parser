@@ -169,16 +169,6 @@
                     label="Ретейлер"
                   ></v-text-field>
                 </v-col>
-                <v-col
-                  cols="12"
-                  sm="4"
-                  md="4"
-                >
-                  <v-text-field
-                    v-model="editedItem.FeedID"
-                    label="FeedID"
-                  ></v-text-field>
-                </v-col>
               </v-row>
               <v-row>
                 <v-col
@@ -453,16 +443,6 @@
       </v-tooltip>
     </div>
   </template>
-
-  <template v-slot:item.FeedID="{ item }">
-    <v-text-field
-      class="pa-0"
-      variant="solo"
-      v-model="item.columns.FeedID"
-      @blur='updateFeedID(item.columns.FeedID, item.value.ProductId, item.raw)'
-    ></v-text-field>
-  </template>
-
   <template v-slot:no-data>
     <p class="text-subtitle-1 text-truncate">
       Ничего не найдено
@@ -522,7 +502,7 @@ export default {
       { title: 'Опт. цена', key: 'optPrice', align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
       { title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
-      { title: 'FeedID', key: 'FeedID', align: 'center', width: "125px"},
+      //{ title: 'FeedID', key: 'FeedID', align: 'center', width: "125px"},
       //{ title: 'Бонусы', key: 'Bonus', align: 'center' },
       //{ title: 'РСТ', key: 'Rostest', align: 'center' },
       // { title: 'Карта', key: 'CardCash', align: 'center' },

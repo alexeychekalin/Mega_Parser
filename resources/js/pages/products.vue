@@ -156,16 +156,6 @@
                         label="Ретейлер"
                       ></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="4"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.FeedID"
-                        label="FeedID"
-                      ></v-text-field>
-                    </v-col>
                   </v-row>
                   <v-row>
                     <v-col
@@ -489,7 +479,7 @@ export default {
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
       // { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
-      { title: 'FeedID', key: 'FeedID', align: 'center' },
+      //{ title: 'FeedID', key: 'FeedID', align: 'center' },
       // { title: 'Дата', key: 'SberParseDate', align: 'center' },
       // { title: 'Бонусы', key: 'Bonus', align: 'center' },
       // { title: 'Карта', key: 'CardCash', align: 'center' },
