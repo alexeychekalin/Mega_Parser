@@ -192,16 +192,7 @@
                     label="Цена продажи"
                   ></v-text-field>
                 </v-col>
-                <v-col
-                  cols="12"
-                  sm="4"
-                  md="4"
-                >
-                  <v-text-field
-                    v-model="editedItem.Color"
-                    label="Цвет"
-                  ></v-text-field>
-                </v-col>
+
                 <VCol cols="12" md="3" class='d-flex justify-center'>
                   <VCheckbox
                     color="success"
@@ -278,86 +269,92 @@
   </template>
 
   <template v-slot:item.actions="{ item }">
-    <div style="white-space: nowrap">
-
-      <v-tooltip text='Мониторинг'
-                 location="top"
+      <v-btn
+        variant="text"
+        icon
+        color='secondary'
       >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-            @click="set(item.raw, 'Monitor', !products[products.indexOf(item.raw)].Monitor, 'мониторинге')"
-            size="40px"
-            class='mr-1'
-            :color="getColor(products[products.indexOf(item.raw)].Monitor)"
-          >
-            <v-icon color="grey-lighten-1">
-              mdi-shopping-search-outline
-            </v-icon>
-          </v-btn>
-        </template>
-        Мониторинг
-      </v-tooltip>
+        <VIcon icon="mdi-dots-vertical" />
+        <!-- SECTION Menu -->
+        <VMenu
+          activator="parent"
+        >
+          <VList>
+            <VListItem link>
+              <template #prepend>
+                <VIcon
+                  class="me-2"
+                  icon="mdi-shopping-search-outline"
+                  :color="getColor(products[products.indexOf(item.raw)].Monitor)"
+                />
+              </template>
+              <VListItemTitle
+                class="font-weight-semibold"
+                @click="set(item.raw, 'Monitor', !products[products.indexOf(item.raw)].Monitor, 'мониторинге')"
+              >
+                Мониторинг
+              </VListItemTitle>
+            </VListItem>
 
-      <v-tooltip text='Ростест'
-        location="top"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-            @click="set(item.raw, 'Rostest', !products[products.indexOf(item.raw)].Rostest, 'Ростесте')"
-            size="40px"
-            class='mr-1'
-            :color="getColor(products[products.indexOf(item.raw)].Rostest)"
-          >
-            <v-icon color="grey-lighten-1">
-              mdi-alpha-r-circle-outline
-            </v-icon>
-          </v-btn>
-        </template>
-        Ростест
-      </v-tooltip>
+            <VDivider/>
 
-      <v-tooltip
-        location="top"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-            @click="editItem(item.raw)"
-            color="primary"
-            size="40px"
-          >
-            <v-icon color="grey-lighten-1">
-              mdi-pencil
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Редактировать</span>
-      </v-tooltip>
+            <VListItem link>
+              <template #prepend>
+                <VIcon
+                  class="me-2"
+                  icon="mdi-alpha-r-circle-outline"
+                  :color="getColor(products[products.indexOf(item.raw)].Rostest)"
+                />
+              </template>
+              <VListItemTitle
+                class="font-weight-semibold"
+                @click="set(item.raw, 'Rostest', !products[products.indexOf(item.raw)].Rostest, 'Ростесте')"
+              >
+                Ростест
+              </VListItemTitle>
+            </VListItem>
 
-      <v-tooltip
-        location="top"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-            color="error"
-            class="ma-1"
-            @click="deleteItem(item.raw)"
-          >
-            <v-icon color="grey-lighten-1">
-              mdi-delete
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Удалить</span>
-      </v-tooltip>
-    </div>
+            <VDivider />
+
+            <VListItem link>
+              <template #prepend>
+                <VIcon
+                  class="me-2"
+                  icon="mdi-pencil"
+                  color="primary"
+                />
+              </template>
+              <VListItemTitle
+                class="font-weight-semibold"
+                @click="editItem(item.raw)"
+              >
+                Редактировать
+              </VListItemTitle>
+            </VListItem>
+
+            <VDivider />
+
+            <VListItem link>
+              <template #prepend>
+                <VIcon
+                  class="me-2"
+                  icon="mdi-delete"
+                  color="error"
+                />
+              </template>
+              <VListItemTitle
+                class="font-weight-semibold"
+                @click="deleteItem(item.raw)"
+              >
+                Удалить
+              </VListItemTitle>
+            </VListItem>
+
+          </VList>
+
+        </VMenu>
+        <!-- !SECTION -->
+      </v-btn>
   </template>
 
 <!--
@@ -458,6 +455,7 @@
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import Spinner from "@/layouts/spinner.vue";
 import moment from "moment";
+import avatar1 from '@images/avatars/avatar-1.png'
 </script>
 
 <script>
@@ -485,7 +483,7 @@ export default {
     filters: {
       Model:[],
       Bonus: [],
-      Color: [],
+      //Color: [],
       typeName: [],
       providerName:[],
       //Retailer: []
@@ -493,7 +491,7 @@ export default {
     headers: [
       { title: 'Рын. рент', key: 'profit', align: 'center'  },
       { title: 'Название', align: 'center', key: 'Model'},
-      { title: 'Цвет', align: 'center', key: 'Color'},
+      //{ title: 'Цвет', align: 'center', key: 'Color'},
       { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
       { title: 'Поставщик', key: 'providerName', align: 'center' },
       { title: 'Ретейлер', key: 'Retailer', align: 'center'  },
@@ -667,7 +665,7 @@ export default {
     },
 
     getColor (value) {
-      return value === 1 || value === true ? 'success' : 'warning'
+      return value === 1 || value === true ? 'success' : 'secondary'
     },
 
     formatNumber(i){
