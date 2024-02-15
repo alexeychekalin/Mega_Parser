@@ -286,83 +286,93 @@
       {{item.columns.parseDate !== null ? moment(item.columns.parseDate).format("DD.MM.YY") : ''}}
     </template>
 
-    <template v-slot:item.actions="{ item }">
-      <div style="white-space: nowrap">
-        <v-tooltip text='Мониторинг'
-                   location="top"
+      <template v-slot:item.actions="{ item }">
+        <v-btn
+          variant="text"
+          icon
+          color='secondary'
         >
-          <template v-slot:activator="{ props }">
-            <v-btn
-              icon
-              v-bind="props"
-              @click="set(item.raw, 'Monitor', !products[products.indexOf(item.raw)].Monitor, 'мониторинге')"
-              size="40px"
-              class='mr-1'
-              :color="getColor(products[products.indexOf(item.raw)].Monitor)"
-            >
-              <v-icon color="grey-lighten-1">
-                mdi-shopping-search-outline
-              </v-icon>
-            </v-btn>
-          </template>
-          Мониторинг
-        </v-tooltip>
-        <v-tooltip text='Ростест'
-                   location="top"
-        >
-          <template v-slot:activator="{ props }">
-            <v-btn
-              icon
-              v-bind="props"
-              @click="set(item.raw, 'Rostest', !products[products.indexOf(item.raw)].Rostest, 'Ростесте')"
-              size="40px"
-              class='mr-1'
-              :color="getColor(products[products.indexOf(item.raw)].Rostest)"
-            >
-              <v-icon color="grey-lighten-1">
-                mdi-alpha-r-circle-outline
-              </v-icon>
-            </v-btn>
-          </template>
-          Ростест
-        </v-tooltip>
-        <v-tooltip
-          location="top"
-        >
-          <template v-slot:activator="{ props }">
-            <v-btn
-              icon
-              v-bind="props"
-              @click="editItem(item.raw)"
-              color="primary"
-              size="40px"
-            >
-              <v-icon color="grey-lighten-1">
-                mdi-pencil
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>Редактировать</span>
-        </v-tooltip>
-        <v-tooltip
-          location="top"
-        >
-          <template v-slot:activator="{ props }">
-            <v-btn
-              icon
-              v-bind="props"
-              color="error"
-              class="ma-1"
-              @click="deleteItem(item.raw)"
-            >
-              <v-icon color="grey-lighten-1">
-                mdi-delete
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>Удалить</span>
-        </v-tooltip>
-      </div>
+          <VIcon icon="mdi-dots-vertical" />
+          <!-- SECTION Menu -->
+          <VMenu
+            activator="parent"
+          >
+            <VList>
+              <VListItem link>
+                <template #prepend>
+                  <VIcon
+                    class="me-2"
+                    icon="mdi-shopping-search-outline"
+                    :color="getColor(products[products.indexOf(item.raw)].Monitor)"
+                  />
+                </template>
+                <VListItemTitle
+                  class="font-weight-semibold"
+                  @click="set(item.raw, 'Monitor', !products[products.indexOf(item.raw)].Monitor, 'мониторинге')"
+                >
+                  Мониторинг
+                </VListItemTitle>
+              </VListItem>
+
+              <VDivider/>
+
+              <VListItem link>
+                <template #prepend>
+                  <VIcon
+                    class="me-2"
+                    icon="mdi-alpha-r-circle-outline"
+                    :color="getColor(products[products.indexOf(item.raw)].Rostest)"
+                  />
+                </template>
+                <VListItemTitle
+                  class="font-weight-semibold"
+                  @click="set(item.raw, 'Rostest', !products[products.indexOf(item.raw)].Rostest, 'Ростесте')"
+                >
+                  Ростест
+                </VListItemTitle>
+              </VListItem>
+
+              <VDivider />
+
+              <VListItem link>
+                <template #prepend>
+                  <VIcon
+                    class="me-2"
+                    icon="mdi-pencil"
+                    color="primary"
+                  />
+                </template>
+                <VListItemTitle
+                  class="font-weight-semibold"
+                  @click="editItem(item.raw)"
+                >
+                  Редактировать
+                </VListItemTitle>
+              </VListItem>
+
+              <VDivider />
+
+              <VListItem link>
+                <template #prepend>
+                  <VIcon
+                    class="me-2"
+                    icon="mdi-delete"
+                    color="error"
+                  />
+                </template>
+                <VListItemTitle
+                  class="font-weight-semibold"
+                  @click="deleteItem(item.raw)"
+                >
+                  Удалить
+                </VListItemTitle>
+              </VListItem>
+
+            </VList>
+
+          </VMenu>
+          <!-- !SECTION -->
+        </v-btn>
       </template>
 
     <template v-slot:no-data>
