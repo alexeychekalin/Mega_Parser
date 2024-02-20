@@ -169,7 +169,7 @@ export default {
 
       <VCol
         cols="12"
-        md="4"
+        md="6"
       >
         <v-text-field
           v-model="PurchasePrice"
@@ -182,7 +182,7 @@ export default {
 
       <VCol
         cols="12"
-        md="4"
+        md="6"
       >
         <v-text-field
           v-model="SellPrice"
@@ -190,18 +190,6 @@ export default {
           placeholder="Рыночная цена"
           :rules="[rules.required, rules.number]"
           prepend-inner-icon="mdi-currency-rub"
-        />
-      </VCol>
-
-      <VCol
-        cols="12"
-        md="4"
-      >
-        <v-text-field
-          v-model="Color"
-          label="Цвет"
-          placeholder="Цвет"
-          prepend-inner-icon="mdi-palette"
         />
       </VCol>
 

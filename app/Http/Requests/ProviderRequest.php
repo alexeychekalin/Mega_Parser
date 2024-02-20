@@ -25,7 +25,9 @@ class ProviderRequest extends FormRequest
     {
         return [
             'providerID' => '',
-            'providerName' => 'required'
+            'providerName' => 'required',
+            'bio' => '',
+            'link' => ''
         ];
     }
 }

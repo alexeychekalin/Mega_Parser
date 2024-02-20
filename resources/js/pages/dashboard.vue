@@ -3,6 +3,8 @@ import AnalyticsAward from '@/views/dashboard/AnalyticsAward.vue'
 import NewProduct from "@/views/pages/form-layouts/NewProduct.vue";
 import NewUser from "@/views/pages/form-layouts/NewUser.vue";
 import Monitor from "@/views/dashboard/Monitor.vue";
+import DayStats from '@/views/dashboard/DayStats.vue'
+import LastUpdate from '@/views/dashboard/LastUpdate.vue'
 </script>
 
 <template>
@@ -20,6 +22,20 @@ import Monitor from "@/views/dashboard/Monitor.vue";
       <Monitor />
     </VCol>
 
+    <VCol
+      cols="12"
+      md="4"
+    >
+      <LastUpdate />
+    </VCol>
+
+    <VCol
+      cols="12"
+      md="8"
+    >
+      <DayStats />
+    </VCol>
+
     <VCol cols="12" md="6" >
       <VCard title="Новый товар">
         <VCardText>
@@ -34,6 +50,7 @@ import Monitor from "@/views/dashboard/Monitor.vue";
         </VCardText>
       </VCard>
     </VCol>
+
 <!--
     <VCol
       cols="12"

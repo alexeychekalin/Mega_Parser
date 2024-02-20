@@ -78,7 +78,6 @@ export default {
     /*
     checkState(key){
       useToast().info('Сервис проверки работает в режиме эмуляции ответов!')
-      //TODO: На карточке админпанель в рабочем состоянии должен быть глобус
       this.solidCardData.forEach(e => e.state = this.state[Math.floor(Math.random() * this.state.length)])
       //this.solidCardData[0].state = this.state[Math.floor(Math.random() * this.state.length)]
     }

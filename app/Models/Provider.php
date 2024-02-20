@@ -18,7 +18,9 @@ class Provider extends Authenticatable
      */
     protected $fillable = [
         'providerID',
-        'providerName'
+        'providerName',
+        'bio',
+        'link'
     ];
 
     public $timestamps = false;

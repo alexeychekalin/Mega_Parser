@@ -108,8 +108,6 @@
                   <v-row>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="6"
                     >
                       <v-text-field
                         v-model="editedItem.Model"
@@ -117,10 +115,12 @@
                         :rules="[rules.required]"
                       ></v-text-field>
                     </v-col>
+                  </v-row>
+                  <v-row>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="6"
+                      sm="4"
+                      md="4"
                     >
                       <v-autocomplete
                         v-model="editedItem.Type"
@@ -131,8 +131,6 @@
                         :rules="[rules.required]"
                       ></v-autocomplete>
                     </v-col>
-                  </v-row>
-                  <v-row>
                     <v-col
                       cols="12"
                       sm="4"
@@ -160,8 +158,8 @@
                   <v-row>
                     <v-col
                       cols="12"
-                      sm="4"
-                      md="4"
+                      sm="6"
+                      md="6"
                     >
                       <v-text-field
                         v-model="editedItem.PurchasePrice"
@@ -171,22 +169,12 @@
                     </v-col>
                     <v-col
                       cols="12"
-                      sm="4"
-                      md="4"
+                      sm="6"
+                      md="6"
                     >
                       <v-text-field
                         v-model="editedItem.SellPrice"
                         label="Цена продажи"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="4"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.Color"
-                        label="Цвет"
                       ></v-text-field>
                     </v-col>
                     <VCol cols="12" md="3" class='d-flex justify-center'>
@@ -779,7 +767,6 @@ export default {
     },
 
     searchSimilar(model, Type, id){
-      console.log(Type)
       this.newType = this.types.find(f => f.typeID === Type).typeName;
       this.similar = model
       axios.post('api/product/getSimilarTypeProducts', {Model : model}).then(res => {
@@ -832,13 +819,6 @@ export default {
 <style>
 .filter-search{
   margin: 0 10px 5px 10px;
-}
-.custom_table_class thead tr th {
-  font-size: 14px;
-  text-transform: uppercase
-}
-.v-select.fit {
-  //width: max-content;
 }
 
 </style>

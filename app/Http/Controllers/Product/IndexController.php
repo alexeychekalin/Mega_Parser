@@ -16,7 +16,7 @@ class IndexController extends Controller
     public function index()
     {
         $product['values'] = DB::table('product')
-                    ->select('product.*', 'types.typeName', 'providers.providerName', 'types.commission',
+                    ->select('product.*', 'types.typeName', 'providers.providerName', 'types.commission', 'providers.providerID',
                         DB::raw('(CASE WHEN product.Bonus = 0 THEN false WHEN product.Bonus is NULL THEN false ELSE true END) as Bonus'),
                         DB::raw('(CASE WHEN product.CardCash = 0 THEN false WHEN product.CardCash is NULL THEN false ELSE true END) as CardCash'),
                         DB::raw('(CASE WHEN product.Monitor = 0 THEN false WHEN product.Monitor is NULL THEN false ELSE true END) as Monitor')

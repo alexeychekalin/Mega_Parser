@@ -24,7 +24,9 @@ class ProviderController extends Controller
             ->where('providerID', $request['providerID'])
             ->update(
                 [
-                    'providerName' => $request['providerName']
+                    'providerName' => $request['providerName'],
+                    'link' => $request['link'],
+                    'bio' => $request['bio'],
                 ]
             );
         return $request['providerID'];

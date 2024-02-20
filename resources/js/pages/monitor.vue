@@ -121,8 +121,6 @@
               <v-row>
                 <v-col
                   cols="12"
-                  sm="6"
-                  md="6"
                 >
                   <v-text-field
                     v-model="editedItem.Model"
@@ -130,10 +128,12 @@
                     :rules="[rules.required]"
                   ></v-text-field>
                 </v-col>
+              </v-row>
+              <v-row>
                 <v-col
                   cols="12"
-                  sm="6"
-                  md="6"
+                  sm="4"
+                  md="4"
                 >
                   <v-autocomplete
                     v-model="editedItem.Type"
@@ -144,8 +144,6 @@
                     :rules="[rules.required]"
                   ></v-autocomplete>
                 </v-col>
-              </v-row>
-              <v-row>
                 <v-col
                   cols="12"
                   sm="4"
@@ -173,8 +171,8 @@
               <v-row>
                 <v-col
                   cols="12"
-                  sm="4"
-                  md="4"
+                  sm="6"
+                  md="6"
                 >
                   <v-text-field
                     v-model="editedItem.PurchasePrice"
@@ -184,15 +182,16 @@
                 </v-col>
                 <v-col
                   cols="12"
-                  sm="4"
-                  md="4"
+                  sm="6"
+                  md="6"
                 >
                   <v-text-field
                     v-model="editedItem.SellPrice"
                     label="Цена продажи"
                   ></v-text-field>
                 </v-col>
-
+              </v-row>
+              <v-row>
                 <VCol cols="12" md="3" class='d-flex justify-center'>
                   <VCheckbox
                     color="success"
@@ -446,6 +445,32 @@
     </p>
   </template>
 
+  <template v-slot:item.providerName="{ item }">
+      <Popper
+        arrow
+      >
+        <template #content>
+         <div
+           v-html="getData(item.raw.providerID, 'bio')"
+         ></div>
+          <v-btn
+            class="ma-2"
+            color="primary"
+            :href="getData(item.raw.providerID, 'link')"
+            target="_blank"
+          >
+            Написать
+            <v-icon
+              end
+              icon="mdi-telegram"
+            ></v-icon>
+          </v-btn>
+        </template>
+        <Button>{{item.columns.providerName}}</Button>
+      </Popper>
+  </template>
+
+
 </v-data-table>
   </VCard>
 </template>
@@ -463,6 +488,7 @@ import axios from "axios";
 import { useToast } from "vue-toastification";
 import store from "@/store";
 import * as XLSX from 'xlsx/xlsx.mjs';
+import Popper from "vue3-popper";
 
 export default {
   data: () => ({
@@ -492,11 +518,11 @@ export default {
       { title: 'Рын. рент', key: 'profit', align: 'center'  },
       { title: 'Название', align: 'center', key: 'Model'},
       //{ title: 'Цвет', align: 'center', key: 'Color'},
-      { title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
+      //{ title: 'Тип', key: 'typeName', sortable: false, align: 'center' },
       { title: 'Поставщик', key: 'providerName', align: 'center' },
       { title: 'Ретейлер', key: 'Retailer', align: 'center'  },
       { title: 'Закупка', key: 'PurchasePrice', align: 'center' },
-      { title: 'Продажа', key: 'SellPrice', sortable: false, align: 'center' },
+      { title: 'Цена СММ', key: 'SellPrice', sortable: false, align: 'center' },
       { title: 'Опт. цена', key: 'optPrice', align: 'center' },
       { title: 'Дата', key: 'parseDate', align: 'center' },
       { title: 'Дата СММ', key: 'SberParseDate', align: 'center' },
@@ -552,7 +578,8 @@ export default {
   }),
 
   components:{
-    axios
+    axios,
+    Popper,
   },
 
   computed: {
@@ -584,6 +611,11 @@ export default {
   },
 
   methods: {
+    getData(id, what){
+      const pr = this.provider.find(o => o.providerID === id)
+      if(pr) return pr[what]
+      else return ''
+    },
     updateFeedID(feedid, id, item){
       if(feedid === null || feedid === ' ' || feedid === '') return
       axios.post('api/product/feedid', {ProductId : id, FeedID: feedid}).then(res => {
@@ -840,9 +872,17 @@ export default {
 .filter-search{
   margin: 0 10px 5px 10px;
 }
+</style>
 
-.custom_table_class thead tr th {
-  font-size: 14px;
-  text-transform: uppercase
+<style>
+:root {
+  --popper-theme-background-color: #333333;
+  --popper-theme-background-color-hover: #333333;
+  --popper-theme-text-color: #ffffff;
+  --popper-theme-border-width: 0px;
+  --popper-theme-border-style: solid;
+  --popper-theme-border-radius: 6px;
+  --popper-theme-padding: 32px;
+  --popper-theme-box-shadow: 0 6px 30px -6px rgba(0, 0, 0, 0.25);
 }
 </style>

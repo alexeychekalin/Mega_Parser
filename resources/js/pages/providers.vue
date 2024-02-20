@@ -48,16 +48,30 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col
-                    cols="12"
-                  >
+                  <v-col>
                     <v-text-field
                       v-model="editedItem.providerName"
                       label="Название"
                       :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
-
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      v-model="editedItem.link"
+                      label="Ссылка"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      label="Описание"
+                      variant="outlined"
+                      v-model="editedItem.bio"
+                    ></v-textarea>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -170,9 +184,13 @@ export default {
     editedIndex: -1,
     editedItem: {
       providerName: '',
+      bio: '',
+      link: '',
     },
     defaultItem: {
       providerName: '',
+      bio: '',
+      link: '',
     },
     rules: {
       required: value => !!value || 'Поле обязательно',
@@ -265,6 +283,8 @@ export default {
             {
                     providerID: updatedProvider.providerID,
                     providerName: updatedProvider.providerName,
+                    bio: updatedProvider.bio,
+                    link: updatedProvider.link,
             }
         )
           .then(res => {

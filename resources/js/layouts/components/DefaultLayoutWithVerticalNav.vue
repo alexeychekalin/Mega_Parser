@@ -21,8 +21,8 @@ import store from "@/store";
 export default {
   data: () => ({
     items: [{
-      'Не найдена модель': [{icon: 'mdi-robot-vacuum-alert', link: '/errors'}],
-      'Недостаточно полей': [{icon: 'mdi-robot-vacuum-alert', link: '/errors'}],
+      'Не найдена модель': [{icon: 'mdi-sync-alert', link: '/errors'}],
+      'Недостаточно полей': [{icon: 'mdi-alert-circle-outline', link: '/errors'}],
       'Неизвестный тип': [{icon: 'mdi-call-merge', link: '/notype'}],
       'Не найдено на СММ': [{icon: 'mdi-store-off-outline', link: '/nosmm'}],
   }],
@@ -167,7 +167,7 @@ export default {
       <VerticalNavLink
         :item="{
           title: 'Ошибки',
-          icon: 'mdi-robot-vacuum-alert',
+          icon: 'mdi-sync-alert',
           to: '/errors',
           colorBadge: 'error',
           badge: stats.filter(x => x.Type === 100 || x.Type === 101).reduce((ac, obj) =>  {return ac + obj.count}, 0)
