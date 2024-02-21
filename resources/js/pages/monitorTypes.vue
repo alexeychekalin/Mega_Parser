@@ -5,7 +5,7 @@
     :items="types"
     :search="search"
     class="custom_table_class"
-    hover="true"
+    hover
   >
     <template v-slot:top>
       <v-toolbar
@@ -131,8 +131,7 @@ export default {
     set(item, set){
       this.editedIndex = this.types.indexOf(item)
       this.types[this.editedIndex].monitor = set ? 1 : 0
-      console.log(this.types[this.editedIndex].monitor)
-      axios.post('api/product/setbytype', {set : set, typeID : item.typeID}).then(res => {
+      axios.post('api/product/setbytype', {set : set, typeID : item.typeID}).then(() => {
         useToast().success('Данные о мониторинге обновлены', {timeout:1000,closeOnClick:true,pauseOnFocusLoss:true,pauseOnHover:true,draggable:true,draggablePercent:1.16})
         axios.post('api/types/setbytype', {set : set, typeID : item.typeID})
           .catch(function (error) {
@@ -150,8 +149,5 @@ export default {
 </script>
 
 <style>
-.custom_table_class thead tr th {
-  font-size: 14px;
-  text-transform: uppercase
-}
+
 </style>

@@ -484,7 +484,7 @@ export default {
 
     deleteItemConfirm () {
       let currentProduct = this.products[this.editedIndex]
-      axios.post('api/product/delete', {ProductID : currentProduct.ProductId}).then(res => {
+      axios.post('api/product/delete', {ProductID : currentProduct.ProductId}).then(() => {
         useToast().success('Товар удален')
         this.products.splice(this.editedIndex, 1)
         this.closeDelete()
@@ -528,7 +528,7 @@ export default {
             ProductId: updatedProduct.ProductId
           }
       )
-        .then(res => {
+        .then(() => {
             useToast().success('Товар обновлен')
             this.close()
             this.products[this.editedIndex]['typeName'] = this.types.find(f => f.typeID === updatedProduct.Type).typeName
@@ -546,12 +546,4 @@ export default {
 .filter-search{
   margin: 0 10px 5px 10px;
 }
-.custom_table_class thead tr th {
-  font-size: 14px;
-  text-transform: uppercase
-}
-.now-green{
-  background-color: #4caf50;
-}
-
 </style>

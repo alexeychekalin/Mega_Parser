@@ -34,8 +34,6 @@
 
 <script>
 import axios from "axios";
-import { useToast } from "vue-toastification";
-import store from "@/store";
 export default {
   data: () => ({
     tab: 'one',
@@ -75,8 +73,5 @@ export default {
 </script>
 
 <style>
-.custom_table_class thead tr th {
-  font-size: 14px;
-  text-transform: uppercase
-}
+
 </style>

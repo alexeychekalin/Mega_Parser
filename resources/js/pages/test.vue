@@ -253,8 +253,4 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 .filter-search{
   margin: 0 10px 5px 10px;
 }
-.custom_table_class thead tr th {
-  font-size: 14px;
-  text-transform: uppercase
-}
 </style>
